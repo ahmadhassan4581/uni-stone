@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://uni-stone.vercel.app'
 
 export async function apiFetch(path, options = {}, token) {
   const url = path.startsWith('http') ? path : `${API_BASE}${path}`
