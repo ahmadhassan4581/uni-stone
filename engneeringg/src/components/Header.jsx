@@ -88,7 +88,7 @@ export default function Header() {
                     <img
                       src={logo}
                       alt="Unistone"
-                      className="h-full w-full object-contain drop-shadow-[0_2px_3px_rgba(0,0,0,0.65)]"
+                      className="h-full w-full object-contain"
                     />
                   </span>
                   <span className="text-[0.65rem] tracking-[0.34em] uppercase text-obsidian/60">Menu</span>
@@ -205,14 +205,14 @@ export default function Header() {
         <Container className="flex items-center gap-4 py-2.5 sm:py-3">
           <Link
             to="/"
-            className="group flex shrink-0 items-center rounded-lg border border-transparent px-2 py-0.5 transition-all duration-500 ease-luxury hover:border-gold/20 hover:bg-black/5"
+            className="flex shrink-0 items-center border-0 bg-transparent px-2 py-0.5 outline-none [-webkit-tap-highlight-color:transparent] hover:border-0 hover:bg-transparent focus:border-0 focus:bg-transparent focus:outline-none active:border-0 active:bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
             aria-label="Unistone"
           >
-            <span className="inline-flex h-14 w-28 shrink-0 items-center justify-center transition-transform duration-500 ease-luxury group-hover:scale-[1.03] sm:h-16 sm:w-32">
+            <span className="inline-flex h-14 w-28 shrink-0 items-center justify-center sm:h-16 sm:w-32">
               <img
                 src={logo}
                 alt="Unistone"
-                className="h-full w-full object-contain drop-shadow-[0_2px_3px_rgba(0,0,0,0.65)]"
+                className="h-full w-full object-contain"
               />
             </span>
             <span className="sr-only">Unistone</span>
