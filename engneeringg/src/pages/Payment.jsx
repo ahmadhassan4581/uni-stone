@@ -121,14 +121,14 @@ export default function Payment() {
               <div className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
                 <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Payment methods</p>
                 <div className="mt-6 grid gap-4">
-                  <div className="flex items-center justify-between rounded-lg border border-black/10 bg-neutral-50 p-5">
+                  <div className="flex flex-col gap-3 rounded-lg border border-black/10 bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
                       <CreditCard className="h-5 w-5 text-gold/90" />
                       <p className="text-sm text-obsidian/80">Stripe (placeholder)</p>
                     </div>
                     <span className="text-xs tracking-[0.3em] uppercase text-obsidian/50">Card</span>
                   </div>
-                  <div className="flex items-center justify-between rounded-lg border border-black/10 bg-neutral-50 p-5">
+                  <div className="flex flex-col gap-3 rounded-lg border border-black/10 bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
                       <Landmark className="h-5 w-5 text-gold/90" />
                       <p className="text-sm text-obsidian/80">Razorpay (placeholder)</p>

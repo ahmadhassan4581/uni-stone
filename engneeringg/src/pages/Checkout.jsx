@@ -193,7 +193,7 @@ export default function Checkout() {
 
               <div className="mt-6 grid gap-4">
                 <div className="rounded-xl border border-black/10 bg-neutral-50 p-6">
-                  <div className="flex items-start justify-between gap-5">
+                  <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
                     <div className="flex items-start gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-black/10 bg-white">
                         <CreditCard className="h-5 w-5 text-gold/90" />
@@ -207,6 +207,7 @@ export default function Checkout() {
                       type="button"
                       variant="blue"
                       size="sm"
+                      className="w-full sm:w-auto h-auto py-3 sm:h-10 sm:py-0"
                       disabled={!hasItems || loading}
                       onClick={() => startPayment('stripe')}
                     >
@@ -216,7 +217,7 @@ export default function Checkout() {
                 </div>
 
                 <div className="rounded-xl border border-black/10 bg-neutral-50 p-6">
-                  <div className="flex items-start justify-between gap-5">
+                  <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
                     <div className="flex items-start gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-black/10 bg-white">
                         <Landmark className="h-5 w-5 text-gold/90" />
@@ -230,6 +231,7 @@ export default function Checkout() {
                       type="button"
                       variant="blue"
                       size="sm"
+                      className="w-full sm:w-auto h-auto py-3 sm:h-10 sm:py-0"
                       disabled={!hasItems || loading}
                       onClick={() => startPayment('razorpay')}
                     >
@@ -239,7 +241,7 @@ export default function Checkout() {
                 </div>
 
                 <div className="rounded-xl border border-black/10 bg-neutral-50 p-6">
-                  <div className="flex items-start justify-between gap-5">
+                  <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
                     <div className="flex items-start gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-black/10 bg-white">
                         <Wallet className="h-5 w-5 text-gold/90" />
@@ -253,6 +255,7 @@ export default function Checkout() {
                       type="button"
                       variant="blue"
                       size="sm"
+                      className="w-full sm:w-auto h-auto py-3 sm:h-10 sm:py-0"
                       disabled={!hasItems || loading}
                       onClick={() => startPayment('paytm')}
                     >
