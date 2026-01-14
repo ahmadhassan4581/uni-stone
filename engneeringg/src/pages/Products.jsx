@@ -15,6 +15,7 @@ export default function Products() {
   const { products, loading, error, refresh } = useProducts()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeCategory = searchParams.get('category') || 'All'
+  const q = (searchParams.get('q') || '').trim()
   const [sort, setSort] = useState('featured')
   const [perPage, setPerPage] = useState(12)
   const [page, setPage] = useState(1)
@@ -23,10 +24,23 @@ export default function Products() {
     refresh()
   }, [refresh])
 
+  useEffect(() => {
+    setPage(1)
+  }, [activeCategory, q])
+
   const filtered = useMemo(() => {
-    if (!activeCategory || activeCategory === 'All') return products
-    return products.filter((p) => p.category === activeCategory)
-  }, [activeCategory, products])
+    const normalizedQ = q.toLowerCase()
+
+    const byCategory =
+      !activeCategory || activeCategory === 'All' ? products : products.filter((p) => p.category === activeCategory)
+
+    if (!normalizedQ) return byCategory
+
+    return byCategory.filter((p) => {
+      const hay = `${p?.name || ''} ${p?.category || ''} ${p?.description || ''}`.toLowerCase()
+      return hay.includes(normalizedQ)
+    })
+  }, [activeCategory, products, q])
 
   const sorted = useMemo(() => {
     const next = [...filtered]
@@ -88,7 +102,8 @@ export default function Products() {
               <div>
                 <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Showing</p>
                 <p className="mt-2 text-sm text-obsidian/70">
-                  {activeCategory === 'All' ? 'All items' : activeCategory} · {sorted.length} products
+                  {activeCategory === 'All' ? 'All items' : activeCategory}
+                  {q ? ` · Search: "${q}"` : ''} · {sorted.length} products
                 </p>
               </div>
 

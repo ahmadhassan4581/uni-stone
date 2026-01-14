@@ -27,9 +27,20 @@ function HeaderLink({ to, children }) {
 
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const { totalCount } = useCart()
   const { isAuthenticated, logout, user } = useAuth()
   const navigate = useNavigate()
+
+  const submitSearch = (e) => {
+    e?.preventDefault?.()
+    const q = searchQuery.trim()
+    if (!q) {
+      navigate('/products')
+      return
+    }
+    navigate(`/products?q=${encodeURIComponent(q)}`)
+  }
 
   const handleLogout = () => {
     logout()
@@ -220,7 +231,10 @@ export default function Header() {
 
           <div className="hidden flex-1 md:block">
             <div className="max-w-none">
-              <div className="flex overflow-hidden rounded-md border border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60">
+              <form
+                className="flex overflow-hidden rounded-md border border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60"
+                onSubmit={submitSearch}
+              >
                 <label className="sr-only" htmlFor="site-search">
                   Search
                 </label>
@@ -228,16 +242,18 @@ export default function Header() {
                   id="site-search"
                   placeholder="Search for products..."
                   className="h-10 w-full bg-transparent px-4 text-sm text-[#111111] outline-none placeholder:text-[#222222]"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <button
-                  type="button"
+                  type="submit"
                   className="inline-flex h-10 w-10 items-center justify-center border-l border-black/30 bg-neutral-50 text-[#111111] transition-colors duration-500 ease-luxury hover:bg-neutral-100 hover:text-black"
                   aria-label="Search"
-                  title="Search (UI only)"
+                  title="Search"
                 >
                   <Search className="h-5 w-5" />
                 </button>
-              </div>
+              </form>
             </div>
           </div>
 
