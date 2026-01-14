@@ -58,6 +58,14 @@ export default function Products() {
     return sorted.slice(start, start + perPage)
   }, [sorted, perPage, page, pageCount])
 
+  const showing = useMemo(() => {
+    if (!sorted.length) return { start: 0, end: 0, total: 0 }
+    const safePage = Math.min(Math.max(1, page), pageCount)
+    const start = (safePage - 1) * perPage + 1
+    const end = Math.min(safePage * perPage, sorted.length)
+    return { start, end, total: sorted.length }
+  }, [page, pageCount, perPage, sorted.length])
+
   const setCategory = (cat) => {
     const next = new URLSearchParams(searchParams)
     if (!cat || cat === 'All') next.delete('category')
@@ -98,78 +106,41 @@ export default function Products() {
         <div className="mt-12">
           {error ? <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div> : null}
 
-          <div className="mb-6 grid gap-4 rounded-xl border border-black/10 bg-white p-5 sm:flex sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Showing</p>
-                <p className="mt-2 text-sm text-obsidian/70">
-                  {activeCategory === 'All' ? 'All items' : activeCategory}
-                  {q ? ` · Search: "${q}"` : ''} · {sorted.length} products
-                </p>
-              </div>
+          <div className="mb-6 flex flex-col justify-between gap-3 border-b border-black/10 pb-4 sm:flex-row sm:items-center">
+            <p className="text-xs text-obsidian/70">
+              Showing products {showing.start} to {showing.end} of {showing.total}
+            </p>
 
-              <div className="grid gap-3 sm:flex sm:items-end">
-                <label className="grid gap-2">
-                  <span className="text-[0.7rem] tracking-[0.32em] uppercase text-obsidian/60">Sort</span>
-                  <select
-                    value={sort}
-                    onChange={(e) => {
-                      setSort(e.target.value)
-                      setPage(1)
-                    }}
-                    className="h-11 rounded-md border border-black/10 bg-white px-3 text-sm text-obsidian/80 outline-none transition-colors duration-500 ease-luxury focus:border-gold/55"
-                  >
-                    <option value="featured" className="bg-white">
-                      Featured
-                    </option>
-                    <option value="price_asc" className="bg-white">
-                      Price: Low → High
-                    </option>
-                    <option value="price_desc" className="bg-white">
-                      Price: High → Low
-                    </option>
-                    <option value="name_asc" className="bg-white">
-                      Name: A → Z
-                    </option>
-                    <option value="name_desc" className="bg-white">
-                      Name: Z → A
-                    </option>
-                  </select>
-                </label>
+            <label className="flex items-center gap-2 text-xs text-obsidian/70">
+              <span>Sort by:</span>
+              <select
+                value={sort}
+                onChange={(e) => {
+                  setSort(e.target.value)
+                  setPage(1)
+                }}
+                className="h-9 rounded border border-black/20 bg-white px-2 text-xs text-obsidian/80 outline-none"
+              >
+                <option value="featured" className="bg-white">
+                  Most popular
+                </option>
+                <option value="price_asc" className="bg-white">
+                  Price: Low → High
+                </option>
+                <option value="price_desc" className="bg-white">
+                  Price: High → Low
+                </option>
+                <option value="name_asc" className="bg-white">
+                  Name: A → Z
+                </option>
+                <option value="name_desc" className="bg-white">
+                  Name: Z → A
+                </option>
+              </select>
+            </label>
+          </div>
 
-                <label className="grid gap-2">
-                  <span className="text-[0.7rem] tracking-[0.32em] uppercase text-obsidian/60">Per page</span>
-                  <select
-                    value={perPage}
-                    onChange={(e) => {
-                      setPerPage(Number(e.target.value))
-                      setPage(1)
-                    }}
-                    className="h-11 rounded-md border border-black/10 bg-white px-3 text-sm text-obsidian/80 outline-none transition-colors duration-500 ease-luxury focus:border-gold/55"
-                  >
-                    <option value={8} className="bg-white">
-                      8
-                    </option>
-                    <option value={12} className="bg-white">
-                      12
-                    </option>
-                    <option value={16} className="bg-white">
-                      16
-                    </option>
-                    <option value={24} className="bg-white">
-                      24
-                    </option>
-                  </select>
-                </label>
-
-                {activeCategory !== 'All' ? (
-                  <Button size="sm" variant="light" onClick={() => setCategory('All')}>
-                    Clear
-                  </Button>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {loading ? (
                 <div className="text-sm text-obsidian/60">Loading...</div>
               ) : (
