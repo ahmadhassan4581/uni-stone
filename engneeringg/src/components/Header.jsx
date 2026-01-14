@@ -1,35 +1,21 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { MapPin, Menu, Phone, Search, ShoppingBag, User, X } from 'lucide-react'
+import { Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import { cn } from '../lib/cn'
 import logo from '../assets/logo.png'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
+import { useProducts } from '../context/ProductsContext'
 import Container from './Container'
 import Button from './Button'
-
-function HeaderLink({ to, children }) {
-  return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        cn(
-          'relative inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-semibold tracking-[0.18em] uppercase text-[#111111] transition-[background-color,color,box-shadow] duration-300 ease-in-out hover:bg-[#ededed] hover:text-black active:bg-[#e0e0e0] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black/30',
-          isActive && 'bg-[#e0e0e0] font-bold text-black shadow-[0_1px_0_rgba(0,0,0,0.12)]',
-        )
-      }
-    >
-      {children}
-    </NavLink>
-  )
-}
 
 export default function Header() {
   const [open, setOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const { totalCount } = useCart()
   const { isAuthenticated, logout, user } = useAuth()
+  const { products } = useProducts()
   const navigate = useNavigate()
 
   const submitSearch = (e) => {
@@ -63,6 +49,28 @@ export default function Header() {
       { to: '/products', label: 'Products' },
       { to: '/contact', label: 'Contact' },
       { to: '/payment', label: 'Consultation' },
+    ],
+    [],
+  )
+
+  const categories = useMemo(() => {
+    const set = new Set()
+    products.forEach((p) => {
+      const c = p?.category
+      if (typeof c === 'string' && c.trim()) set.add(c.trim())
+    })
+    const list = Array.from(set).sort((a, b) => a.localeCompare(b))
+    return list.length ? list : ['Structural', 'Finishes', 'Facade']
+  }, [products])
+
+  const quickLinks = useMemo(
+    () => [
+      { to: '/contact', label: 'Contact' },
+      { to: '/about', label: 'About' },
+      { to: '/services', label: 'Service' },
+      { to: '/info/delivery', label: 'Fast delivery' },
+      { to: '/info/faqs', label: 'FAQs' },
+      { to: '/info/pebble-guide', label: 'pebble-guide' },
     ],
     [],
   )
@@ -115,13 +123,24 @@ export default function Header() {
               </div>
 
               <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-7">
-                <label className="grid gap-2">
+                <form className="grid gap-2" onSubmit={submitSearch}>
                   <span className="text-[0.65rem] tracking-[0.34em] uppercase text-obsidian/60">Search</span>
-                  <input
-                    placeholder="Search (UI only)"
-                    className="h-11 w-full rounded-md border border-black/30 bg-white px-4 text-sm text-[#111111] outline-none transition-colors duration-500 ease-luxury placeholder:text-[#222222] focus:border-black/60"
-                  />
-                </label>
+                  <div className="flex overflow-hidden rounded-md border border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60">
+                    <input
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search for products..."
+                      className="h-11 w-full bg-transparent px-4 text-sm text-[#111111] outline-none placeholder:text-[#222222]"
+                    />
+                    <button
+                      type="submit"
+                      className="inline-flex h-11 w-11 items-center justify-center border-l border-black/30 bg-blue-600 text-white transition-colors duration-500 ease-luxury hover:bg-blue-700"
+                      aria-label="Search"
+                    >
+                      <Search className="h-5 w-5" />
+                    </button>
+                  </div>
+                </form>
 
                 {links.map((l) => (
                   <NavLink
@@ -189,31 +208,7 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-black/30 bg-white">
-        <div className="hidden border-b border-black/30 bg-white md:block">
-          <Container className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-6 text-[0.7rem] font-medium tracking-[0.25em] text-[#111111]">
-              <a className="inline-flex items-center gap-2 transition-colors hover:text-obsidian" href="tel:+971000000000">
-                <Phone className="h-4 w-4 text-[#111111]" />
-                +971 000 000 000
-              </a>
-              <span className="inline-flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-[#111111]" />
-                Dubai Design District
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link className="text-[0.7rem] font-medium tracking-[0.28em] uppercase text-[#111111] hover:text-black" to="/payment">
-                Book Consultation
-              </Link>
-              <span className="h-4 w-px bg-black/30" />
-              <Link className="text-[0.7rem] font-medium tracking-[0.28em] uppercase text-[#111111] hover:text-black" to="/products">
-                Explore Catalog
-              </Link>
-            </div>
-          </Container>
-        </div>
-
-        <Container className="flex items-center gap-4 py-2.5 sm:py-3">
+        <Container className="flex items-center gap-4 py-3">
           <Link
             to="/"
             className="flex shrink-0 items-center border-0 bg-transparent px-2 py-0.5 outline-none [-webkit-tap-highlight-color:transparent] hover:border-0 hover:bg-transparent focus:border-0 focus:bg-transparent focus:outline-none active:border-0 active:bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -230,7 +225,7 @@ export default function Header() {
           </Link>
 
           <div className="hidden flex-1 md:block">
-            <div className="max-w-none">
+            <div className="mx-auto max-w-3xl">
               <form
                 className="flex overflow-hidden rounded-md border border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60"
                 onSubmit={submitSearch}
@@ -247,7 +242,7 @@ export default function Header() {
                 />
                 <button
                   type="submit"
-                  className="inline-flex h-10 w-10 items-center justify-center border-l border-black/30 bg-neutral-50 text-[#111111] transition-colors duration-500 ease-luxury hover:bg-neutral-100 hover:text-black"
+                  className="inline-flex h-10 w-11 items-center justify-center border-l border-black/30 bg-blue-600 text-white transition-colors duration-500 ease-luxury hover:bg-blue-700"
                   aria-label="Search"
                   title="Search"
                 >
@@ -303,13 +298,33 @@ export default function Header() {
           </button>
         </Container>
 
-        <div className="hidden border-t border-black/30 bg-white md:block">
-          <Container className="flex items-center justify-center py-2">
-            <nav className="flex items-center gap-6" aria-label="Primary">
-              {links.map((l) => (
-                <HeaderLink key={l.to} to={l.to}>
+        <div className="hidden border-t border-black/10 bg-white md:block">
+          <Container className="py-2">
+            <nav className="flex flex-wrap items-center gap-x-6 gap-y-2" aria-label="Categories">
+              {categories.map((cat) => (
+                <Link
+                  key={cat}
+                  to={`/products?category=${encodeURIComponent(cat)}`}
+                  className="text-xs font-semibold tracking-[0.12em] text-[#111111] transition-colors hover:text-black"
+                >
+                  {cat}
+                </Link>
+              ))}
+            </nav>
+          </Container>
+        </div>
+
+        <div className="hidden border-t border-blue-700 bg-blue-600 md:block">
+          <Container className="py-2">
+            <nav className="flex flex-wrap items-center justify-center gap-x-10 gap-y-2" aria-label="Quick links">
+              {quickLinks.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  className="text-[0.7rem] font-semibold tracking-[0.22em] text-white/95 transition-colors hover:text-white"
+                >
                   {l.label}
-                </HeaderLink>
+                </Link>
               ))}
             </nav>
           </Container>
