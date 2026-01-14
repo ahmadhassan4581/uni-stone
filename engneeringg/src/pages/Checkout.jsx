@@ -68,6 +68,7 @@ export default function Checkout() {
         packageName: consultationState?.packageName,
         amount: Number(consultationState?.amount || 0),
         currency: consultationState?.currency || 'USD',
+        schedule: consultationState?.schedule,
       }
     }
 
@@ -283,6 +284,11 @@ export default function Checkout() {
                 <div className="mt-6 rounded-xl border border-black/10 bg-neutral-50 p-5">
                   <p className="text-xs tracking-[0.35em] uppercase text-obsidian/60">Package</p>
                   <p className="mt-2 font-display text-2xl text-obsidian">{consultationState?.packageName || 'Consultation'}</p>
+                  {((consultationState?.schedule?.date || consultationState?.schedule?.day) && consultationState?.schedule?.time) ? (
+                    <p className="mt-3 text-sm text-obsidian/70">
+                      {consultationState.schedule.date || consultationState.schedule.day} at {consultationState.schedule.time}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
 
