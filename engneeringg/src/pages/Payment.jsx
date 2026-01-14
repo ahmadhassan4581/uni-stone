@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, CreditCard, Landmark, ShieldCheck } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
@@ -6,6 +6,7 @@ import Container from '../components/Container'
 import Reveal from '../components/Reveal'
 import SectionHeading from '../components/SectionHeading'
 import { cn } from '../lib/cn'
+import logo from '../assets/logo.png'
 
 export default function Payment() {
   const navigate = useNavigate()
@@ -155,7 +156,7 @@ export default function Payment() {
                   </div>
                 </div>
 
-                <div className="mt-4 -mx-1 overflow-x-auto px-1">
+                <div className="mt-4 -mx-1 overflow-x-auto px-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   <div className="flex min-w-max gap-3">
                     {visibleDates.map((d) => {
                       const isActive = selectedDateIso === d.iso
@@ -233,7 +234,7 @@ export default function Payment() {
                 </div>
               </div>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mt-8 grid gap-4">
                 {selectedTime ? (
                   <div className="w-full rounded-xl border border-black/10 bg-white p-6">
                     <div className="flex items-start justify-between gap-6">
@@ -309,75 +310,59 @@ export default function Payment() {
                   </div>
                 ) : null}
 
-                <Button
-                  size="lg"
-                  variant="blue"
-                  type="button"
-                  disabled={!detailsValid}
-                  onClick={() => {
-                    navigate('/checkout', {
-                      state: {
-                        kind: 'consultation',
-                        packageId: selectedPackage.id,
-                        packageName: selectedPackage.name,
-                        amount: selectedPackage.amount,
-                        currency: 'USD',
-                        schedule: {
-                          date: selectedDateLabel,
-                          dateIso: selectedDateIso,
-                          time: selectedTime,
+                <div className="flex justify-center">
+                  <Button
+                    size="lg"
+                    variant="blue"
+                    type="button"
+                    disabled={!detailsValid}
+                    onClick={() => {
+                      navigate('/checkout', {
+                        state: {
+                          kind: 'consultation',
+                          packageId: selectedPackage.id,
+                          packageName: selectedPackage.name,
+                          amount: selectedPackage.amount,
+                          currency: 'USD',
+                          schedule: {
+                            date: selectedDateLabel,
+                            dateIso: selectedDateIso,
+                            time: selectedTime,
+                          },
+                          customer: {
+                            name: customerName.trim(),
+                            phone: customerPhone.trim(),
+                            email: customerEmail.trim(),
+                            notes: customerNotes.trim(),
+                          },
                         },
-                        customer: {
-                          name: customerName.trim(),
-                          phone: customerPhone.trim(),
-                          email: customerEmail.trim(),
-                          notes: customerNotes.trim(),
-                        },
-                      },
-                    })
-                  }}
-                >
-                  Proceed to Checkout
-                </Button>
+                      })
+                    }}
+                  >
+                    Proceed to Checkout
+                  </Button>
+                </div>
               </div>
             </div>
           </Reveal>
 
           <Reveal delay={140} className="lg:col-span-5">
-            <div className="grid gap-6">
-              <div className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
-                <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Payment methods</p>
-                <div className="mt-6 grid gap-4">
-                  <div className="flex flex-col gap-3 rounded-lg border border-black/10 bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      <CreditCard className="h-5 w-5 text-gold/90" />
-                      <p className="text-sm text-obsidian/80">Stripe (placeholder)</p>
-                    </div>
-                    <span className="text-xs tracking-[0.3em] uppercase text-obsidian/50">Card</span>
-                  </div>
-                  <div className="flex flex-col gap-3 rounded-lg border border-black/10 bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      <Landmark className="h-5 w-5 text-gold/90" />
-                      <p className="text-sm text-obsidian/80">Razorpay (placeholder)</p>
-                    </div>
-                    <span className="text-xs tracking-[0.3em] uppercase text-obsidian/50">UPI</span>
-                  </div>
-                </div>
+            <div className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
+              <div className="flex items-center gap-3">
+                <img src={logo} alt="Logo" className="h-10 w-10 rounded-md border border-black/10 bg-white object-contain" />
+                <p className="font-display text-xl tracking-[0.02em] text-obsidian">Why Choose Our Consultation?</p>
               </div>
 
-              <div className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-md border border-black/10 bg-neutral-50">
-                    <ShieldCheck className="h-5 w-5 text-gold/90" />
-                  </div>
-                  <div>
-                    <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Assurance</p>
-                    <p className="mt-3 text-sm leading-7 text-obsidian/70">
-                      Consultation fees are credited against your final contract when you proceed with delivery.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <ul className="mt-6 space-y-3 text-sm leading-7 text-obsidian/70">
+                <li>Over 15 years of expertise in natural stone & surfaces</li>
+                <li>Expert guidance based on material, application, and durability</li>
+                <li>Transparent advice with no obligation or hidden costs</li>
+                <li>Trusted by architects, designers, and construction professionals</li>
+              </ul>
+
+              <p className="mt-8 text-sm leading-7 text-obsidian/70">
+                <span className="font-semibold text-obsidian">*</span>Enjoy a complimentary stone consultation for a limited period. Reserve your slot now and make the right stone choice with confidence.
+              </p>
             </div>
           </Reveal>
         </div>
