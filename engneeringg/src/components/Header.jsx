@@ -208,13 +208,13 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-black/30 bg-white">
-        <Container className="flex items-center gap-4 py-3">
+        <Container className="flex items-center gap-4 py-2">
           <Link
             to="/"
             className="flex shrink-0 items-center border-0 bg-transparent px-2 py-0.5 outline-none [-webkit-tap-highlight-color:transparent] hover:border-0 hover:bg-transparent focus:border-0 focus:bg-transparent focus:outline-none active:border-0 active:bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
             aria-label="Unistone"
           >
-            <span className="inline-flex h-14 w-28 shrink-0 items-center justify-center sm:h-16 sm:w-32">
+            <span className="inline-flex h-10 w-28 shrink-0 items-center justify-center sm:h-11 sm:w-32">
               <img
                 src={logo}
                 alt="Unistone"
