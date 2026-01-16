@@ -125,7 +125,7 @@ export default function Header() {
               <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-7">
                 <form className="grid gap-2" onSubmit={submitSearch}>
                   <span className="text-[0.65rem] tracking-[0.34em] uppercase text-obsidian/60">Search</span>
-                  <div className="flex overflow-hidden rounded-md border border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60">
+                  <div className="flex items-center border-b border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60">
                     <input
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -134,7 +134,7 @@ export default function Header() {
                     />
                     <button
                       type="submit"
-                      className="inline-flex h-11 w-11 items-center justify-center border-l border-black/30 bg-blue-600 text-white transition-colors duration-500 ease-luxury hover:bg-blue-700"
+                      className="inline-flex h-11 w-11 items-center justify-center bg-blue-600 text-white transition-colors duration-500 ease-luxury hover:bg-blue-700"
                       aria-label="Search"
                     >
                       <Search className="h-5 w-5" />
@@ -227,7 +227,7 @@ export default function Header() {
           <div className="hidden flex-1 md:block">
             <div className="mx-auto max-w-3xl">
               <form
-                className="flex overflow-hidden rounded-md border border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60"
+                className="flex items-center border-b border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60"
                 onSubmit={submitSearch}
               >
                 <label className="sr-only" htmlFor="site-search">
@@ -242,7 +242,7 @@ export default function Header() {
                 />
                 <button
                   type="submit"
-                  className="inline-flex h-10 w-11 items-center justify-center border-l border-black/30 bg-blue-600 text-white transition-colors duration-500 ease-luxury hover:bg-blue-700"
+                  className="inline-flex h-10 w-11 items-center justify-center bg-blue-600 text-white transition-colors duration-500 ease-luxury hover:bg-blue-700"
                   aria-label="Search"
                   title="Search"
                 >
@@ -256,7 +256,7 @@ export default function Header() {
             {isAuthenticated ? (
               <Link
                 to="/account/profile"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-black/10 bg-white text-[#111111] transition-all duration-500 ease-luxury hover:border-black/20 hover:text-black"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
                 aria-label="Account"
                 title="Account"
               >
@@ -265,7 +265,7 @@ export default function Header() {
             ) : (
               <Link
                 to="/auth"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-black/10 bg-white text-[#111111] transition-all duration-500 ease-luxury hover:border-black/20 hover:text-black"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
                 aria-label="Account"
                 title="Account"
               >
@@ -275,12 +275,12 @@ export default function Header() {
 
             <Link
               to="/cart"
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-md border border-black/10 bg-white text-[#111111] transition-all duration-500 ease-luxury hover:border-black/20 hover:text-black"
+              className="relative inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
               aria-label={`Cart (${totalCount})`}
             >
               <ShoppingBag className="h-5 w-5" />
               {totalCount ? (
-                <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gold px-1.5 text-[0.65rem] font-semibold text-obsidian">
+                <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[0.55rem] font-semibold text-white">
                   {totalCount}
                 </span>
               ) : null}
