@@ -294,7 +294,7 @@ export default function Home() {
         <Container className="py-16 sm:py-20">
           <Reveal>
             <div className="grid gap-10 md:grid-cols-12 md:items-start">
-              <div className="md:col-span-7">
+              <div className="md:col-span-12">
                 <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Engineering</p>
                 <h2 className="mt-5 font-display text-3xl leading-[1.05] tracking-[0.03em] text-obsidian sm:text-4xl">
                   Civil Engineering &amp; Construction
@@ -340,31 +340,6 @@ export default function Home() {
                     in stock at unbeatable prices. Viewing is welcomed at our Plumpton Green Showroom in East Sussex a short drive
                     from Surrey, Hampshire, London or Kent.
                   </p>
-                </div>
-              </div>
-
-              <div className="md:col-span-5 md:flex md:justify-end">
-                <div className="w-full rounded-xl border border-black/10 bg-white p-8 shadow-sm">
-                  <p className="text-sm leading-7 text-obsidian/70">
-                    If you’re exploring services or want to review our packages, you can browse the{' '}
-                    <Link className="text-gold/90 transition-colors hover:text-gold-2" to="/products">
-                      catalog
-                    </Link>{' '}
-                    or reach out through our{' '}
-                    <Link className="text-gold/90 transition-colors hover:text-gold-2" to="/contact">
-                      contact page
-                    </Link>
-                    .
-                  </p>
-                  <div className="mt-7 grid gap-3">
-                    <Button as={Link} to="/products" size="md" variant="blue">
-                      Browse Catalog
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                    <Button as={Link} to="/contact" size="md" variant="light">
-                      Contact Us
-                    </Button>
-                  </div>
                 </div>
               </div>
             </div>
