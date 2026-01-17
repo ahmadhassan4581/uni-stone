@@ -1,6 +1,9 @@
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import aboutIcon from '../assets/about-new.png'
+import contactIcon from '../assets/contact-new.png'
+import sampleIcon from '../assets/sample-new.png'
 import Button from '../components/Button'
 import Container from '../components/Container'
 import Reveal from '../components/Reveal'
@@ -149,6 +152,54 @@ export default function Home() {
             })}
           </div>
         </div>
+      </section>
+
+      <section className="bg-white">
+        <Container className="py-10 sm:py-12">
+          <div className="grid gap-10 sm:grid-cols-3 sm:gap-6">
+            <Link
+              to="/info/samples"
+              className="group flex flex-col items-center justify-center gap-4 text-center"
+              aria-label="Samples"
+            >
+              <img
+                src={sampleIcon}
+                alt="Samples"
+                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
+                loading="lazy"
+              />
+              <p className="text-sm font-medium text-obsidian">Samples</p>
+            </Link>
+
+            <Link
+              to="/about"
+              className="group flex flex-col items-center justify-center gap-4 text-center"
+              aria-label="About Us"
+            >
+              <img
+                src={aboutIcon}
+                alt="About Us"
+                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
+                loading="lazy"
+              />
+              <p className="text-sm font-medium text-obsidian">About Us</p>
+            </Link>
+
+            <Link
+              to="/contact"
+              className="group flex flex-col items-center justify-center gap-4 text-center"
+              aria-label="Contact Us"
+            >
+              <img
+                src={contactIcon}
+                alt="Contact Us"
+                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
+                loading="lazy"
+              />
+              <p className="text-sm font-medium text-obsidian">Contact Us</p>
+            </Link>
+          </div>
+        </Container>
       </section>
 
       <section className="bg-white">
