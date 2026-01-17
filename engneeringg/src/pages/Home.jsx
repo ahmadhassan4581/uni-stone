@@ -155,54 +155,6 @@ export default function Home() {
       </section>
 
       <section className="bg-white">
-        <Container className="py-10 sm:py-12">
-          <div className="grid gap-10 sm:grid-cols-3 sm:gap-6">
-            <Link
-              to="/info/samples"
-              className="group flex flex-col items-center justify-center gap-4 text-center"
-              aria-label="Samples"
-            >
-              <img
-                src={sampleIcon}
-                alt="Samples"
-                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
-                loading="lazy"
-              />
-              <p className="text-sm font-medium text-obsidian">Samples</p>
-            </Link>
-
-            <Link
-              to="/about"
-              className="group flex flex-col items-center justify-center gap-4 text-center"
-              aria-label="About Us"
-            >
-              <img
-                src={aboutIcon}
-                alt="About Us"
-                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
-                loading="lazy"
-              />
-              <p className="text-sm font-medium text-obsidian">About Us</p>
-            </Link>
-
-            <Link
-              to="/contact"
-              className="group flex flex-col items-center justify-center gap-4 text-center"
-              aria-label="Contact Us"
-            >
-              <img
-                src={contactIcon}
-                alt="Contact Us"
-                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
-                loading="lazy"
-              />
-              <p className="text-sm font-medium text-obsidian">Contact Us</p>
-            </Link>
-          </div>
-        </Container>
-      </section>
-
-      <section className="bg-white">
         <Container className="py-5 sm:py-6">
           <Reveal>
             <div className="grid gap-4 md:grid-cols-3">
@@ -424,6 +376,54 @@ export default function Home() {
               </div>
             </div>
           </Reveal>
+        </Container>
+      </section>
+
+      <section className="bg-white">
+        <Container className="py-10 sm:py-12">
+          <div className="grid gap-10 sm:grid-cols-3 sm:gap-6">
+            <Link
+              to="/info/samples"
+              className="group flex flex-col items-center justify-center gap-4 text-center"
+              aria-label="Samples"
+            >
+              <img
+                src={sampleIcon}
+                alt="Samples"
+                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
+                loading="lazy"
+              />
+              <p className="text-sm font-medium text-obsidian">Samples</p>
+            </Link>
+
+            <Link
+              to="/about"
+              className="group flex flex-col items-center justify-center gap-4 text-center"
+              aria-label="About Us"
+            >
+              <img
+                src={aboutIcon}
+                alt="About Us"
+                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
+                loading="lazy"
+              />
+              <p className="text-sm font-medium text-obsidian">About Us</p>
+            </Link>
+
+            <Link
+              to="/contact"
+              className="group flex flex-col items-center justify-center gap-4 text-center"
+              aria-label="Contact Us"
+            >
+              <img
+                src={contactIcon}
+                alt="Contact Us"
+                className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
+                loading="lazy"
+              />
+              <p className="text-sm font-medium text-obsidian">Contact Us</p>
+            </Link>
+          </div>
         </Container>
       </section>
     </>
