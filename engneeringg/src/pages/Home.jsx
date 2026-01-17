@@ -6,6 +6,7 @@ import contactIcon from '../assets/contact-new.png'
 import sampleIcon from '../assets/sample-new.png'
 import Button from '../components/Button'
 import Container from '../components/Container'
+import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
 import { useProducts } from '../context/ProductsContext'
 
@@ -262,31 +263,10 @@ export default function Home() {
             </div>
           </Reveal>
 
-          <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((p, idx) => (
               <Reveal key={p.id || p.name} delay={idx * 80}>
-                <article className="group">
-                  <Link
-                    to={`/products/${p.slug}`}
-                    aria-label={p.name}
-                    className="relative block aspect-[4/3] overflow-hidden rounded-md border border-black/10 bg-neutral-50 p-0 text-left"
-                  >
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      loading="lazy"
-                      className="h-full w-full object-contain p-6 transition-transform duration-700 ease-luxury group-hover:scale-[1.03]"
-                    />
-                  </Link>
-
-                  <div className="mt-4 border-t border-black/10 pt-4">
-                    <h3 className="text-sm font-medium leading-6 text-obsidian/90">{p.name}</h3>
-
-                    <div className="mt-3 flex items-center justify-between gap-4">
-                      <p className="text-sm font-semibold text-gold">${p.price}</p>
-                    </div>
-                  </div>
-                </article>
+                <ProductCard product={p} tone="light" />
               </Reveal>
             ))}
           </div>
