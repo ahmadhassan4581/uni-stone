@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext'
 import { apiFetch } from '../lib/api'
 
 function money(n) {
-  return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(n)
+  return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(n)
 }
 
 export default function MyOrders() {

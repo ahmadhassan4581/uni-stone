@@ -323,7 +323,7 @@ export default function Payment() {
                           packageId: selectedPackage.id,
                           packageName: selectedPackage.name,
                           amount: selectedPackage.amount,
-                          currency: 'USD',
+                          currency: 'EUR',
                           schedule: {
                             date: selectedDateLabel,
                             dateIso: selectedDateIso,

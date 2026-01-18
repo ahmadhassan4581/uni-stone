@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Star } from 'lucide-react'
 
 function money(n) {
-  return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(Number(n || 0))
+  return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(Number(n || 0))
 }
 
 function ratingFromProduct(product) {
