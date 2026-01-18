@@ -187,7 +187,7 @@ export default function Header() {
                       </Button>
                     </div>
                   ) : (
-                    <Button as={Link} to="/auth" onClick={() => setOpen(false)} variant="light">
+                    <Button as={Link} to="/account" onClick={() => setOpen(false)} variant="light">
                       <User className="h-4 w-4" />
                       Account
                     </Button>
@@ -264,7 +264,7 @@ export default function Header() {
               </Link>
             ) : (
               <Link
-                to="/auth"
+                to="/account"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
                 aria-label="Account"
                 title="Account"

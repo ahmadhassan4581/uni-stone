@@ -30,7 +30,7 @@ export default function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="auth" element={<Auth />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="account" element={<Profile />} />
+          <Route path="account" element={<Auth />} />
           <Route path="account/profile" element={<Profile />} />
           <Route path="orders" element={<MyOrders />} />
           <Route path="payment" element={<Payment />} />

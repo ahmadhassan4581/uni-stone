@@ -70,7 +70,7 @@ export default function MyOrders() {
             <div className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
               <p className="text-sm text-obsidian/70">Please login to view your orders.</p>
               <div className="mt-6">
-                <Button as={Link} to="/auth" variant="blue" size="lg">
+                <Button as={Link} to="/account" variant="blue" size="lg">
                   Login
                 </Button>
               </div>

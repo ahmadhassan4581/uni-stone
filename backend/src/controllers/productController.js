@@ -37,6 +37,7 @@ async function listProducts(req, res, next) {
       price: p.price,
       description: p.description,
       bullets: p.bullets,
+      images: Array.isArray(p.images) && p.images.length ? p.images : [p.image].filter(Boolean),
       image: p.image,
     })))
   } catch (err) {
@@ -64,6 +65,7 @@ async function getProductBySlug(req, res, next) {
       price: p.price,
       description: p.description,
       bullets: p.bullets,
+      images: Array.isArray(p.images) && p.images.length ? p.images : [p.image].filter(Boolean),
       image: p.image,
     })
   } catch (err) {
@@ -73,7 +75,12 @@ async function getProductBySlug(req, res, next) {
 
 async function createProduct(req, res, next) {
   try {
-    const product = await Product.create(req.body)
+    const payload = { ...req.body }
+    if (Array.isArray(payload.images)) payload.images = payload.images.filter(Boolean).slice(0, 5)
+    if ((!payload.images || payload.images.length === 0) && payload.image) payload.images = [payload.image]
+    if (!payload.image && Array.isArray(payload.images) && payload.images[0]) payload.image = payload.images[0]
+
+    const product = await Product.create(payload)
     res.status(201).json(product)
   } catch (err) {
     next(err)
@@ -82,7 +89,12 @@ async function createProduct(req, res, next) {
 
 async function updateProduct(req, res, next) {
   try {
-    const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    const payload = { ...req.body }
+    if (Array.isArray(payload.images)) payload.images = payload.images.filter(Boolean).slice(0, 5)
+    if ((!payload.images || payload.images.length === 0) && payload.image) payload.images = [payload.image]
+    if (!payload.image && Array.isArray(payload.images) && payload.images[0]) payload.image = payload.images[0]
+
+    const updated = await Product.findByIdAndUpdate(req.params.id, payload, { new: true })
     if (!updated) {
       res.status(404)
       throw new Error('Product not found')

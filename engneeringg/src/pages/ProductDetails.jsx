@@ -22,12 +22,79 @@ export default function ProductDetails() {
   const { addItem } = useCart()
   const [qty, setQty] = useState(1)
   const [activeTab, setActiveTab] = useState('info')
+  const [selectedImage, setSelectedImage] = useState('')
+  const [isImageSwitching, setIsImageSwitching] = useState(false)
 
   useEffect(() => {
     refresh()
   }, [refresh])
 
-  if (!product) return null
+  const images = useMemo(() => {
+    const fromApi = Array.isArray(product?.images) ? product.images.filter(Boolean) : []
+    if (fromApi.length) return fromApi.slice(0, 5)
+    if (product?.image) return [product.image]
+    return []
+  }, [product])
+
+  useEffect(() => {
+    setSelectedImage(images[0] || '')
+    setIsImageSwitching(false)
+  }, [images])
+
+  useEffect(() => {
+    const stock = Number(product?.stock ?? 0)
+    if (!Number.isFinite(stock) || stock <= 0) return
+    setQty((current) => Math.max(1, Math.min(current, stock)))
+  }, [product?.stock])
+
+  if (loading) {
+    return (
+      <section className="bg-white">
+        <Container className="py-20 sm:py-24">
+          <p className="text-sm text-obsidian/70">Loading...</p>
+        </Container>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="bg-white">
+        <Container className="py-20 sm:py-24">
+          <p className="text-sm text-red-700">{error}</p>
+          <div className="mt-10">
+            <Button as={Link} to="/products" size="lg" variant="light">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Products
+            </Button>
+          </div>
+        </Container>
+      </section>
+    )
+  }
+
+  if (!product) {
+    return (
+      <section className="bg-white">
+        <Container className="py-20 sm:py-24">
+          <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Product</p>
+          <h1 className="mt-6 font-display text-4xl tracking-[0.03em] text-obsidian">Not found</h1>
+          <p className="mt-6 text-sm leading-7 text-obsidian/70">This product doesn’t exist.</p>
+          <div className="mt-10">
+            <Button as={Link} to="/products" size="lg" variant="light">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Products
+            </Button>
+          </div>
+        </Container>
+      </section>
+    )
+  }
+
+  const stock = Number(product.stock ?? 0)
+  const inStock = Number.isFinite(stock) && stock > 0
+  const thumbnails = images.slice(0, 4)
+  const mainImage = selectedImage || images[0] || ''
 
   return (
     <section className="bg-white">
@@ -47,29 +114,52 @@ export default function ProductDetails() {
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* LEFT – IMAGES */}
           <div>
-            <div className="border rounded-md overflow-hidden">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-[420px] object-cover"
-              />
+            <div className="overflow-hidden rounded-md border border-black/10 bg-white">
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-50">
+                {mainImage ? (
+                  <img
+                    src={mainImage}
+                    alt={product.name}
+                    className={
+                      'h-full w-full object-cover transition-opacity duration-300 ' +
+                      (isImageSwitching ? 'opacity-70' : 'opacity-100')
+                    }
+                    loading="eager"
+                    onLoad={() => setIsImageSwitching(false)}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-sm text-obsidian/60">No image</div>
+                )}
+              </div>
             </div>
 
-            {/* Thumbnails (UI only) */}
-            <div className="mt-4 flex gap-3">
-              {[1, 2, 3, 4].map(i => (
-                <div
-                  key={i}
-                  className="h-20 w-20 border rounded overflow-hidden cursor-pointer"
-                >
-                  <img
-                    src={product.image}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ))}
-            </div>
+            {thumbnails.length ? (
+              <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
+                {thumbnails.map((src) => {
+                  const active = src === mainImage
+                  return (
+                    <button
+                      key={src}
+                      type="button"
+                      onClick={() => {
+                        if (src === mainImage) return
+                        setIsImageSwitching(true)
+                        setSelectedImage(src)
+                      }}
+                      aria-label={active ? 'Selected image' : 'View image'}
+                      className={
+                        'h-20 w-20 shrink-0 overflow-hidden rounded border bg-white transition-colors ' +
+                        (active
+                          ? 'border-blue-600 ring-2 ring-blue-600/40'
+                          : 'border-black/10 hover:border-blue-600/50')
+                      }
+                    >
+                      <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />
+                    </button>
+                  )
+                })}
+              </div>
+            ) : null}
           </div>
 
           {/* RIGHT – PRODUCT INFO */}
@@ -89,8 +179,11 @@ export default function ProductDetails() {
             </div>
 
             {/* STOCK */}
-            <p className="mt-2 text-sm text-green-600 font-medium">
-              ✔ In Stock
+            <p className={
+              'mt-2 text-sm font-medium ' +
+              (inStock ? 'text-green-600' : 'text-red-600')
+            }>
+              {inStock ? 'In Stock' : 'Out of Stock'}
             </p>
 
             {/* ACTIONS */}
@@ -99,7 +192,11 @@ export default function ProductDetails() {
                 variant="blue"
                 size="lg"
                 className="w-full"
-                onClick={() => addItem(product.id, qty)}
+                disabled={!inStock}
+                onClick={() => {
+                  if (!inStock) return
+                  addItem(product.id, qty)
+                }}
               >
                 Add to Cart
               </Button>

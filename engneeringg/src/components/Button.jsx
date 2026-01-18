@@ -16,6 +16,7 @@ export default function Button({
     dark: 'border-white/10 bg-charcoal/70 text-white hover:border-gold/40 hover:bg-charcoal',
     light: 'border-black/10 bg-white text-obsidian hover:border-black/20 hover:bg-neutral-100 focus-visible:ring-black/20',
     blue: 'border-blue-600 bg-blue-600 text-white shadow-sm hover:border-blue-700 hover:bg-blue-700 focus-visible:ring-blue-500/60',
+    green: 'border-emerald-600 bg-emerald-600 text-white shadow-sm hover:border-emerald-700 hover:bg-emerald-700 focus-visible:ring-emerald-500/60',
   }
 
   const sizes = {

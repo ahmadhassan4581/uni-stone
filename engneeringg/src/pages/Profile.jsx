@@ -44,7 +44,7 @@ export default function Profile() {
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                      <Button as={Link} to="/auth" variant="blue" size="lg">
+                      <Button as={Link} to="/account" variant="blue" size="lg">
                         Login
                       </Button>
                       <Button as={Link} to="/products" variant="light" size="lg">

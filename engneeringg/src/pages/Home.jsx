@@ -1,6 +1,6 @@
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import aboutIcon from '../assets/about-new.png'
 import contactIcon from '../assets/contact-new.png'
 import sampleIcon from '../assets/sample-new.png'
@@ -12,6 +12,7 @@ import { useProducts } from '../context/ProductsContext'
 
 export default function Home() {
   const { products, refresh } = useProducts()
+  const navigate = useNavigate()
 
   useEffect(() => {
     refresh()
@@ -36,20 +37,14 @@ export default function Home() {
         ctaLabel: 'Shop Now',
         ctaTo: '/products',
       },
-      {
-        src: 'https://media.istockphoto.com/id/174072557/photo/hydraulic-lift.jpg?s=1024x1024&w=is&k=20&c=uRJzcSk4MMvqkX8AI-u_onNxyWUXRsn446Aua9DgRsg=',
-        alt: 'Hydraulic lift',
-        title: 'Facade & Finishes',
-        subtitle: 'Materials-first detailing for modern, luxury-grade environments.',
-        ctaLabel: 'Shop Now',
-        ctaTo: '/products',
-      },
     ],
     [],
   )
 
   const [heroIndex, setHeroIndex] = useState(0)
   const [heroPaused, setHeroPaused] = useState(false)
+
+  const heroNavigateTo = heroSlides[heroIndex]?.ctaTo || '/products'
 
   useEffect(() => {
     heroSlides.forEach((s) => {
@@ -71,11 +66,23 @@ export default function Home() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden">
+      <section
+        className="group relative isolate cursor-pointer overflow-hidden"
+        role="link"
+        tabIndex={0}
+        aria-label="Hero"
+        onClick={() => navigate(heroNavigateTo)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            navigate(heroNavigateTo)
+          }
+        }}
+        onMouseEnter={() => setHeroPaused(true)}
+        onMouseLeave={() => setHeroPaused(false)}
+      >
         <div
           className="absolute inset-0 -z-10"
-          onMouseEnter={() => setHeroPaused(true)}
-          onMouseLeave={() => setHeroPaused(false)}
         >
           {heroSlides.map((s, idx) => (
             <img
@@ -91,7 +98,7 @@ export default function Home() {
               loading="eager"
             />
           ))}
-          <div className="absolute inset-0 bg-obsidian/10" />
+          <div className="absolute inset-0 bg-obsidian/10 transition-colors duration-500 ease-luxury group-hover:bg-white/30" />
           <div className="absolute inset-0 bg-[radial-gradient(closest-side_at_78%_45%,rgba(200,164,93,0.22),transparent_62%)]" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/10 to-obsidian/70" />
         </div>
@@ -99,7 +106,10 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 z-10 hidden md:block">
           <button
             type="button"
-            onClick={prevHero}
+            onClick={(e) => {
+              e.stopPropagation()
+              prevHero()
+            }}
             aria-label="Previous slide"
             className="pointer-events-auto absolute left-4 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-md border border-gold/25 bg-obsidian/35 text-white/80 backdrop-blur transition-all duration-500 ease-luxury hover:border-gold/50 hover:bg-obsidian/55 hover:text-white"
           >
@@ -108,7 +118,10 @@ export default function Home() {
 
           <button
             type="button"
-            onClick={nextHero}
+            onClick={(e) => {
+              e.stopPropagation()
+              nextHero()
+            }}
             aria-label="Next slide"
             className="pointer-events-auto absolute right-4 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-md border border-gold/25 bg-obsidian/35 text-white/80 backdrop-blur transition-all duration-500 ease-luxury hover:border-gold/50 hover:bg-obsidian/55 hover:text-white"
           >
@@ -121,7 +134,12 @@ export default function Home() {
             <div className="pointer-events-none w-full max-w-xl rounded-md border border-gold/15 bg-obsidian/35 p-8 text-center shadow-[0_0_0_1px_rgba(200,164,93,0.08)] backdrop-blur">
               <p className="font-display text-3xl tracking-[0.02em] text-white sm:text-4xl">{heroSlides[heroIndex].title}</p>
               <p className="mt-4 text-sm leading-7 text-white/70">{heroSlides[heroIndex].subtitle}</p>
-              <div className="pointer-events-auto mt-7 flex justify-center">
+              <div
+                className="pointer-events-auto mt-7 flex justify-center"
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
+              >
                 <Button as={Link} to={heroSlides[heroIndex].ctaTo} size="md" className="min-w-40" variant="blue">
                   {heroSlides[heroIndex].ctaLabel}
                   <ArrowRight className="h-4 w-4" />
@@ -135,6 +153,9 @@ export default function Home() {
           <div
             className="flex items-center justify-center gap-2 rounded-full border border-gold/15 bg-obsidian/35 px-4 py-2 backdrop-blur"
             aria-label="Hero slide navigation"
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
           >
             {heroSlides.map((_, i) => {
               const active = i === heroIndex
@@ -142,7 +163,10 @@ export default function Home() {
                 <button
                   key={i}
                   type="button"
-                  onClick={() => setHeroIndex(i)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setHeroIndex(i)
+                  }}
                   aria-label={`Go to slide ${i + 1}`}
                   className={
                     'h-2.5 w-2.5 rounded-full border transition-all duration-500 ease-luxury ' +

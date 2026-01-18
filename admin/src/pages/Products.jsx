@@ -34,6 +34,7 @@ export default function Products() {
   const [description, setDescription] = useState('')
   const [bullets, setBullets] = useState('')
   const [image, setImage] = useState('')
+  const [images, setImages] = useState('')
 
   const resetForm = () => {
     setEditing(null)
@@ -46,6 +47,7 @@ export default function Products() {
     setDescription('')
     setBullets('')
     setImage('')
+    setImages('')
   }
 
   const load = async () => {
@@ -76,11 +78,20 @@ export default function Products() {
     setDescription(p.description || '')
     setBullets((p.bullets || []).join(', '))
     setImage(p.image || '')
+    setImages((Array.isArray(p.images) && p.images.length ? p.images : [p.image]).filter(Boolean).join(', '))
   }
 
   const submit = async (e) => {
     e.preventDefault()
     setError('')
+
+    const parsedImages = images
+      .split(',')
+      .map((url) => url.trim())
+      .filter(Boolean)
+      .slice(0, 5)
+    const normalizedImages = parsedImages.length ? parsedImages : (image ? [image] : [])
+    const mainImage = image || normalizedImages[0] || ''
 
     const payload = {
       productId,
@@ -94,7 +105,8 @@ export default function Products() {
         .split(',')
         .map((b) => b.trim())
         .filter(Boolean),
-      image,
+      images: normalizedImages,
+      image: mainImage,
     }
 
     try {
@@ -250,7 +262,8 @@ export default function Products() {
                 />
               </label>
 
-              <Field label="Image URL" value={image} onChange={setImage} required />
+              <Field label="Images (up to 5, comma separated)" value={images} onChange={setImages} required={!image.trim()} />
+              <Field label="Main Image URL" value={image} onChange={setImage} required={!images.trim()} />
 
               <div className="mt-2 flex gap-2">
                 <button type="submit" className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800">
