@@ -25,6 +25,41 @@ export default function Header() {
       navigate('/products')
       return
     }
+
+    const qLower = q.toLowerCase()
+
+    const pageMatches = [
+      { keys: ['home'], to: '/' },
+      { keys: ['products', 'product', 'all products', 'shop'], to: '/products' },
+      { keys: ['about', 'about us'], to: '/about' },
+      { keys: ['services', 'service'], to: '/services' },
+      { keys: ['consultation', 'consult', 'request a call', 'call'], to: '/payment' },
+      { keys: ['contact', 'contact us'], to: '/contact' },
+      { keys: ['faq', 'faqs'], to: '/info/faqs' },
+      { keys: ['delivery'], to: '/info/delivery' },
+      { keys: ['orders', 'my orders'], to: '/orders' },
+      { keys: ['profile', 'account'], to: isAuthenticated ? '/account/profile' : '/account' },
+      { keys: ['cart', 'basket'], to: '/cart' },
+    ]
+
+    const page = pageMatches.find((p) => p.keys.some((k) => qLower.includes(k)))
+    if (page) {
+      setOpen(false)
+      navigate(page.to)
+      return
+    }
+
+    const cat = categories.find((c) => {
+      const cLower = String(c).toLowerCase()
+      return qLower === cLower || qLower.includes(cLower)
+    })
+    if (cat) {
+      setOpen(false)
+      navigate(`/products?category=${encodeURIComponent(cat)}`)
+      return
+    }
+
+    setOpen(false)
     navigate(`/products?q=${encodeURIComponent(q)}`)
   }
 
@@ -48,7 +83,7 @@ export default function Header() {
       { to: '/services', label: 'Services' },
       { to: '/products', label: 'Products' },
       { to: '/contact', label: 'Contact' },
-      { to: '/payment', label: 'Consultation' },
+      { to: '/payment', label: 'Request a Call' },
     ],
     [],
   )
@@ -134,7 +169,7 @@ export default function Header() {
                     />
                     <button
                       type="submit"
-                      className="inline-flex h-11 w-11 items-center justify-center bg-blue-600 text-white transition-colors duration-500 ease-luxury hover:bg-blue-700"
+                      className="inline-flex h-11 w-11 items-center justify-center text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
                       aria-label="Search"
                     >
                       <Search className="h-5 w-5" />
@@ -196,7 +231,7 @@ export default function Header() {
                     Request a Quote
                   </Button>
                   <Button as={Link} to="/payment" onClick={() => setOpen(false)} variant="light">
-                    Book Consultation
+                    Request a Call
                   </Button>
                 </div>
               </div>
@@ -242,7 +277,7 @@ export default function Header() {
                 />
                 <button
                   type="submit"
-                  className="inline-flex h-10 w-11 items-center justify-center bg-blue-600 text-white transition-colors duration-500 ease-luxury hover:bg-blue-700"
+                  className="inline-flex h-10 w-11 items-center justify-center bg-transparent text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
                   aria-label="Search"
                   title="Search"
                 >
@@ -300,7 +335,13 @@ export default function Header() {
 
         <div className="hidden border-t border-black/10 bg-white md:block">
           <Container className="py-2">
-            <nav className="flex flex-wrap items-center gap-x-6 gap-y-2" aria-label="Categories">
+            <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2" aria-label="Categories">
+              <Link
+                to="/products"
+                className="text-xs font-semibold tracking-[0.12em] text-[#111111] transition-colors hover:text-black"
+              >
+                All Products
+              </Link>
               {categories.map((cat) => (
                 <Link
                   key={cat}

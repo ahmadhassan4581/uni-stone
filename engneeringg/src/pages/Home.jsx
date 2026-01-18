@@ -81,26 +81,27 @@ export default function Home() {
         onMouseEnter={() => setHeroPaused(true)}
         onMouseLeave={() => setHeroPaused(false)}
       >
-        <div
-          className="absolute inset-0 -z-10"
-        >
-          {heroSlides.map((s, idx) => (
-            <img
-              key={s.src}
-              src={s.src}
-              alt={s.alt}
-              decoding="async"
-              fetchPriority={idx === heroIndex ? 'high' : 'auto'}
-              className={
-                'absolute inset-0 h-full w-full object-cover brightness-110 contrast-110 saturate-125 transition-opacity duration-700 ease-luxury ' +
-                (idx === heroIndex ? 'opacity-100' : 'opacity-0')
-              }
-              loading="eager"
-            />
-          ))}
-          <div className="absolute inset-0 bg-obsidian/10 transition-colors duration-500 ease-luxury group-hover:bg-white/30" />
-          <div className="absolute inset-0 bg-[radial-gradient(closest-side_at_78%_45%,rgba(200,164,93,0.22),transparent_62%)]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/10 to-obsidian/70" />
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div
+            className="flex h-full w-full transition-transform duration-700 ease-luxury"
+            style={{ transform: `translateX(-${heroIndex * 100}%)` }}
+          >
+            {heroSlides.map((s, idx) => (
+              <div key={s.src} className="relative h-full w-full shrink-0">
+                <img
+                  src={s.src}
+                  alt={s.alt}
+                  decoding="async"
+                  fetchPriority={idx === heroIndex ? 'high' : 'auto'}
+                  className="absolute inset-0 h-full w-full object-cover brightness-110 contrast-110 saturate-125"
+                  loading="eager"
+                />
+                <div className="absolute inset-0 bg-obsidian/10 transition-colors duration-500 ease-luxury group-hover:bg-white/30" />
+                <div className="absolute inset-0 bg-[radial-gradient(closest-side_at_78%_45%,rgba(200,164,93,0.22),transparent_62%)]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/10 to-obsidian/70" />
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="pointer-events-none absolute inset-0 z-10 hidden md:block">
@@ -131,19 +132,30 @@ export default function Home() {
 
         <Container className="relative flex min-h-[420px] items-center justify-center py-16 sm:min-h-[520px] sm:py-24">
           <Reveal>
-            <div className="pointer-events-none w-full max-w-xl rounded-md border border-gold/15 bg-obsidian/35 p-8 text-center shadow-[0_0_0_1px_rgba(200,164,93,0.08)] backdrop-blur">
-              <p className="font-display text-3xl tracking-[0.02em] text-white sm:text-4xl">{heroSlides[heroIndex].title}</p>
-              <p className="mt-4 text-sm leading-7 text-white/70">{heroSlides[heroIndex].subtitle}</p>
+            <div className="w-full max-w-xl overflow-hidden">
               <div
-                className="pointer-events-auto mt-7 flex justify-center"
-                onClick={(e) => {
-                  e.stopPropagation()
-                }}
+                className="flex transition-transform duration-700 ease-luxury"
+                style={{ transform: `translateX(-${heroIndex * 100}%)` }}
               >
-                <Button as={Link} to={heroSlides[heroIndex].ctaTo} size="md" className="min-w-40" variant="blue">
-                  {heroSlides[heroIndex].ctaLabel}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                {heroSlides.map((s) => (
+                  <div key={s.src} className="w-full shrink-0">
+                    <div className="pointer-events-none w-full rounded-md border border-gold/15 bg-obsidian/35 p-8 text-center shadow-[0_0_0_1px_rgba(200,164,93,0.08)] backdrop-blur">
+                      <p className="font-display text-3xl tracking-[0.02em] text-white sm:text-4xl">{s.title}</p>
+                      <p className="mt-4 text-sm leading-7 text-white/70">{s.subtitle}</p>
+                      <div
+                        className="pointer-events-auto mt-7 flex justify-center"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                        }}
+                      >
+                        <Button as={Link} to={s.ctaTo} size="md" className="min-w-40">
+                          {s.ctaLabel}
+                          <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </Reveal>
@@ -197,7 +209,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
                   <p className="text-2xl font-semibold text-white drop-shadow sm:text-3xl">Structural</p>
-                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-white px-6 text-sm font-semibold text-slate-900 shadow-sm transition-colors duration-300 hover:bg-white/90">
+                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
                     Shop Now
                   </span>
                 </div>
@@ -217,7 +229,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
                   <p className="text-2xl font-semibold text-white drop-shadow sm:text-3xl">Finishes</p>
-                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-white px-6 text-sm font-semibold text-slate-900 shadow-sm transition-colors duration-300 hover:bg-white/90">
+                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
                     Shop Now
                   </span>
                 </div>
@@ -237,7 +249,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
                   <p className="text-2xl font-semibold text-white drop-shadow sm:text-3xl">Facade</p>
-                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-white px-6 text-sm font-semibold text-slate-900 shadow-sm transition-colors duration-300 hover:bg-white/90">
+                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
                     Shop Now
                   </span>
                 </div>
@@ -248,41 +260,10 @@ export default function Home() {
       </section>
 
       <section className="bg-white">
-        <div className="py-8 sm:py-10">
-          <Reveal>
-            <div className="relative isolate overflow-hidden border-y border-black/10">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1663040562058-feb5f8470a24?auto=format&fit=crop&w=2400&q=85"
-                alt="Construction site hero background"
-                className="h-[340px] w-full object-cover brightness-105 contrast-105 sm:h-[420px]"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-obsidian/10" />
-
-              <div className="absolute inset-0 flex items-center justify-center px-5">
-                <div className="w-full max-w-3xl rounded-md border border-white/35 bg-white/75 p-8 text-center shadow-[0_0_0_1px_rgba(255,255,255,0.25)] backdrop-blur sm:p-12">
-                  <p className="font-display text-3xl text-obsidian sm:text-4xl">Signature</p>
-                  <p className="mt-4 text-sm leading-7 text-obsidian/80 sm:text-base">
-                    Explore premium delivery packages designed for calm site control and refined outcomes.
-                  </p>
-                  <div className="mt-7 flex justify-center">
-                    <Button as={Link} to="/products" size="md" variant="blue">
-                      Shop Now
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="bg-white">
         <Container className="py-16 sm:py-20">
           <Reveal>
             <div className="border-b border-black/10 pb-4">
-              <h2 className="font-display text-3xl tracking-[0.02em] text-obsidian sm:text-4xl">Stone Sinks &amp; Wash Basins</h2>
+              <h2 className="font-display text-3xl tracking-[0.02em] text-obsidian sm:text-4xl">ALL Products</h2>
               <div className="mt-3 h-1 w-28 bg-gold" />
             </div>
           </Reveal>
@@ -293,6 +274,13 @@ export default function Home() {
                 <ProductCard product={p} tone="light" />
               </Reveal>
             ))}
+          </div>
+
+          <div className="mt-10 flex justify-center">
+            <Button as={Link} to="/products" size="md">
+              All Products
+              <ArrowRight className="h-4 w-4" />
+            </Button>
           </div>
         </Container>
       </section>
@@ -374,7 +362,7 @@ export default function Home() {
                     Request a Quote
                   </Button>
                   <Button as={Link} to="/payment" size="lg" variant="light">
-                    Book Consultation
+                    Request a Call
                   </Button>
                 </div>
               </div>
@@ -387,17 +375,17 @@ export default function Home() {
         <Container className="py-10 sm:py-12">
           <div className="grid gap-10 sm:grid-cols-3 sm:gap-6">
             <Link
-              to="/info/samples"
+              to="/info/faqs"
               className="group flex flex-col items-center justify-center gap-4 text-center"
-              aria-label="Samples"
+              aria-label="FAQs"
             >
               <img
                 src={sampleIcon}
-                alt="Samples"
+                alt="FAQs"
                 className="h-32 w-32 object-contain transition-transform duration-500 ease-luxury group-hover:scale-[1.02] sm:h-40 sm:w-40"
                 loading="lazy"
               />
-              <p className="text-sm font-medium text-obsidian">Samples</p>
+              <p className="text-sm font-medium text-obsidian">FAQs</p>
             </Link>
 
             <Link

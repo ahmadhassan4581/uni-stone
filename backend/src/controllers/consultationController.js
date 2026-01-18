@@ -2,9 +2,63 @@ const { validationResult } = require('express-validator')
 const Consultation = require('../models/consultationModel')
 
 const TRACK_FEES = {
+  'Free Stone Consultation': 0,
   'Concept Review': 150,
   'Site Walkthrough': 350,
   'Executive Advisory': 650,
+}
+
+async function sendConsultationEmailIfConfigured(payload) {
+  const host = process.env.SMTP_HOST
+  const port = process.env.SMTP_PORT
+  const user = process.env.SMTP_USER
+  const pass = process.env.SMTP_PASS
+  const to = process.env.CONSULTATION_NOTIFY_EMAIL
+  const from = process.env.SMTP_FROM || user
+  const customerFrom = process.env.SMTP_CUSTOMER_FROM || from
+
+  if (!host || !port || !user || !pass || !to || !from) return
+
+  const nodemailer = require('nodemailer')
+
+  const transporter = nodemailer.createTransport({
+    host,
+    port: Number(port),
+    secure: Number(port) === 465,
+    auth: { user, pass },
+  })
+
+  const lines = [
+    `Track: ${payload.track}`,
+    `Date: ${payload.scheduleDateLabel || payload.scheduleDateIso}`,
+    `Time: ${payload.scheduleTime}`,
+    `Name: ${payload.customerName || ''}`,
+    `Phone: ${payload.customerPhone}`,
+    `Email: ${payload.customerEmail || ''}`,
+    `Notes: ${payload.notes || ''}`,
+  ]
+
+  await transporter.sendMail({
+    from,
+    to,
+    subject: `New Consultation Request (${payload.track})`,
+    text: lines.join('\n'),
+  })
+
+  if (payload.customerEmail) {
+    await transporter.sendMail({
+      from: customerFrom,
+      to: payload.customerEmail,
+      subject: 'Your consultation request has been received',
+      text: [
+        'Thanks for your request. We will contact you shortly.',
+        '',
+        `Requested: ${payload.track}`,
+        `Date: ${payload.scheduleDateLabel || payload.scheduleDateIso}`,
+        `Time: ${payload.scheduleTime}`,
+      ].join('\n'),
+    })
+  }
 }
 
 async function createConsultation(req, res, next) {
@@ -15,9 +69,18 @@ async function createConsultation(req, res, next) {
       return res.json({ errors: errors.array() })
     }
 
-    const { track, notes } = req.body
+    const {
+      track,
+      notes,
+      scheduleDateIso,
+      scheduleTime,
+      scheduleDateLabel,
+      customerName,
+      customerPhone,
+      customerEmail,
+    } = req.body
     const fee = TRACK_FEES[track]
-    if (!fee) {
+    if (fee === undefined) {
       res.status(400)
       throw new Error('Invalid track')
     }
@@ -28,7 +91,29 @@ async function createConsultation(req, res, next) {
       fee,
       notes,
       currency: 'USD',
+      paymentStatus: fee > 0 ? 'pending' : 'paid',
+      scheduleDateIso,
+      scheduleTime,
+      scheduleDateLabel,
+      customerName,
+      customerPhone,
+      customerEmail,
     })
+
+    try {
+      await sendConsultationEmailIfConfigured({
+        track,
+        scheduleDateIso,
+        scheduleTime,
+        scheduleDateLabel,
+        customerName,
+        customerPhone,
+        customerEmail,
+        notes,
+      })
+    } catch (e) {
+      console.error('Consultation email failed:', e?.message || e)
+    }
 
     res.status(201).json(doc)
   } catch (err) {

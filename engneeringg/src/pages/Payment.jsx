@@ -1,15 +1,14 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
 import Container from '../components/Container'
 import Reveal from '../components/Reveal'
 import SectionHeading from '../components/SectionHeading'
 import { cn } from '../lib/cn'
+import { apiFetch } from '../lib/api'
 import logo from '../assets/logo.png'
 
 export default function Payment() {
-  const navigate = useNavigate()
   const baseDate = useMemo(() => {
     const d = new Date()
     d.setHours(0, 0, 0, 0)
@@ -90,13 +89,18 @@ export default function Payment() {
   const morningSlots = useMemo(() => ['09:00 AM', '10:00 AM', '11:00 AM'], [])
   const afternoonSlots = useMemo(() => ['12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM'], [])
 
-  const selectedPackage = useMemo(() => ({ id: 'concept', name: 'Concept Review', amount: 150 }), [])
+  const selectedPackage = useMemo(
+    () => ({ id: 'free', name: 'Free Stone Consultation', amount: 0, currency: 'USD' }),
+    [],
+  )
 
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
   const [customerEmail, setCustomerEmail] = useState('')
   const [customerNotes, setCustomerNotes] = useState('')
   const [showNotes, setShowNotes] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState('idle')
+  const [submitError, setSubmitError] = useState('')
 
   const detailsValid = useMemo(() => {
     if (!selectedTime) return false
@@ -109,13 +113,47 @@ export default function Payment() {
     return true
   }, [customerEmail, customerName, customerPhone, selectedTime])
 
+  const submitRequest = async () => {
+    if (!detailsValid || submitStatus === 'submitting') return
+
+    setSubmitStatus('submitting')
+    setSubmitError('')
+
+    try {
+      await apiFetch('/api/consultations', {
+        method: 'POST',
+        body: JSON.stringify({
+          track: selectedPackage.name,
+          scheduleDateIso: selectedDateIso,
+          scheduleDateLabel: selectedDateLabel,
+          scheduleTime: selectedTime,
+          customerName: customerName.trim(),
+          customerPhone: customerPhone.trim(),
+          customerEmail: customerEmail.trim(),
+          notes: customerNotes.trim(),
+        }),
+      })
+
+      setSubmitStatus('success')
+      setSelectedTime('')
+      setCustomerName('')
+      setCustomerPhone('')
+      setCustomerEmail('')
+      setCustomerNotes('')
+      setShowNotes(false)
+    } catch (err) {
+      setSubmitStatus('error')
+      setSubmitError(err?.message || 'Failed to submit request')
+    }
+  }
+
   return (
     <section className="bg-white">
       <Container className="py-20 sm:py-24">
         <Reveal>
           <SectionHeading
             eyebrow="Consultation"
-            title="Book a Free Stone Consultation"
+            title="Request a Call"
             subtitle="Get expert guidance on marble, granite & natural stone selection – absolutely free."
             tone="light"
           />
@@ -123,16 +161,16 @@ export default function Payment() {
 
         <div className="mt-12 grid gap-8 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
-            <div className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
-              <div className="rounded-xl border border-black/10 bg-neutral-50 p-6">
-                <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Select day & time</p>
+            <div className="rounded-xl bg-white p-8 shadow-sm">
+              <div className="rounded-xl bg-neutral-50 p-6">
+                <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Book a Free Stone Consultation</p>
 
                 <div className="mt-4 flex items-center justify-between gap-4">
                   <p className="text-sm font-semibold text-obsidian">{selectedDateLabel}</p>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      className="flex h-9 w-9 items-center justify-center rounded-md border border-black/10 bg-white text-obsidian/70 transition-all duration-500 ease-luxury hover:border-black/20 hover:bg-neutral-100"
+                      className="flex h-9 w-9 items-center justify-center rounded-md bg-white text-obsidian/70 shadow-sm transition-all duration-500 ease-luxury hover:bg-neutral-100"
                       aria-label="Previous week"
                       onClick={() => {
                         setWeekOffset((w) => Math.max(0, w - 1))
@@ -144,7 +182,7 @@ export default function Payment() {
                     </button>
                     <button
                       type="button"
-                      className="flex h-9 w-9 items-center justify-center rounded-md border border-black/10 bg-white text-obsidian/70 transition-all duration-500 ease-luxury hover:border-black/20 hover:bg-neutral-100"
+                      className="flex h-9 w-9 items-center justify-center rounded-md bg-white text-obsidian/70 shadow-sm transition-all duration-500 ease-luxury hover:bg-neutral-100"
                       aria-label="Next week"
                       onClick={() => {
                         setWeekOffset((w) => w + 1)
@@ -170,12 +208,12 @@ export default function Payment() {
                             setSelectedTime('')
                           }}
                           className={cn(
-                            'flex w-[72px] flex-col items-center justify-center gap-1 rounded-lg border px-3 py-3 text-sm transition-all duration-500 ease-luxury',
+                            'flex w-[72px] flex-col items-center justify-center gap-1 rounded-lg px-3 py-3 text-sm shadow-sm transition-all duration-500 ease-luxury',
                             d.disabled
-                              ? 'cursor-not-allowed border-black/10 bg-white text-obsidian/35'
+                              ? 'cursor-not-allowed bg-white text-obsidian/35'
                               : isActive
-                                ? 'border-blue-600 bg-blue-600 text-white'
-                                : 'border-black/10 bg-white text-obsidian/80 hover:border-black/20 hover:bg-neutral-100',
+                                ? 'bg-gold text-obsidian'
+                                : 'bg-white text-obsidian/80 hover:bg-neutral-100',
                           )}
                           aria-pressed={isActive}
                         >
@@ -197,10 +235,10 @@ export default function Payment() {
                         type="button"
                         onClick={() => setSelectedTime(slot)}
                         className={cn(
-                          'flex h-11 min-w-[110px] items-center justify-center rounded-md border bg-white text-sm transition-all duration-500 ease-luxury',
+                          'flex h-11 min-w-[110px] items-center justify-center rounded-md bg-white text-sm shadow-sm transition-all duration-500 ease-luxury',
                           active
-                            ? 'border-blue-600 bg-blue-600 text-white'
-                            : 'border-black/10 text-obsidian/70 hover:border-black/20 hover:bg-neutral-100',
+                            ? 'bg-gold text-obsidian'
+                            : 'text-obsidian/70 hover:bg-neutral-100',
                         )}
                         aria-pressed={active}
                       >
@@ -220,10 +258,10 @@ export default function Payment() {
                         type="button"
                         onClick={() => setSelectedTime(slot)}
                         className={cn(
-                          'flex h-11 min-w-[110px] items-center justify-center rounded-md border bg-white text-sm transition-all duration-500 ease-luxury',
+                          'flex h-11 min-w-[110px] items-center justify-center rounded-md bg-white text-sm shadow-sm transition-all duration-500 ease-luxury',
                           active
-                            ? 'border-blue-600 bg-blue-600 text-white'
-                            : 'border-black/10 text-obsidian/70 hover:border-black/20 hover:bg-neutral-100',
+                            ? 'bg-gold text-obsidian'
+                            : 'text-obsidian/70 hover:bg-neutral-100',
                         )}
                         aria-pressed={active}
                       >
@@ -236,7 +274,7 @@ export default function Payment() {
 
               <div className="mt-8 grid gap-4">
                 {selectedTime ? (
-                  <div className="w-full rounded-xl border border-black/10 bg-white p-6">
+                  <div className="w-full rounded-xl bg-white p-6 shadow-sm">
                     <div className="flex items-start justify-between gap-6">
                       <div>
                         <p className="text-sm font-semibold text-obsidian">{selectedDateLabel}</p>
@@ -244,7 +282,7 @@ export default function Payment() {
                       </div>
                       <button
                         type="button"
-                        className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+                        className="text-sm font-semibold text-gold hover:text-gold/80"
                         onClick={() => setSelectedTime('')}
                       >
                         Change
@@ -260,7 +298,7 @@ export default function Payment() {
                           <input
                             value={customerName}
                             onChange={(e) => setCustomerName(e.target.value)}
-                            className="h-11 w-full rounded-md border border-black/10 bg-white px-4 text-sm text-obsidian outline-none transition-all focus:border-blue-600"
+                            className="h-11 w-full rounded-md bg-white px-4 text-sm text-obsidian shadow-sm outline-none transition-all focus:ring-2 focus:ring-gold/40"
                             type="text"
                             placeholder=""
                           />
@@ -271,7 +309,7 @@ export default function Payment() {
                           <input
                             value={customerPhone}
                             onChange={(e) => setCustomerPhone(e.target.value)}
-                            className="h-11 w-full rounded-md border border-black/10 bg-white px-4 text-sm text-obsidian outline-none transition-all focus:border-blue-600"
+                            className="h-11 w-full rounded-md bg-white px-4 text-sm text-obsidian shadow-sm outline-none transition-all focus:ring-2 focus:ring-gold/40"
                             type="tel"
                             placeholder=""
                           />
@@ -282,7 +320,7 @@ export default function Payment() {
                           <input
                             value={customerEmail}
                             onChange={(e) => setCustomerEmail(e.target.value)}
-                            className="h-11 w-full rounded-md border border-black/10 bg-white px-4 text-sm text-obsidian outline-none transition-all focus:border-blue-600"
+                            className="h-11 w-full rounded-md bg-white px-4 text-sm text-obsidian shadow-sm outline-none transition-all focus:ring-2 focus:ring-gold/40"
                             type="email"
                             placeholder=""
                           />
@@ -292,7 +330,7 @@ export default function Payment() {
                       <div className="mt-4 flex items-center justify-end">
                         <button
                           type="button"
-                          className="text-xs font-semibold text-blue-600 hover:text-blue-700"
+                          className="text-xs font-semibold text-gold hover:text-gold/80"
                           onClick={() => setShowNotes((s) => !s)}
                         >
                           Add Notes
@@ -303,7 +341,7 @@ export default function Payment() {
                         <textarea
                           value={customerNotes}
                           onChange={(e) => setCustomerNotes(e.target.value)}
-                          className="mt-3 min-h-[96px] w-full rounded-md border border-black/10 bg-white px-4 py-3 text-sm text-obsidian outline-none transition-all focus:border-blue-600"
+                          className="mt-3 min-h-[96px] w-full rounded-md bg-white px-4 py-3 text-sm text-obsidian shadow-sm outline-none transition-all focus:ring-2 focus:ring-gold/40"
                         />
                       ) : null}
                     </div>
@@ -313,43 +351,29 @@ export default function Payment() {
                 <div className="flex justify-center">
                   <Button
                     size="lg"
-                    variant="blue"
+                    variant="gold"
                     type="button"
                     disabled={!detailsValid}
-                    onClick={() => {
-                      navigate('/checkout', {
-                        state: {
-                          kind: 'consultation',
-                          packageId: selectedPackage.id,
-                          packageName: selectedPackage.name,
-                          amount: selectedPackage.amount,
-                          currency: 'EUR',
-                          schedule: {
-                            date: selectedDateLabel,
-                            dateIso: selectedDateIso,
-                            time: selectedTime,
-                          },
-                          customer: {
-                            name: customerName.trim(),
-                            phone: customerPhone.trim(),
-                            email: customerEmail.trim(),
-                            notes: customerNotes.trim(),
-                          },
-                        },
-                      })
-                    }}
+                    onClick={submitRequest}
                   >
-                    Proceed to Checkout
+                    {submitStatus === 'submitting' ? 'Sending...' : 'Submit Request'}
                   </Button>
                 </div>
+
+                {submitStatus === 'success' ? (
+                  <p className="mt-4 text-center text-sm font-semibold text-emerald-700">Request submitted successfully.</p>
+                ) : null}
+                {submitStatus === 'error' ? (
+                  <p className="mt-4 text-center text-sm font-semibold text-red-600">{submitError}</p>
+                ) : null}
               </div>
             </div>
           </Reveal>
 
           <Reveal delay={140} className="lg:col-span-5">
-            <div className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
+            <div className="rounded-xl bg-white p-8 shadow-sm">
               <div className="flex items-center gap-3">
-                <img src={logo} alt="Logo" className="h-10 w-10 rounded-md border border-black/10 bg-white object-contain" />
+                <img src={logo} alt="Logo" className="h-10 w-10 rounded-md bg-white object-contain" />
                 <p className="font-display text-xl tracking-[0.02em] text-obsidian">Why Choose Our Consultation?</p>
               </div>
 
@@ -361,7 +385,7 @@ export default function Payment() {
               </ul>
 
               <p className="mt-8 text-sm leading-7 text-obsidian/70">
-                <span className="font-semibold text-obsidian">*</span>Enjoy a complimentary stone consultation for a limited period. Reserve your slot now and make the right stone choice with confidence.
+                <span className="font-bold text-obsidian">Enjoy a complimentary stone consultation for a limited period. Reserve your slot now and make the right stone choice with confidence.</span>
               </p>
             </div>
           </Reveal>

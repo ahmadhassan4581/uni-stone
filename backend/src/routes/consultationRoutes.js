@@ -16,8 +16,14 @@ router.post(
   [
     body('track')
       .isString()
-      .custom((v) => ['Concept Review', 'Site Walkthrough', 'Executive Advisory'].includes(v))
+      .custom((v) => ['Free Stone Consultation', 'Concept Review', 'Site Walkthrough', 'Executive Advisory'].includes(v))
       .withMessage('Invalid track'),
+    body('scheduleDateIso').isString().withMessage('scheduleDateIso is required'),
+    body('scheduleTime').isString().withMessage('scheduleTime is required'),
+    body('scheduleDateLabel').optional().isString(),
+    body('customerName').optional().isString(),
+    body('customerPhone').isString().withMessage('customerPhone is required'),
+    body('customerEmail').optional().isString(),
     body('notes').optional().isString(),
   ],
   createConsultation,
