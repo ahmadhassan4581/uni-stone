@@ -18,19 +18,20 @@ function ratingFromProduct(product) {
 export default function ProductCard({ product, className, actions, tone = 'dark', onImageClick }) {
   const shellClass =
     tone === 'light'
-      ? 'border-black/15 bg-white hover:border-black/25'
-      : 'border-gold/15 bg-charcoal/50 shadow-[0_0_0_1px_rgba(200,164,93,0.08)] hover:border-gold/35'
+      ? 'bg-white'
+      : 'bg-charcoal/50 shadow-[0_0_0_1px_rgba(200,164,93,0.08)]'
   const mediaBgClass = tone === 'light' ? 'bg-neutral-50' : 'bg-obsidian/30'
-  const bodyClass = tone === 'light' ? 'border-black/10 bg-white' : 'border-gold/15 bg-obsidian/30'
+  const dividerClass = tone === 'light' ? 'bg-black/10' : 'bg-gold/15'
+  const bodyClass = tone === 'light' ? 'bg-white' : 'bg-obsidian/30'
   const titleClass = tone === 'light' ? 'text-obsidian' : 'text-white'
   const descClass = tone === 'light' ? 'text-obsidian/70' : 'text-white/70'
-  const actionsClass = tone === 'light' ? 'border-black/10 bg-white' : 'border-gold/15 bg-obsidian/40'
+  const actionsClass = tone === 'light' ? 'bg-white' : 'bg-obsidian/40'
   const priceClass = tone === 'light' ? 'text-obsidian' : 'text-white'
   const rating = ratingFromProduct(product)
   return (
     <article
       className={cn(
-        'group relative overflow-hidden rounded-md border transition-colors duration-300',
+        'group relative overflow-hidden rounded-md transition-colors duration-300',
         shellClass,
         className,
       )}
@@ -64,7 +65,9 @@ export default function ProductCard({ product, className, actions, tone = 'dark'
         </Link>
       )}
 
-      <div className={cn('border-t p-4', bodyClass)}>
+      <div className={cn('h-px w-full', dividerClass)} />
+
+      <div className={cn('p-4', bodyClass)}>
         <h3 className={cn('text-sm font-semibold leading-snug', titleClass)}>
           <Link to={`/products/${product.slug}`} className="transition-colors hover:text-blue-700">
             {product.name}
@@ -96,7 +99,7 @@ export default function ProductCard({ product, className, actions, tone = 'dark'
       </div>
 
       {actions ? (
-        <div className={cn('flex items-center justify-between gap-4 border-t p-5', actionsClass)}>
+        <div className={cn('flex items-center justify-between gap-4 p-5', actionsClass)}>
           {actions}
         </div>
       ) : null}
