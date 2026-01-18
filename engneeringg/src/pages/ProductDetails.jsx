@@ -1,10 +1,9 @@
-import { ArrowLeft, Heart } from 'lucide-react'
+import { ArrowLeft, ChevronDown, ChevronUp, Heart, Instagram, XCircle } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Button from '../components/Button'
 import Breadcrumbs from '../components/Breadcrumbs'
 import Container from '../components/Container'
-import QuantityControl from '../components/QuantityControl'
 import { useCart } from '../context/CartContext'
 import { useProducts } from '../context/ProductsContext'
 
@@ -17,13 +16,14 @@ function money(n) {
 
 export default function ProductDetails() {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const { products, loading, error, refresh } = useProducts()
   const product = useMemo(() => products.find(p => p.slug === slug), [products, slug])
   const { addItem } = useCart()
-  const [qty, setQty] = useState(1)
   const [activeTab, setActiveTab] = useState('info')
   const [selectedImage, setSelectedImage] = useState('')
   const [isImageSwitching, setIsImageSwitching] = useState(false)
+  const [showAllImages, setShowAllImages] = useState(false)
 
   useEffect(() => {
     refresh()
@@ -40,12 +40,6 @@ export default function ProductDetails() {
     setSelectedImage(images[0] || '')
     setIsImageSwitching(false)
   }, [images])
-
-  useEffect(() => {
-    const stock = Number(product?.stock ?? 0)
-    if (!Number.isFinite(stock) || stock <= 0) return
-    setQty((current) => Math.max(1, Math.min(current, stock)))
-  }, [product?.stock])
 
   if (loading) {
     return (
@@ -91,29 +85,37 @@ export default function ProductDetails() {
     )
   }
 
-  const stock = Number(product.stock ?? 0)
-  const inStock = Number.isFinite(stock) && stock > 0
-  const thumbnails = images.slice(0, 4)
+  const hasStock = product.stock !== undefined && product.stock !== null && product.stock !== ''
+  const stock = hasStock ? Number(product.stock) : null
+  const inStock = !hasStock || (Number.isFinite(stock) && stock > 0)
+  const thumbnails = showAllImages ? images : images.slice(0, 4)
   const mainImage = selectedImage || images[0] || ''
+  const safeBullets = Array.isArray(product?.bullets) ? product.bullets.filter(Boolean) : []
 
   return (
     <section className="bg-white">
-      <Container className="py-10">
-        {/* Breadcrumb */}
-        <Breadcrumbs
-          tone="light"
-          items={[
-            { label: 'Home', to: '/' },
-            { label: 'Products', to: '/products' },
-            { label: product.category },
-            { label: product.name },
-          ]}
-        />
-
-        {/* MAIN GRID */}
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* LEFT – IMAGES */}
+      <Container className="py-12">
+        <div className="flex flex-col gap-4 border-b border-black/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
+            <p className="text-sm text-obsidian/60">{product.category || 'Products'}</p>
+          </div>
+          <div className="sm:text-right">
+            <Breadcrumbs
+              tone="light"
+              items={[
+                { label: 'Home', to: '/' },
+                { label: 'Products', to: '/products' },
+                ...(product.category
+                  ? [{ label: product.category, to: `/products?category=${encodeURIComponent(product.category)}` }]
+                  : []),
+                { label: product.name },
+              ]}
+            />
+          </div>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-5">
             <div className="overflow-hidden rounded-md border border-black/10 bg-white">
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-50">
                 {mainImage ? (
@@ -134,60 +136,84 @@ export default function ProductDetails() {
             </div>
 
             {thumbnails.length ? (
-              <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
-                {thumbnails.map((src) => {
-                  const active = src === mainImage
-                  return (
-                    <button
-                      key={src}
-                      type="button"
-                      onClick={() => {
-                        if (src === mainImage) return
-                        setIsImageSwitching(true)
-                        setSelectedImage(src)
-                      }}
-                      aria-label={active ? 'Selected image' : 'View image'}
-                      className={
-                        'h-20 w-20 shrink-0 overflow-hidden rounded border bg-white transition-colors ' +
-                        (active
-                          ? 'border-blue-600 ring-2 ring-blue-600/40'
-                          : 'border-black/10 hover:border-blue-600/50')
-                      }
-                    >
-                      <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />
-                    </button>
-                  )
-                })}
+              <div className="mt-4">
+                <div className="grid grid-cols-4 gap-3">
+                  {thumbnails.map((src) => {
+                    const active = src === mainImage
+                    return (
+                      <button
+                        key={src}
+                        type="button"
+                        onClick={() => {
+                          if (src === mainImage) return
+                          setIsImageSwitching(true)
+                          setSelectedImage(src)
+                        }}
+                        aria-label={active ? 'Selected image' : 'View image'}
+                        className={
+                          'aspect-square w-full overflow-hidden rounded border bg-white transition-colors ' +
+                          (active
+                            ? 'border-blue-600 ring-2 ring-blue-600/40'
+                            : 'border-black/10 hover:border-blue-600/50')
+                        }
+                      >
+                        <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {images.length > 4 ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllImages((s) => !s)}
+                    className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-blue-600 hover:underline"
+                  >
+                    {showAllImages ? 'View less images' : 'View more images'}
+                    {showAllImages ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </button>
+                ) : null}
               </div>
             ) : null}
           </div>
 
-          {/* RIGHT – PRODUCT INFO */}
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">
-              {product.name}
-            </h1>
+          <div className="lg:col-span-4">
+            <h1 className="text-xl font-semibold text-obsidian sm:text-2xl">{product.name}</h1>
 
-            {/* PRICE */}
             <div className="mt-3">
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-lg font-semibold text-obsidian sm:text-xl">
                 {money(product.price)}
-                <span className="text-sm font-normal text-gray-500 ml-2">
-                  (ex. VAT)
-                </span>
+                <span className="ml-2 text-sm font-normal text-obsidian/55">(ex. VAT)</span>
               </p>
             </div>
 
-            {/* STOCK */}
-            <p className={
-              'mt-2 text-sm font-medium ' +
-              (inStock ? 'text-green-600' : 'text-red-600')
-            }>
-              {inStock ? 'In Stock' : 'Out of Stock'}
+            <p className="mt-3 flex items-center gap-2 text-sm text-obsidian/70">
+              {inStock ? (
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-4">
+                    <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              ) : (
+                <XCircle className="h-5 w-5 text-red-600" />
+              )}
+              <span className="font-medium text-obsidian/70">Stock Status:</span>
+              <span className={inStock ? 'text-green-700' : 'text-red-700'}>{inStock ? 'In Stock' : 'Out of Stock'}</span>
             </p>
 
-            {/* ACTIONS */}
-            <div className="mt-6 flex flex-col gap-4">
+            <div className="mt-4 flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="Instagram"
+                className="inline-flex h-8 w-8 items-center justify-center rounded border border-black/10 bg-white text-obsidian/70 hover:border-black/20 hover:text-obsidian"
+              >
+                <Instagram className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="lg:col-span-3">
+            <div className="rounded-md border border-black/10 bg-white p-5">
               <Button
                 variant="blue"
                 size="lg"
@@ -195,22 +221,18 @@ export default function ProductDetails() {
                 disabled={!inStock}
                 onClick={() => {
                   if (!inStock) return
-                  addItem(product.id, qty)
+                  addItem(product.id, 1)
+                  navigate('/cart')
                 }}
               >
                 Add to Cart
               </Button>
 
-              <button className="flex items-center justify-center gap-2 text-sm text-gray-700 hover:text-black">
+              <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-md border border-black/10 bg-white py-3 text-xs font-medium text-obsidian/70 transition-colors hover:border-black/20 hover:text-obsidian">
                 <Heart className="h-4 w-4" />
                 Add to your Wish List
               </button>
-            </div>
 
-            {/* QUANTITY */}
-            <div className="mt-6 flex items-center gap-4">
-              <span className="text-sm text-gray-600">Quantity</span>
-              <QuantityControl value={qty} onChange={setQty} tone="light" />
             </div>
           </div>
         </div>
@@ -252,13 +274,17 @@ export default function ProductDetails() {
 
           {/* TAB CONTENT */}
           <div className="mt-6 text-sm text-gray-700 leading-7">
-            {activeTab === 'info' && <p>{product.description}</p>}
+            {activeTab === 'info' && <p>{product.description || ''}</p>}
             {activeTab === 'specs' && (
-              <ul className="list-disc ml-5">
-                {product.bullets.map(b => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
+              safeBullets.length ? (
+                <ul className="list-disc ml-5">
+                  {safeBullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No specifications available.</p>
+              )
             )}
             {activeTab === 'reviews' && <p>No reviews yet.</p>}
           </div>

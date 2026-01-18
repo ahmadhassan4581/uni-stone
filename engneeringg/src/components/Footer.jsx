@@ -17,7 +17,6 @@
           </div>
 
           <div className="md:col-span-2">
-            <p className="text-xs font-medium tracking-[0.22em] text-gold/70">Menu</p>
             <nav className="mt-4 space-y-2 text-sm">
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/">
                 Home
@@ -41,7 +40,6 @@
           </div>
 
           <div className="md:col-span-2">
-            <p className="text-xs font-medium tracking-[0.22em] text-gold/70">Resources</p>
             <nav className="mt-4 space-y-2 text-sm">
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/privacy">
                 Privacy Policy
@@ -68,7 +66,6 @@
           </div>
 
           <div className="md:col-span-4">
-            <p className="text-xs font-medium tracking-[0.22em] text-gold/70">Contact Us</p>
             <div className="mt-4 space-y-3 text-sm text-obsidian/65">
               <p>📍 Dubai Design District, UAE</p>
               <p>📞 +971 000 000 000</p>

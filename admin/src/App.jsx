@@ -7,6 +7,7 @@ import Products from './pages/Products'
 import Contacts from './pages/Contacts'
 import Orders from './pages/Orders'
 import Users from './pages/Users'
+import Consultations from './pages/Consultations'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="products" element={<Products />} />
             <Route path="contacts" element={<Contacts />} />
             <Route path="orders" element={<Orders />} />
+            <Route path="consultations" element={<Consultations />} />
             <Route path="users" element={<Users />} />
           </Route>
         </Route>

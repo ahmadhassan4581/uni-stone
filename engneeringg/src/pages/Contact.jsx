@@ -1,6 +1,39 @@
+import { useState } from 'react'
 import Container from '../components/Container'
+import { apiFetch } from '../lib/api'
 
 export default function Contact() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [submitStatus, setSubmitStatus] = useState('idle')
+  const [submitError, setSubmitError] = useState('')
+
+  const submit = async (e) => {
+    e.preventDefault()
+    if (submitStatus === 'submitting') return
+
+    setSubmitStatus('submitting')
+    setSubmitError('')
+    try {
+      await apiFetch('/api/contacts', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+        }),
+      })
+      setSubmitStatus('success')
+      setName('')
+      setEmail('')
+      setMessage('')
+    } catch (err) {
+      setSubmitStatus('error')
+      setSubmitError(err?.message || 'Failed to send message')
+    }
+  }
+
   return (
     <section className="bg-white">
       <Container className="py-16">
@@ -25,12 +58,14 @@ export default function Contact() {
         <p className="mb-4 text-sm text-gray-700">Alternatively, use this contact form and we will get back to you as soon as possible.</p>
         <p className="mb-2 text-xs text-red-600">*Required Field</p>
 
-        <form className="max-w-2xl space-y-4">
+        <form className="max-w-2xl space-y-4" onSubmit={submit}>
           <div>
             <label className="block text-sm font-medium">Name: <span className="text-red-600">*</span></label>
             <input
               type="text"
               required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="mt-1 w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
@@ -40,14 +75,19 @@ export default function Contact() {
             <input
               type="email"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium">Message:</label>
+            <label className="block text-sm font-medium">Message: <span className="text-red-600">*</span></label>
             <textarea
               rows={5}
+              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               className="mt-1 w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
@@ -60,10 +100,19 @@ export default function Contact() {
 
           <button
             type="submit"
+            disabled={submitStatus === 'submitting'}
             className="bg-blue-700 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-800"
           >
-            SEND
+            {submitStatus === 'submitting' ? 'SENDING...' : 'SEND'}
           </button>
+
+          {submitStatus === 'success' ? (
+            <p className="text-sm font-semibold text-emerald-700">Message sent successfully.</p>
+          ) : null}
+
+          {submitStatus === 'error' ? (
+            <p className="text-sm font-semibold text-red-700">{submitError}</p>
+          ) : null}
         </form>
       </Container>
     </section>

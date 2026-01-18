@@ -30,37 +30,121 @@ export default function Auth() {
           />
         </Reveal>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-12">
-          <Reveal className="lg:col-span-7">
-            <div className="rounded-md border border-black/10 bg-white p-8 shadow-sm">
-              <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Login' : 'Create Account'}</p>
-              <p className="mt-1 text-sm text-obsidian/60">{isLogin ? 'View your recent orders and update your details.' : 'Manage your orders and details.'}</p>
+        {isLogin ? (
+          <div className="mx-auto mt-12 grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_360px]">
+            <Reveal>
+              <div className="rounded-md border border-black/10 bg-white p-8 shadow-sm">
+                <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Login' : 'Create Account'}</p>
+                <p className="mt-1 text-sm text-obsidian/60">{isLogin ? 'View your recent orders and update your details.' : 'Manage your orders and details.'}</p>
 
-              <form
-                className="mt-8"
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  const form = new FormData(e.currentTarget)
+                <form
+                  className="mt-8"
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    const form = new FormData(e.currentTarget)
 
-                  const name = String(form.get('name') || '')
-                  const email = String(form.get('email') || '')
-                  const password = String(form.get('password') || '')
-                  const confirmPassword = String(form.get('confirmPassword') || '')
+                    const email = String(form.get('email') || '')
+                    const password = String(form.get('password') || '')
 
-                  const run = async () => {
-                    if (isLogin) {
+                    const run = async () => {
                       await login({ email, password })
-                    } else {
-                      await register({ name, email, password, confirmPassword })
+                      navigate('/')
                     }
-                    navigate('/')
-                  }
 
-                  run().catch(() => {})
-                }}
-              >
-                <div className="grid gap-5">
-                  {!isLogin ? (
+                    run().catch(() => {})
+                  }}
+                >
+                  <div className="grid gap-5">
+                    <label className="grid gap-2">
+                      <span className="text-xs font-medium text-[#111111]">Email Address</span>
+                      <input
+                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        autoComplete="email"
+                        required
+                      />
+                    </label>
+
+                    <label className="grid gap-2">
+                      <span className="text-xs font-medium text-[#111111]">Password</span>
+                      <input
+                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        autoComplete="current-password"
+                        required
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mt-6">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      variant="green"
+                      className="w-full tracking-normal normal-case hover:translate-y-0 hover:scale-100"
+                    >
+                      {loading ? 'Please wait...' : 'Log In'}
+                    </Button>
+                  </div>
+
+                  <div className="mt-4 text-center">
+                    <Link className="text-xs text-obsidian/65 hover:text-obsidian hover:underline" to="/contact">
+                      Forgot password?
+                    </Link>
+                  </div>
+
+                  {error ? <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+                </form>
+              </div>
+            </Reveal>
+
+            <Reveal delay={130}>
+              <div className="rounded-md border border-black/10 bg-white p-8 shadow-sm">
+                <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Need an account?' : 'Already have an account?'}</p>
+                <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
+                <div className="mt-6">
+                  <button
+                    type="button"
+                    onClick={() => setMode(isLogin ? 'signup' : 'login')}
+                    className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+                  >
+                    {isLogin ? 'Create Account' : 'Log In'}
+                  </button>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        ) : (
+          <div className="mx-auto mt-12 w-full max-w-md">
+            <Reveal>
+              <div className="rounded-md border border-black/10 bg-white p-8 shadow-sm">
+                <p className="text-sm font-semibold text-[#111111]">Create Account</p>
+                <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
+
+                <form
+                  className="mt-8"
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    const form = new FormData(e.currentTarget)
+
+                    const name = String(form.get('name') || '')
+                    const email = String(form.get('email') || '')
+                    const password = String(form.get('password') || '')
+                    const confirmPassword = String(form.get('confirmPassword') || '')
+
+                    const run = async () => {
+                      await register({ name, email, password, confirmPassword })
+                      navigate('/')
+                    }
+
+                    run().catch(() => {})
+                  }}
+                >
+                  <div className="grid gap-5">
                     <label className="grid gap-2">
                       <span className="text-xs font-medium text-[#111111]">Full Name</span>
                       <input
@@ -72,33 +156,31 @@ export default function Auth() {
                         required
                       />
                     </label>
-                  ) : null}
 
-                  <label className="grid gap-2">
-                    <span className="text-xs font-medium text-[#111111]">Email Address</span>
-                    <input
-                      className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      autoComplete="email"
-                      required
-                    />
-                  </label>
+                    <label className="grid gap-2">
+                      <span className="text-xs font-medium text-[#111111]">Email Address</span>
+                      <input
+                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        autoComplete="email"
+                        required
+                      />
+                    </label>
 
-                  <label className="grid gap-2">
-                    <span className="text-xs font-medium text-[#111111]">Password</span>
-                    <input
-                      className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
-                      type="password"
-                      name="password"
-                      placeholder="Password"
-                      autoComplete={isLogin ? 'current-password' : 'new-password'}
-                      required
-                    />
-                  </label>
+                    <label className="grid gap-2">
+                      <span className="text-xs font-medium text-[#111111]">Password</span>
+                      <input
+                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        autoComplete="new-password"
+                        required
+                      />
+                    </label>
 
-                  {!isLogin ? (
                     <label className="grid gap-2">
                       <span className="text-xs font-medium text-[#111111]">Confirm Password</span>
                       <input
@@ -110,44 +192,39 @@ export default function Auth() {
                         required
                       />
                     </label>
-                  ) : null}
-                </div>
-
-                <div className="mt-6">
-                  <Button type="submit" size="lg" variant="green" className="w-full hover:translate-y-0 hover:scale-100">
-                    {loading ? 'Please wait...' : isLogin ? 'Log In' : 'Create Account'}
-                  </Button>
-                </div>
-
-                {isLogin ? (
-                  <div className="mt-4 text-center">
-                    <Link className="text-xs text-obsidian/65 hover:text-obsidian hover:underline" to="/contact">
-                      Forgot password?
-                    </Link>
                   </div>
-                ) : null}
 
-                {error ? <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
-              </form>
-            </div>
-          </Reveal>
+                  <div className="mt-6">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      variant="green"
+                      className="w-full tracking-normal normal-case hover:translate-y-0 hover:scale-100"
+                    >
+                      {loading ? 'Please wait...' : 'Create Account'}
+                    </Button>
+                  </div>
 
-          <Reveal delay={130} className="lg:col-span-5">
-            <div className="rounded-md border border-black/10 bg-white p-8 shadow-sm">
-              <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Need an account?' : 'Already have an account?'}</p>
-              <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
-              <div className="mt-6">
-                <button
-                  type="button"
-                  onClick={() => setMode(isLogin ? 'signup' : 'login')}
-                  className="text-sm font-semibold text-blue-600 hover:text-blue-700"
-                >
-                  {isLogin ? 'Create Account' : 'Log In'}
-                </button>
+                  <div className="mt-6 rounded-md border border-black/10 bg-white p-6">
+                    <p className="text-sm font-semibold text-[#111111]">Already have an account?</p>
+                    <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
+                    <div className="mt-4">
+                      <button
+                        type="button"
+                        onClick={() => setMode('login')}
+                        className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+                      >
+                        Log In
+                      </button>
+                    </div>
+                  </div>
+
+                  {error ? <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+                </form>
               </div>
-            </div>
-          </Reveal>
-        </div>
+            </Reveal>
+          </div>
+        )}
       </Container>
     </section>
   )
