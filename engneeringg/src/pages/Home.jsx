@@ -208,7 +208,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
-                  <p className="text-2xl font-semibold text-white drop-shadow sm:text-3xl">Structural</p>
+                  <p className="text-2xl font-semibold text-[rgba(255,172,6)] drop-shadow sm:text-3xl">Structural</p>
                   <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
                     Shop Now
                   </span>
@@ -228,7 +228,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
-                  <p className="text-2xl font-semibold text-white drop-shadow sm:text-3xl">Finishes</p>
+                  <p className="text-2xl font-semibold text-[rgba(255,172,6)] drop-shadow sm:text-3xl">Finishes</p>
                   <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
                     Shop Now
                   </span>
@@ -248,7 +248,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
-                  <p className="text-2xl font-semibold text-white drop-shadow sm:text-3xl">Facade</p>
+                  <p className="text-2xl font-semibold text-[rgba(255,172,6)] drop-shadow sm:text-3xl">Facade</p>
                   <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
                     Shop Now
                   </span>
