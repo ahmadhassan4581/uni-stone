@@ -1,93 +1,92 @@
 import Container from '../components/Container'
 import Reveal from '../components/Reveal'
 import SectionHeading from '../components/SectionHeading'
+import yard1 from '../assets/yard1.jpg'
+import yard2 from '../assets/yard2.jpg'
+import yard3 from '../assets/yard3.jpg'
 
 export default function About() {
   return (
-    <>
-      <section className="bg-white">
-        <Container className="py-20 sm:py-24">
-          <Reveal>
-            <SectionHeading
-              eyebrow="About"
-              title="A civil engineering firm built for luxury execution"
-              subtitle="We combine site discipline, design coordination, and premium material expertise to deliver calm, high-end outcomes."
-              tone="light"
-              className="[&_h2]:!text-[#111111] [&_p]:!text-[#111111]"
-            />
-          </Reveal>
+    <section className="bg-white">
+      <Container className="py-20 sm:py-24">
+        <Reveal>
+          <SectionHeading
+            eyebrow="About Us"
+            title="Natural Stone & Porcelain Specialists"
+            subtitle="Serving East Sussex and beyond from our Plumpton Green showroom."
+            tone="light"
+            className="[&_h2]:!text-[#111111] [&_p]:!text-[#111111]"
+          />
+        </Reveal>
 
-          <div className="mt-12 grid gap-10 md:grid-cols-12 md:items-center">
-            <Reveal className="md:col-span-6">
-              <div className="space-y-8">
-                <div className="rounded-xl border border-[#1a1a1a] bg-white p-8 shadow-sm">
-                  <p className="text-xs tracking-[0.35em] uppercase text-[#111111]">Experience</p>
-                  <p className="mt-4 text-sm leading-7 text-[#111111]">
-                    Our teams have delivered premium villas, commercial spaces, and infrastructure scopes through a consistent
-                    standard: tight sequencing, clean detailing, and communication that respects your time.
-                  </p>
-                </div>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="rounded-xl border border-[#1a1a1a] bg-neutral-50 p-7">
-                    <p className="text-xs tracking-[0.35em] uppercase text-[#111111]">Vision</p>
-                    <p className="mt-4 text-sm leading-7 text-[#111111]">
-                      Calm delivery for modern luxury builds.
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-[#1a1a1a] bg-neutral-50 p-7">
-                    <p className="text-xs tracking-[0.35em] uppercase text-[#111111]">Mission</p>
-                    <p className="mt-4 text-sm leading-7 text-[#111111]">
-                      Convert design intent into precise, durable structures.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={140} className="md:col-span-6">
-              <div className="relative overflow-hidden rounded-xl border border-[#1a1a1a] bg-white shadow-sm">
-                <img
-                  src="https://images.unsplash.com/photo-1536895058696-a69b1c7ba34f?auto=format&fit=crop&w=1800&q=70"
-                  alt="Architectural plans"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent" />
-                <div className="absolute bottom-0 p-8">
-                  <p className="text-xs tracking-[0.35em] uppercase text-[#111111]">Our promise</p>
-                  <p className="mt-3 max-w-sm text-sm leading-7 text-[#111111]">
-                    Strong coordination. Disciplined supervision. Luxury finishing.
-                  </p>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </Container>
-      </section>
-
-      <section className="bg-white">
-        <Container className="py-20 sm:py-24">
-          <Reveal>
-            <div className="grid gap-10 md:grid-cols-3">
-              <div className="rounded-xl border border-[#1a1a1a] bg-neutral-50 p-8">
-                <p className="text-xs tracking-[0.35em] uppercase text-[#111111]">Principle 01</p>
-                <h3 className="mt-5 font-display text-2xl text-[#111111]">Clarity</h3>
-                <p className="mt-3 text-sm leading-7 text-[#111111]">Transparent scope definition and reporting cadence.</p>
-              </div>
-              <div className="rounded-xl border border-[#1a1a1a] bg-neutral-50 p-8">
-                <p className="text-xs tracking-[0.35em] uppercase text-[#111111]">Principle 02</p>
-                <h3 className="mt-5 font-display text-2xl text-[#111111]">Control</h3>
-                <p className="mt-3 text-sm leading-7 text-[#111111]">Schedule discipline and risk mitigation built in.</p>
-              </div>
-              <div className="rounded-xl border border-[#1a1a1a] bg-neutral-50 p-8">
-                <p className="text-xs tracking-[0.35em] uppercase text-[#111111]">Principle 03</p>
-                <h3 className="mt-5 font-display text-2xl text-[#111111]">Craft</h3>
-                <p className="mt-3 text-sm leading-7 text-[#111111]">Details that respect material, light, and proportion.</p>
-              </div>
+        <div className="mt-12 grid gap-12 md:grid-cols-12 md:items-start">
+          {/* IMAGES — LEFT (NO BORDERS) */}
+          <Reveal className="md:col-span-5">
+            <div className="grid gap-6">
+              <img
+                src={yard1}
+                alt="Stone yard"
+                className="h-60 w-full rounded-xl object-cover"
+              />
+              <img
+                src={yard2}
+                alt="Stone display"
+                className="h-60 w-full rounded-xl object-cover"
+              />
+              <img
+                src={yard3}
+                alt="Stone slabs"
+                className="h-60 w-full rounded-xl object-cover"
+              />
             </div>
           </Reveal>
-        </Container>
-      </section>
-    </>
+
+          {/* TEXT — RIGHT (SIMPLE) */}
+          <Reveal delay={120} className="md:col-span-7">
+            <div className="space-y-6 text-sm leading-7 text-[#111111]">
+              <p>
+                We are based in the beautiful scenic East Sussex countryside, just a 20-minute drive from Brighton.
+                You are always welcome to visit and view our huge range of Natural Stone and Porcelain slabs and tiles.
+                The extensive choice of materials we stock, combined with our unbeatable prices, truly sets us apart.
+              </p>
+
+              <p>
+                All of our products are displayed within our premises to give the best possible representation.
+                We are also happy to escort customers to our nearby storage units, just a stone’s throw from the showroom,
+                where you can view tiles and slabs directly from our latest batches.
+              </p>
+
+              <p>
+                Our premises in Plumpton Green is where it all began a few decades ago, and we are proud to continue
+                operating in this beautiful and scenic part of the country.
+              </p>
+
+              <p>
+                Whilst we have grown significantly over the years and expanded across multiple units on the estate,
+                we still follow the same principles that shaped us into the successful family business we are today.
+              </p>
+
+              <p>
+                As a small business, we go the extra yard to stay ahead. We offer expert knowledge, professional advice,
+                and customer service built on reputation. We know we cannot rest on our laurels, and we give everything
+                to compete with the “big boys” — and that is exactly what we do.
+              </p>
+
+              <p>
+                Our large display boards showcase materials across traditional and contemporary styles, all sizes,
+                finishes, and formats, for both internal and external projects. If you can’t find what you’re looking
+                for with us, we’d wager you won’t find it anywhere else.
+              </p>
+
+              <p>
+                If you need help calculating quantities for tiling or paving, simply bring in your plans or send us
+                your dimensions by phone or email. Measurements in metres or centimetres help speed things up,
+                but we’re happy to assist regardless.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </Container>
+    </section>
   )
 }

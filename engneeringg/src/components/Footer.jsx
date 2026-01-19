@@ -28,7 +28,7 @@
                 Services
               </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/products">
-                catlog
+                Catalog
               </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/payment">
                 Consultation
@@ -53,15 +53,11 @@
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/delivery">
                 Deliver
               </Link>
-              <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/samples">
-                Samples
-              </Link>
+            
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/pebble-guide">
                 pebble-guide:
               </Link>
-              <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/samples">
-                Samples
-              </Link>
+           
             </nav>
           </div>
 
