@@ -33,7 +33,7 @@ export default function Auth() {
         {isLogin ? (
           <div className="mx-auto mt-12 grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_360px]">
             <Reveal>
-              <div className="rounded-md border border-black/10 bg-white p-8 shadow-sm">
+              <div className="rounded-md bg-white p-8 shadow-sm">
                 <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Login' : 'Create Account'}</p>
                 <p className="mt-1 text-sm text-obsidian/60">{isLogin ? 'View your recent orders and update your details.' : 'Manage your orders and details.'}</p>
 
@@ -103,7 +103,7 @@ export default function Auth() {
             </Reveal>
 
             <Reveal delay={130}>
-              <div className="rounded-md border border-black/10 bg-white p-8 shadow-sm">
+              <div className="rounded-md bg-white p-8 shadow-sm">
                 <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Need an account?' : 'Already have an account?'}</p>
                 <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
                 <div className="mt-6">
@@ -121,7 +121,7 @@ export default function Auth() {
         ) : (
           <div className="mx-auto mt-12 w-full max-w-md">
             <Reveal>
-              <div className="rounded-md border border-black/10 bg-white p-8 shadow-sm">
+              <div className="rounded-md bg-white p-8 shadow-sm">
                 <p className="text-sm font-semibold text-[#111111]">Create Account</p>
                 <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
 
@@ -205,7 +205,7 @@ export default function Auth() {
                     </Button>
                   </div>
 
-                  <div className="mt-6 rounded-md border border-black/10 bg-white p-6">
+                  <div className="mt-6 rounded-md bg-white p-6 shadow-sm">
                     <p className="text-sm font-semibold text-[#111111]">Already have an account?</p>
                     <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
                     <div className="mt-4">

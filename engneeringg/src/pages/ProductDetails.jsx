@@ -111,29 +111,28 @@ export default function ProductDetails() {
   return (
     <section className="bg-white">
       <Container className="py-12">
-        <div className="flex flex-col gap-4 border-b border-black/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm text-obsidian/60">{product.category || 'Products'}</p>
-          </div>
+        <div className="flex flex-col items-start gap-3 border-b border-black/10 pb-6 sm:items-end">
+          <Breadcrumbs
+            tone="light"
+            items={[
+              { label: 'Home', to: '/' },
+              { label: 'Products', to: '/products' },
+              ...(product.category
+                ? [{ label: product.category, to: `/products?category=${encodeURIComponent(product.category)}` }]
+                : []),
+              { label: product.name },
+            ]}
+          />
           <div className="sm:text-right">
-            <Breadcrumbs
-              tone="light"
-              items={[
-                { label: 'Home', to: '/' },
-                { label: 'Products', to: '/products' },
-                ...(product.category
-                  ? [{ label: product.category, to: `/products?category=${encodeURIComponent(product.category)}` }]
-                  : []),
-                { label: product.name },
-              ]}
-            />
+            <h1 className="text-lg font-semibold text-obsidian sm:text-xl">{product.name}</h1>
+            <p className="mt-1 text-sm text-obsidian/60">{product.category || 'Products'}</p>
           </div>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <div className="overflow-hidden rounded-md border border-black/10 bg-white">
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-50">
+              <div className="relative aspect-[4/3] w-[90%] mx-auto overflow-hidden bg-neutral-50">
                 {mainImage ? (
                   <img
                     src={mainImage}
@@ -194,8 +193,6 @@ export default function ProductDetails() {
           </div>
 
           <div className="lg:col-span-4">
-            <h1 className="text-xl font-semibold text-obsidian sm:text-2xl">{product.name}</h1>
-
             <div className="mt-3">
               {(() => {
                 const defaultVatRate = 20
