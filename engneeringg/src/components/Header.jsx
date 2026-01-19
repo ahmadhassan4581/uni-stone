@@ -13,16 +13,22 @@ import Button from './Button'
 export default function Header() {
   const [open, setOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchFeedback, setSearchFeedback] = useState({ type: '', message: '' })
   const { totalCount } = useCart()
   const { isAuthenticated, logout, user } = useAuth()
   const { products } = useProducts()
   const navigate = useNavigate()
 
+  const onSearchChange = (value) => {
+    setSearchQuery(value)
+    if (searchFeedback.message) setSearchFeedback({ type: '', message: '' })
+  }
+
   const submitSearch = (e) => {
     e?.preventDefault?.()
     const q = searchQuery.trim()
     if (!q) {
-      navigate('/products')
+      if (searchFeedback.message) setSearchFeedback({ type: '', message: '' })
       return
     }
 
@@ -44,6 +50,7 @@ export default function Header() {
 
     const page = pageMatches.find((p) => p.keys.some((k) => qLower.includes(k)))
     if (page) {
+      setSearchFeedback({ type: '', message: '' })
       setOpen(false)
       navigate(page.to)
       return
@@ -54,13 +61,27 @@ export default function Header() {
       return qLower === cLower || qLower.includes(cLower)
     })
     if (cat) {
+      setSearchFeedback({ type: '', message: '' })
       setOpen(false)
       navigate(`/products?category=${encodeURIComponent(cat)}`)
       return
     }
 
-    setOpen(false)
-    navigate(`/products?q=${encodeURIComponent(q)}`)
+    const hasProductMatch = products.some((p) => {
+      const name = String(p?.name || '').toLowerCase()
+      const slug = String(p?.slug || '').toLowerCase()
+      const category = String(p?.category || '').toLowerCase()
+      return (name && name.includes(qLower)) || (slug && slug.includes(qLower)) || (category && category.includes(qLower))
+    })
+
+    if (hasProductMatch) {
+      setSearchFeedback({ type: '', message: '' })
+      setOpen(false)
+      navigate(`/products?q=${encodeURIComponent(q)}`)
+      return
+    }
+
+    setSearchFeedback({ type: 'error', message: 'No results found' })
   }
 
   const handleLogout = () => {
@@ -163,7 +184,7 @@ export default function Header() {
                   <div className="flex items-center border-b border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60">
                     <input
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={(e) => onSearchChange(e.target.value)}
                       placeholder="Search for products..."
                       className="h-11 w-full bg-transparent px-4 text-sm text-[#111111] outline-none placeholder:text-[#222222]"
                     />
@@ -175,6 +196,9 @@ export default function Header() {
                       <Search className="h-5 w-5" />
                     </button>
                   </div>
+                  {searchFeedback.type === 'error' && searchFeedback.message ? (
+                    <div className="text-xs text-red-700">{searchFeedback.message}</div>
+                  ) : null}
                 </form>
 
                 {links.map((l) => (
@@ -273,7 +297,7 @@ export default function Header() {
                   placeholder="Search for products..."
                   className="h-10 w-full bg-transparent px-4 text-sm text-[#111111] outline-none placeholder:text-[#222222]"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => onSearchChange(e.target.value)}
                 />
                 <button
                   type="submit"
@@ -284,6 +308,9 @@ export default function Header() {
                   <Search className="h-5 w-5" />
                 </button>
               </form>
+              {searchFeedback.type === 'error' && searchFeedback.message ? (
+                <div className="mt-2 px-4 text-xs text-red-700">{searchFeedback.message}</div>
+              ) : null}
             </div>
           </div>
 
