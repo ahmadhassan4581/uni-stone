@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import Container from '../components/Container'
 
 const TITLES = {
-  delivery: 'Delivery',
+  delivery: 'Shipping and Delivery',
   samples: 'Samples',
   faqs: 'Frequently Asked Questions',
   returns: 'Our Refunds / Returns Policy',
@@ -383,6 +383,124 @@ export default function InfoPage() {
             <p>
               Refunds on overages of delivered goods only (we do not accept back overages of collected products) are accepted back within 14 days of receipt by the customer, this 14 day period begins the day after the goods are received and we will not accept returns outside of this time period under any circumstances.
             </p>
+          </div>
+        ) : slug === 'delivery' ? (
+          <div className="mt-10 space-y-10 text-sm leading-7 text-obsidian/70">
+            <div className="space-y-4">
+              <p>We provide delivery throughout the United Kingdom.</p>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="font-display text-2xl tracking-[0.02em] text-obsidian">Next Working Day</h2>
+              <p>
+                Next Working Day deliveries are available on all stock items to England and Wales, if orders are placed / confirmed before 12:00 pm Mon - Fri.
+              </p>
+              <p>
+                Please note that deliveries ordered / confirmed on a "NEXT WORKING DAY" service, after 12pm Mon - Fri, will not be dispatched until the following working day.
+              </p>
+              <p>
+                Please also note that there are no orders dispatched at the weekend as we are closed, therefore an order placed on a Saturday or Sunday, on a "Next Working day" service, will be dispatched on the following Monday (excluding Bank Holidays / Easter Monday) and delivered the following day.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="font-display text-2xl tracking-[0.02em] text-obsidian">Freight (Pallet) Delivery</h2>
+              <p>
+                Freight (pallet) delivery costs start from £50.00 inclusive of VAT per crate (Local postcodes ONLY) with approximately 13-40 square metres (m2) per crate, dependant on specific material.
+              </p>
+              <p>
+                Please find our delivery costs below, according to your Postcode area, for our Standard 4-5 working day (from day of dispatch) "booked-in" delivery service (Mon-Fri ONLY), whereby our haulage partner will contact the customer to arrange a convenient day for delivery of the consignment. Please be sure to provide correct telephone numbers / contact details at point of order to avoid delays.
+              </p>
+              <p className="font-semibold text-obsidian">
+                PLEASE NOTE THAT A FAILURE TO PROVIDE US WITH CORRECT ADDRESS DETAILS, AND CONTACT PHONE NUMBER/S, WILL RESULT IN A DELAY OF YOUR ORDER BEING DISPATCHED.
+              </p>
+              <p>
+                Please note that "Working Day" deliveries are ordinarily between 9am - 5pm (Mon-Fri ONLY), however can run outside of these times due to the nature of the processes involved. Specific requests for "AM" or "PM" deliveries will incur further costs.
+              </p>
+              <p>
+                ALL CONSIGNMENTS REQUIRE A SIGNATURE. Goods will not be left without being signed for. If this results in a failed delivery, a re-delivery charge will be applicable, or alternatively a collection would need to be arranged with the carrier by the customer to pick-up from the local depot.
+              </p>
+              <p>
+                Due to the heavy weight of stone, the majority of orders placed are shipped as freight, on pallets / in crates.
+              </p>
+              <p>
+                Please be aware that all our freight deliveries are classed as kerbside ONLY, meaning they will be delivered to the nearest level, hard standing area to your property.
+              </p>
+              <p>
+                Our freight deliveries are made using a large, bin lorry sized vehicle (18 tonne truck), and the pallets / crates are manually off-loaded using a pallet truck / tail-lift off-load.
+              </p>
+              <p>
+                Our pallets are very heavy (up to 1,000kg on occasions), therefore we can only deliver onto hard, level surfaces such as concrete, tarmac or block paving. It is imperative that we are informed of any potential restrictions prior to delivery.
+              </p>
+              <p>
+                Marble Mosaics Ltd will not be responsible for additional costs incurred as a result of a customer not informing us about an access issue prior to an attempted delivery. Initial shipping / return shipping costs will also not be met by Marble Mosaics Ltd in this instance, or for costs incurred for a re-delivery after a failed attempt.
+              </p>
+              <p>
+                Please note that any freight delivery will require access with no low hanging trees / canopies etc. Deliveries are at the discretion of the driver.
+              </p>
+              <p>
+                Please note that the delivery driver cannot help with moving the products inside the property as they are not insured to do so, and the haulier will not return to collect empty wooden crates or pallets. These will need to be disposed of by the customer.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="font-display text-2xl tracking-[0.02em] text-obsidian">Courier / Special Items</h2>
+              <p>
+                For some small mosaic orders only (excluding Splitface mosaic material), we can ship using a courier service at only £8.99 per m2 inclusive of VAT. Please call 01273 891144 for more details.
+              </p>
+              <p>
+                For the majority of counter top Stone Sink orders, the delivery costs will be £10.99 per sink based on a "Next Working Day" service (from our day of dispatch). Free Standing sinks will incur a freight delivery charge.
+              </p>
+              <p>
+                For our glass mosaic tiles, we offer a flat rate delivery cost of £10.99 no matter how many glass mosaic tiles are purchased, to the majority of Mainland UK postcodes.
+              </p>
+              <p>Please note there are no collections after 4 pm.</p>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="font-display text-2xl tracking-[0.02em] text-obsidian">Collection</h2>
+              <p>
+                Collection is also welcomed, Unit 30, The Old Brickworks, Station Road, Plumpton Green, East Sussex, BN7 3DF.
+              </p>
+              <p>Monday to Friday 0830 to 1600</p>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="font-display text-2xl tracking-[0.02em] text-obsidian">Delivery Zones (per pallet)</h2>
+              <ul className="list-disc pl-5">
+                <li>
+                  Local: £50.00 inclusive of VAT per pallet (Next Working Day + £15) — BN1-15 & 41-45, RH1-19, KT11, 13-16, 18, & 20-24.
+                </li>
+                <li>
+                  Zone 1: £60.00 inclusive of VAT per pallet (Next Working Day + £15) — AL, B, BA, BB, BD, BL, BN16-18 & 20-27, BR, BS, CB, CF, CH, CM, CO, CR, CV, CW, DA, DH, DE, DL, DN, DY, EN, FY, GL, GU, HA, HD, HG, HP, HR, HU, HX, IG, IP, L, LA1-10, LE, LL11-34, LN3-6 & 7-13, LS, LU, M, ME, MK, NE1-18 / 20-47 & 49, NG, NN, NP, NR, OL, OX, PE, PO1-22, PR, RH20, RG, RM, S, SG, SK, SL, SM, SN, SO, SP, SR, SS, ST, TF, TS, TN, TW, UB, WA, WD, WF, WN, WR, WS, WV & YO.
+                </li>
+                <li>Zone 2: £60 inclusive of VAT per pallet (Next Working Day + £15) — BH, KT1-10, 12, 17 & 19.</li>
+                <li>
+                  Zone 3: £75 inclusive of VAT per pallet (Next Working Day + £15) — CA, CT, DT, DG, EH, EX, FK, G, KA, KY, LA11-23, LD, LL, ML, NE19, 48 & 61-71, PA(1-20), PL, SA, TA, TD, SY, TR1-20, TQ.
+                </li>
+                <li>Zone 4: £65.00 inc of VAT per pallet (Next Working Day + £20.00) — ALL LONDON POSTCODES.</li>
+                <li>Zone 5: £120 inclusive of VAT per pallet (Next Working Day + £35 if available) — AB10-16, 21-25, 30, 39, DD, PH1-16.</li>
+                <li>
+                  Price on application — AB31-38, 41-45, 51-56, KA27-28, KW, PH17-26, 30-41, 42-44, 49-50, IV, PA21-41, Scottish Highlands + Islands, PO30-41 (Isle of Wight), IM1-9 (Isle of Man), HS, GY, JE, TR21-25, ZE.
+                </li>
+                <li>Zone 6: £155.00 inclusive of VAT per pallet — Northern Ireland.</li>
+              </ul>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="font-display text-2xl tracking-[0.02em] text-obsidian">Premium Surcharges (per consignment)</h2>
+              <p>
+                PLEASE NOTE THAT THESE COSTS ARE IN ADDITION TO STANDARD CHARGES, HOWEVER NOT ALL DEPOTS OFFER THESE SERVICES:
+              </p>
+              <ul className="list-disc pl-5">
+                <li>TIME SPECIFIC DELIVERY: £30</li>
+                <li>AM/PM DELIVERY: £17</li>
+                <li>SATURDAY AM: £50</li>
+                <li>SATURDAY PM: £60</li>
+                <li>SATURDAY TIMED: £70</li>
+              </ul>
+              <p>Click here for more information on how to contact us.</p>
+            </div>
           </div>
         ) : (
           <p className="mt-6 max-w-2xl text-sm leading-7 text-obsidian/70">
