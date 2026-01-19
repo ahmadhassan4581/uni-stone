@@ -31,8 +31,11 @@ export default function Products() {
   const [name, setName] = useState('')
   const [category, setCategory] = useState('Structural')
   const [price, setPrice] = useState('')
+  const [vatRate, setVatRate] = useState('')
+  const [stock, setStock] = useState('')
   const [description, setDescription] = useState('')
   const [bullets, setBullets] = useState('')
+  const [specifications, setSpecifications] = useState([])
   const [image, setImage] = useState('')
   const [images, setImages] = useState('')
 
@@ -44,8 +47,11 @@ export default function Products() {
     setName('')
     setCategory('Structural')
     setPrice('')
+    setVatRate('')
+    setStock('')
     setDescription('')
     setBullets('')
+    setSpecifications([])
     setImage('')
     setImages('')
   }
@@ -75,10 +81,30 @@ export default function Products() {
     setName(p.name || '')
     setCategory(p.category || 'Structural')
     setPrice(String(p.price ?? ''))
+    setVatRate(String(p.vatRate ?? ''))
+    setStock(String(p.stock ?? ''))
     setDescription(p.description || '')
     setBullets((p.bullets || []).join(', '))
+    setSpecifications(Array.isArray(p.specifications) ? p.specifications : [])
     setImage(p.image || '')
     setImages((Array.isArray(p.images) && p.images.length ? p.images : [p.image]).filter(Boolean).join(', '))
+  }
+
+  const addSpecRow = () => {
+    setSpecifications((rows) => [...(Array.isArray(rows) ? rows : []), { label: '', value: '' }])
+  }
+
+  const updateSpecRow = (idx, key, val) => {
+    setSpecifications((rows) => {
+      const next = Array.isArray(rows) ? [...rows] : []
+      const curr = next[idx] || { label: '', value: '' }
+      next[idx] = { ...curr, [key]: val }
+      return next
+    })
+  }
+
+  const removeSpecRow = (idx) => {
+    setSpecifications((rows) => (Array.isArray(rows) ? rows.filter((_, i) => i !== idx) : []))
   }
 
   const submit = async (e) => {
@@ -93,6 +119,17 @@ export default function Products() {
     const normalizedImages = parsedImages.length ? parsedImages : (image ? [image] : [])
     const mainImage = image || normalizedImages[0] || ''
 
+    const normalizedSpecs = (Array.isArray(specifications) ? specifications : [])
+      .map((row) => ({
+        label: String(row?.label || '').trim(),
+        value: String(row?.value || '').trim(),
+      }))
+      .filter((row) => row.label || row.value)
+
+    const vatRateRaw = String(vatRate).trim()
+    const vatRateValue = vatRateRaw === '' ? null : Number(vatRateRaw.replace('%', '').trim())
+    const stockValue = String(stock).trim() === '' ? null : Number(stock)
+
     const payload = {
       productId,
       slug,
@@ -100,11 +137,14 @@ export default function Products() {
       name,
       category,
       price: Number(price),
+      vatRate: Number.isFinite(vatRateValue) ? vatRateValue : null,
+      stock: Number.isFinite(stockValue) ? stockValue : null,
       description,
       bullets: bullets
         .split(',')
         .map((b) => b.trim())
         .filter(Boolean),
+      specifications: normalizedSpecs,
       images: normalizedImages,
       image: mainImage,
     }
@@ -165,13 +205,14 @@ export default function Products() {
                     <th className="px-4 py-3">Name</th>
                     <th className="px-4 py-3">Category</th>
                     <th className="px-4 py-3">Price</th>
+                    <th className="px-4 py-3">Stock</th>
                     <th className="px-4 py-3">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td className="px-4 py-4" colSpan={4}>
+                      <td className="px-4 py-4" colSpan={5}>
                         Loading...
                       </td>
                     </tr>
@@ -184,6 +225,7 @@ export default function Products() {
                         </td>
                         <td className="px-4 py-3">{p.category}</td>
                         <td className="px-4 py-3">${p.price}</td>
+                        <td className="px-4 py-3">{p.stock === 0 ? '0' : p.stock || '-'}</td>
                         <td className="px-4 py-3">
                           <div className="flex gap-2">
                             <button
@@ -206,7 +248,7 @@ export default function Products() {
                     ))
                   ) : (
                     <tr>
-                      <td className="px-4 py-4" colSpan={4}>
+                      <td className="px-4 py-4" colSpan={5}>
                         No products.
                       </td>
                     </tr>
@@ -242,6 +284,8 @@ export default function Products() {
               </label>
 
               <Field label="Price" value={price} onChange={setPrice} type="number" required />
+              <Field label="VAT (e.g. 20 or 20%)" value={vatRate} onChange={setVatRate} type="text" />
+              <Field label="Stock" value={stock} onChange={setStock} type="number" />
 
               <label className="block">
                 <span className="text-sm font-medium">Description</span>
@@ -261,6 +305,64 @@ export default function Products() {
                   onChange={(e) => setBullets(e.target.value)}
                 />
               </label>
+
+              <div className="rounded-md border border-slate-200 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-medium">Specifications</p>
+                  <button
+                    type="button"
+                    onClick={addSpecRow}
+                    className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-semibold hover:bg-slate-50"
+                  >
+                    Add row
+                  </button>
+                </div>
+
+                <div className="mt-3 overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-slate-50 text-xs uppercase text-slate-600">
+                      <tr>
+                        <th className="px-2 py-2">Label</th>
+                        <th className="px-2 py-2">Value</th>
+                        <th className="px-2 py-2">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(Array.isArray(specifications) && specifications.length ? specifications : [{ label: '', value: '' }]).map(
+                        (row, idx) => (
+                          <tr key={idx} className="border-t border-slate-200">
+                            <td className="px-2 py-2">
+                              <input
+                                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm outline-none focus:border-slate-900"
+                                value={row?.label || ''}
+                                onChange={(e) => updateSpecRow(idx, 'label', e.target.value)}
+                                placeholder="e.g. Thickness"
+                              />
+                            </td>
+                            <td className="px-2 py-2">
+                              <input
+                                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm outline-none focus:border-slate-900"
+                                value={row?.value || ''}
+                                onChange={(e) => updateSpecRow(idx, 'value', e.target.value)}
+                                placeholder="e.g. 20mm"
+                              />
+                            </td>
+                            <td className="px-2 py-2">
+                              <button
+                                type="button"
+                                onClick={() => removeSpecRow(idx)}
+                                className="rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-100"
+                              >
+                                Remove
+                              </button>
+                            </td>
+                          </tr>
+                        ),
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
               <Field label="Images (up to 5, comma separated)" value={images} onChange={setImages} required={!image.trim()} />
               <Field label="Main Image URL" value={image} onChange={setImage} required={!images.trim()} />

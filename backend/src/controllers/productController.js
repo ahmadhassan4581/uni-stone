@@ -35,8 +35,11 @@ async function listProducts(req, res, next) {
       name: p.name,
       category: p.category,
       price: p.price,
+      vatRate: p.vatRate ?? null,
+      stock: p.stock ?? null,
       description: p.description,
       bullets: p.bullets,
+      specifications: Array.isArray(p.specifications) ? p.specifications : [],
       images: Array.isArray(p.images) && p.images.length ? p.images : [p.image].filter(Boolean),
       image: p.image,
     })))
@@ -63,8 +66,11 @@ async function getProductBySlug(req, res, next) {
       name: p.name,
       category: p.category,
       price: p.price,
+      vatRate: p.vatRate ?? null,
+      stock: p.stock ?? null,
       description: p.description,
       bullets: p.bullets,
+      specifications: Array.isArray(p.specifications) ? p.specifications : [],
       images: Array.isArray(p.images) && p.images.length ? p.images : [p.image].filter(Boolean),
       image: p.image,
     })
@@ -76,6 +82,29 @@ async function getProductBySlug(req, res, next) {
 async function createProduct(req, res, next) {
   try {
     const payload = { ...req.body }
+
+    if (payload.vatRate === '' || payload.vatRate === undefined) payload.vatRate = null
+    if (payload.stock === '' || payload.stock === undefined) payload.stock = null
+
+    if (payload.vatRate !== null) {
+      const raw = typeof payload.vatRate === 'string' ? payload.vatRate.replace('%', '').trim() : payload.vatRate
+      const n = Number(raw)
+      payload.vatRate = Number.isFinite(n) ? n : null
+    }
+
+    if (payload.stock !== null) {
+      const n = Number(payload.stock)
+      payload.stock = Number.isFinite(n) ? n : null
+    }
+
+    if (Array.isArray(payload.specifications)) {
+      payload.specifications = payload.specifications
+        .map((row) => ({
+          label: String(row?.label || '').trim(),
+          value: String(row?.value || '').trim(),
+        }))
+        .filter((row) => row.label || row.value)
+    }
     if (Array.isArray(payload.images)) payload.images = payload.images.filter(Boolean).slice(0, 5)
     if ((!payload.images || payload.images.length === 0) && payload.image) payload.images = [payload.image]
     if (!payload.image && Array.isArray(payload.images) && payload.images[0]) payload.image = payload.images[0]
@@ -90,6 +119,29 @@ async function createProduct(req, res, next) {
 async function updateProduct(req, res, next) {
   try {
     const payload = { ...req.body }
+
+    if (payload.vatRate === '' || payload.vatRate === undefined) payload.vatRate = null
+    if (payload.stock === '' || payload.stock === undefined) payload.stock = null
+
+    if (payload.vatRate !== null) {
+      const raw = typeof payload.vatRate === 'string' ? payload.vatRate.replace('%', '').trim() : payload.vatRate
+      const n = Number(raw)
+      payload.vatRate = Number.isFinite(n) ? n : null
+    }
+
+    if (payload.stock !== null) {
+      const n = Number(payload.stock)
+      payload.stock = Number.isFinite(n) ? n : null
+    }
+
+    if (Array.isArray(payload.specifications)) {
+      payload.specifications = payload.specifications
+        .map((row) => ({
+          label: String(row?.label || '').trim(),
+          value: String(row?.value || '').trim(),
+        }))
+        .filter((row) => row.label || row.value)
+    }
     if (Array.isArray(payload.images)) payload.images = payload.images.filter(Boolean).slice(0, 5)
     if ((!payload.images || payload.images.length === 0) && payload.image) payload.images = [payload.image]
     if (!payload.image && Array.isArray(payload.images) && payload.images[0]) payload.image = payload.images[0]

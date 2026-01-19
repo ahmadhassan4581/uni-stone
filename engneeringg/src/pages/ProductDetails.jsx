@@ -14,6 +14,14 @@ function money(n) {
   }).format(n)
 }
 
+function vatInclusivePrice(price, vatRate) {
+  const base = Number(price)
+  const rate = Number(vatRate)
+  if (!Number.isFinite(base)) return 0
+  if (!Number.isFinite(rate) || rate <= 0) return base
+  return base * (1 + rate / 100)
+}
+
 export default function ProductDetails() {
   const { slug } = useParams()
   const navigate = useNavigate()
@@ -91,6 +99,14 @@ export default function ProductDetails() {
   const thumbnails = showAllImages ? images : images.slice(0, 4)
   const mainImage = selectedImage || images[0] || ''
   const safeBullets = Array.isArray(product?.bullets) ? product.bullets.filter(Boolean) : []
+  const safeSpecs = Array.isArray(product?.specifications)
+    ? product.specifications
+        .map((row) => ({
+          label: String(row?.label || '').trim(),
+          value: String(row?.value || '').trim(),
+        }))
+        .filter((row) => row.label || row.value)
+    : []
 
   return (
     <section className="bg-white">
@@ -181,10 +197,24 @@ export default function ProductDetails() {
             <h1 className="text-xl font-semibold text-obsidian sm:text-2xl">{product.name}</h1>
 
             <div className="mt-3">
-              <p className="text-lg font-semibold text-obsidian sm:text-xl">
-                {money(product.price)}
-                <span className="ml-2 text-sm font-normal text-obsidian/55">(ex. VAT)</span>
-              </p>
+              {(() => {
+                const defaultVatRate = 20
+                const vatRate = Number.isFinite(Number(product?.vatRate)) ? Number(product.vatRate) : defaultVatRate
+                const incVat = vatInclusivePrice(product.price, vatRate)
+
+                return (
+                  <div className="space-y-1">
+                    <p className="text-lg font-semibold text-obsidian sm:text-xl">
+                      {money(product.price)}
+                      <span className="ml-2 text-sm font-normal text-obsidian/55">(ex. VAT)</span>
+                    </p>
+                    <p className="text-sm text-obsidian/70">
+                      <span className="font-semibold text-obsidian">{money(incVat)}</span>
+                      <span className="ml-2 text-obsidian/55">(incl. VAT{vatRate ? ` ${vatRate}%` : ''})</span>
+                    </p>
+                  </div>
+                )
+              })()}
             </div>
 
             <p className="mt-3 flex items-center gap-2 text-sm text-obsidian/70">
@@ -276,12 +306,34 @@ export default function ProductDetails() {
           <div className="mt-6 text-sm text-gray-700 leading-7">
             {activeTab === 'info' && <p>{product.description || ''}</p>}
             {activeTab === 'specs' && (
-              safeBullets.length ? (
-                <ul className="list-disc ml-5">
-                  {safeBullets.map((b) => (
-                    <li key={b}>{b}</li>
-                  ))}
-                </ul>
+              safeSpecs.length ? (
+                <div className="overflow-x-auto rounded-md border border-black/10 bg-white">
+                  <table className="w-full text-left text-sm">
+                    <tbody className="divide-y divide-black/10">
+                      {safeSpecs.map((row, idx) => (
+                        <tr key={`${row.label}-${idx}`} className="align-top">
+                          <th className="w-1/3 whitespace-nowrap px-4 py-3 font-semibold text-obsidian">
+                            {row.label || '-'}
+                          </th>
+                          <td className="px-4 py-3 text-obsidian/70">{row.value || '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : safeBullets.length ? (
+                <div className="overflow-x-auto rounded-md border border-black/10 bg-white">
+                  <table className="w-full text-left text-sm">
+                    <tbody className="divide-y divide-black/10">
+                      {safeBullets.map((b, idx) => (
+                        <tr key={`${b}-${idx}`} className="align-top">
+                          <th className="w-1/3 whitespace-nowrap px-4 py-3 font-semibold text-obsidian">Specification</th>
+                          <td className="px-4 py-3 text-obsidian/70">{b}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ) : (
                 <p>No specifications available.</p>
               )
