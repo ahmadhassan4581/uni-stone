@@ -63,19 +63,20 @@ export default function Services() {
       <Container className="py-20 sm:py-24">
         <Reveal>
           <SectionHeading
-            eyebrow="Services"
+            eyebrow="SERVICES"
+            eyebrowClassName="text-gold-bright"
             title="Our Core Services"
             subtitle="Precision-driven stone solutions designed for architectural excellence and long-term performance."
             tone="light"
           />
         </Reveal>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-2">
           {SERVICES.map((s, idx) => {
             const Icon = s.icon
             return (
-              <Reveal key={s.key} delay={idx * 90}>
-                <div className="rounded-xl bg-neutral-50 p-8 shadow-sm">
+              <Reveal key={s.key} delay={idx * 90} className="h-full">
+                <div className="flex h-full flex-col rounded-xl bg-neutral-50 p-8 shadow-sm">
                   <div className="flex items-start gap-4">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
                       <Icon className="h-5 w-5 text-gold/90" />
@@ -84,14 +85,16 @@ export default function Services() {
                       <p className="text-xs tracking-[0.35em] uppercase text-gold/80">{s.title}</p>
                       <h3 className="mt-3 font-display text-2xl tracking-[0.02em] text-obsidian">{s.subtitle}</h3>
                       <p className="mt-3 text-sm leading-7 text-obsidian/70">{s.description}</p>
-
-                      <p className="mt-6 text-sm font-semibold text-obsidian">Includes:</p>
-                      <ul className="mt-3 list-disc pl-5 text-sm leading-7 text-obsidian/70">
-                        {s.includes.map((line) => (
-                          <li key={line}>{line}</li>
-                        ))}
-                      </ul>
                     </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <p className="text-sm font-semibold text-obsidian">Includes:</p>
+                    <ul className="mt-3 list-disc pl-5 text-sm leading-7 text-obsidian/70">
+                      {s.includes.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </Reveal>

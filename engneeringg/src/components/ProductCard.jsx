@@ -3,16 +3,21 @@ import { Link } from 'react-router-dom'
 import { Star } from 'lucide-react'
 
 function money(n) {
-  return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(Number(n || 0))
+  return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'GBP' }).format(Number(n || 0))
 }
 
-function ratingFromProduct(product) {
-  if (typeof product?.rating === 'number') return product.rating
+function vatInclusivePrice(price, vatRate) {
+  const base = Number(price)
+  const rate = Number(vatRate)
+  if (!Number.isFinite(base)) return 0
+  if (!Number.isFinite(rate) || rate <= 0) return base
+  return base * (1 + rate / 100)
+}
 
-  const seed = String(product?.id || product?.slug || product?.name || '')
-  if (!seed) return 0
-  const sum = seed.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
-  return sum % 3 === 0 ? 0 : 5
+function normalizeRating(raw) {
+  const n = typeof raw === 'number' ? raw : Number(raw)
+  if (!Number.isFinite(n)) return null
+  return Math.max(0, Math.min(5, n))
 }
 
 export default function ProductCard({ product, className, actions, tone = 'dark', onImageClick }) {
@@ -27,7 +32,18 @@ export default function ProductCard({ product, className, actions, tone = 'dark'
   const descClass = tone === 'light' ? 'text-obsidian/70' : 'text-white/70'
   const actionsClass = tone === 'light' ? 'bg-white' : 'bg-obsidian/40'
   const priceClass = tone === 'light' ? 'text-obsidian' : 'text-white'
-  const rating = ratingFromProduct(product)
+  const rating = normalizeRating(product?.rating)
+  const filledCount = rating === null ? 0 : Math.round(rating)
+  const defaultVatRate = 20
+  const vatRate = Number.isFinite(Number(product?.vatRate)) ? Number(product.vatRate) : defaultVatRate
+  const incVat = vatInclusivePrice(product?.price, vatRate)
+  const reviewCount = Number.isFinite(Number(product?.reviewCount))
+    ? Number(product.reviewCount)
+    : Number.isFinite(Number(product?.reviewsCount))
+      ? Number(product.reviewsCount)
+      : Number.isFinite(Number(product?.numReviews))
+        ? Number(product.numReviews)
+        : null
   return (
     <article
       className={cn(
@@ -68,32 +84,45 @@ export default function ProductCard({ product, className, actions, tone = 'dark'
       <div className={cn('h-px w-full', dividerClass)} />
 
       <div className={cn('p-4', bodyClass)}>
-        <h3 className={cn('text-sm font-semibold leading-snug', titleClass)}>
+        <h3
+          className={cn(
+            'text-sm font-semibold leading-snug',
+            'min-h-[2.6rem] overflow-hidden [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]',
+            titleClass,
+          )}
+        >
           <Link to={`/products/${product.slug}`} className="transition-colors hover:text-blue-700">
             {product.name}
           </Link>
         </h3>
 
-        <p className={cn('mt-2 line-clamp-1 text-xs text-obsidian/60', descClass)}>{product.description}</p>
+        <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <p className={cn('text-sm font-semibold', priceClass)}>{money(product.price)}</p>
+          <p className={cn('text-xs', tone === 'light' ? 'text-obsidian/55' : 'text-white/55')}>
+            <span className="font-semibold">{money(incVat)}</span>
+            <span className="ml-1">(incl. VAT)</span>
+          </p>
+        </div>
 
-        <div className="mt-3 flex items-end justify-between gap-4">
-          <div className="min-w-0">
-            <p className={cn('text-sm font-semibold', priceClass)}>{money(product.price)}</p>
-            <p className={cn('mt-0.5 text-[0.7rem]', tone === 'light' ? 'text-obsidian/50' : 'text-white/55')}>incl. VAT</p>
+        <div className="mt-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-0.5" aria-label={`${filledCount} out of 5 stars`}>
+            {Array.from({ length: 5 }).map((_, i) => {
+              const filled = i + 1 <= filledCount
+              return (
+                <Star
+                  key={i}
+                  className={cn(
+                    'h-3.5 w-3.5',
+                    filled ? 'fill-blue-600 text-blue-600' : tone === 'light' ? 'text-black/20' : 'text-white/20',
+                  )}
+                />
+              )
+            })}
           </div>
-
-          {rating ? (
-            <div className="flex items-center gap-0.5" aria-label={`${rating} stars`}>
-              {Array.from({ length: 5 }).map((_, i) => {
-                const filled = i + 1 <= Math.round(rating)
-                return (
-                  <Star
-                    key={i}
-                    className={cn('h-3.5 w-3.5', filled ? 'fill-blue-600 text-blue-600' : 'text-black/20')}
-                  />
-                )
-              })}
-            </div>
+          {reviewCount !== null ? (
+            <span className={cn('text-xs', tone === 'light' ? 'text-obsidian/55' : 'text-white/55')}>
+              ({reviewCount})
+            </span>
           ) : null}
         </div>
       </div>

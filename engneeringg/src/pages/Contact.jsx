@@ -3,18 +3,31 @@ import Container from '../components/Container'
 import { apiFetch } from '../lib/api'
 
 export default function Contact() {
+  const contactEmail = 'sales@marble-mosaics.com'
+  const contactPhone = '01273 891144'
+  const addressText = 'Marblemosaics Ltd, Unit 30, The Old Brickworks, Plumpton Green, East Sussex, BN7 3DF, GB.'
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [submitStatus, setSubmitStatus] = useState('idle')
   const [submitError, setSubmitError] = useState('')
+  const [humanChecked, setHumanChecked] = useState(false)
+  const [humanError, setHumanError] = useState('')
 
   const submit = async (e) => {
     e.preventDefault()
     if (submitStatus === 'submitting') return
 
+    if (!humanChecked) {
+      setHumanError('Please confirm you are human.')
+      setSubmitStatus('idle')
+      return
+    }
+
     setSubmitStatus('submitting')
     setSubmitError('')
+    setHumanError('')
     try {
       await apiFetch('/api/contacts', {
         method: 'POST',
@@ -28,6 +41,7 @@ export default function Contact() {
       setName('')
       setEmail('')
       setMessage('')
+      setHumanChecked(false)
     } catch (err) {
       setSubmitStatus('error')
       setSubmitError(err?.message || 'Failed to send message')
@@ -42,14 +56,21 @@ export default function Contact() {
 
         <div className="space-y-2 text-sm text-gray-700">
           <p>If you have any questions please get in touch</p>
-          <p>Email: <a href="mailto:sales@marble-mosaics.com" className="text-blue-600">sales@marble-mosaics.com</a></p>
-          <p>Phone: 01273 891144 (8.30am – 4.30pm Monday to Friday) <span className="font-semibold">Closed</span> weekends & Bank Holidays.</p>
           <p>
-            Our showroom & yard is open for viewings & collections Monday to Friday from 08.30 to 16.30 but no collections after 16.00 please,
+            Email:{' '}
+            <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:text-blue-700">
+              {contactEmail}
+            </a>
+          </p>
+          <p>
+            Phone: {contactPhone} (8.30am – 4.30pm Monday to Friday) <span className="font-semibold">Closed</span> weekends & Bank Holidays.
+          </p>
+          <p>
+            Our showroom & yard is open for viewings & collections Monday to Friday from 9:00 AM to 5:00 PM, but no collections after 5:00 PM please,
             as we will be loading the trucks for the next day’s nationwide deliveries.
           </p>
           <p>
-            Address: Marblemosaics Ltd, Unit 30, The Old Brickworks, Plumpton Green, East Sussex, BN7 3DF, GB.
+            Address: {addressText}
           </p>
         </div>
 
@@ -92,10 +113,19 @@ export default function Contact() {
             />
           </div>
 
-          {/* reCAPTCHA placeholder */}
-          <div className="flex items-center gap-3 border border-gray-300 p-3 w-fit">
-            <input type="checkbox" />
-            <span className="text-sm">I'm not a robot</span>
+          <div className="w-fit">
+            <div className="flex items-center gap-3 border border-gray-300 p-3">
+              <input
+                type="checkbox"
+                checked={humanChecked}
+                onChange={(e) => {
+                  setHumanChecked(e.target.checked)
+                  if (e.target.checked) setHumanError('')
+                }}
+              />
+              <span className="text-sm">I'm not a robot</span>
+            </div>
+            {humanError ? <p className="mt-2 text-xs font-semibold text-red-600">{humanError}</p> : null}
           </div>
 
           <button

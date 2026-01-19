@@ -208,7 +208,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
-                  <p className="text-2xl font-semibold text-[rgba(255,172,6)] drop-shadow sm:text-3xl">Structural</p>
+                  <p className="text-2xl font-semibold text-[rgba(255,172,6)] drop-shadow sm:text-3xl"> Interiors</p>
                   <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
                     Shop Now
                   </span>
@@ -263,12 +263,12 @@ export default function Home() {
         <Container className="py-16 sm:py-20">
           <Reveal>
             <div className="border-b border-black/10 pb-4">
-              <h2 className="font-display text-3xl tracking-[0.02em] text-obsidian sm:text-4xl">ALL Products</h2>
+              <h2 className="font-display text-3xl tracking-[0.02em] text-obsidian sm:text-4xl">All Products</h2>
               <div className="mt-3 h-1 w-28 bg-gold" />
             </div>
           </Reveal>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((p, idx) => (
               <Reveal key={p.id || p.name} delay={idx * 80}>
                 <ProductCard product={p} tone="light" />
@@ -290,7 +290,7 @@ export default function Home() {
           <Reveal>
             <div className="grid gap-10 md:grid-cols-12 md:items-start">
               <div className="md:col-span-12">
-                <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Engineering</p>
+          
                 <h2 className="mt-5 font-display text-3xl leading-[1.05] tracking-[0.03em] text-obsidian sm:text-4xl">
                   Civil Engineering &amp; Construction
                 </h2>

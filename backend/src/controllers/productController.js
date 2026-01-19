@@ -35,6 +35,7 @@ async function listProducts(req, res, next) {
       name: p.name,
       category: p.category,
       price: p.price,
+      rating: p.rating ?? null,
       vatRate: p.vatRate ?? null,
       stock: p.stock ?? null,
       description: p.description,
@@ -66,6 +67,7 @@ async function getProductBySlug(req, res, next) {
       name: p.name,
       category: p.category,
       price: p.price,
+      rating: p.rating ?? null,
       vatRate: p.vatRate ?? null,
       stock: p.stock ?? null,
       description: p.description,
@@ -85,6 +87,7 @@ async function createProduct(req, res, next) {
 
     if (payload.vatRate === '' || payload.vatRate === undefined) payload.vatRate = null
     if (payload.stock === '' || payload.stock === undefined) payload.stock = null
+    if (payload.rating === '' || payload.rating === undefined) payload.rating = null
 
     if (payload.vatRate !== null) {
       const raw = typeof payload.vatRate === 'string' ? payload.vatRate.replace('%', '').trim() : payload.vatRate
@@ -95,6 +98,11 @@ async function createProduct(req, res, next) {
     if (payload.stock !== null) {
       const n = Number(payload.stock)
       payload.stock = Number.isFinite(n) ? n : null
+    }
+
+    if (payload.rating !== null) {
+      const n = Number(payload.rating)
+      payload.rating = Number.isFinite(n) ? Math.max(0, Math.min(5, n)) : null
     }
 
     if (Array.isArray(payload.specifications)) {
@@ -122,6 +130,7 @@ async function updateProduct(req, res, next) {
 
     if (payload.vatRate === '' || payload.vatRate === undefined) payload.vatRate = null
     if (payload.stock === '' || payload.stock === undefined) payload.stock = null
+    if (payload.rating === '' || payload.rating === undefined) payload.rating = null
 
     if (payload.vatRate !== null) {
       const raw = typeof payload.vatRate === 'string' ? payload.vatRate.replace('%', '').trim() : payload.vatRate
@@ -132,6 +141,11 @@ async function updateProduct(req, res, next) {
     if (payload.stock !== null) {
       const n = Number(payload.stock)
       payload.stock = Number.isFinite(n) ? n : null
+    }
+
+    if (payload.rating !== null) {
+      const n = Number(payload.rating)
+      payload.rating = Number.isFinite(n) ? Math.max(0, Math.min(5, n)) : null
     }
 
     if (Array.isArray(payload.specifications)) {

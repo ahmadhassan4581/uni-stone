@@ -103,8 +103,8 @@ export default function Header() {
       { to: '/about', label: 'About' },
       { to: '/services', label: 'Services' },
       { to: '/products', label: 'Products' },
-      { to: '/contact', label: 'Contact' },
       { to: '/payment', label: 'Request a Call' },
+      { to: '/contact', label: 'Contact' },
     ],
     [],
   )
@@ -121,12 +121,14 @@ export default function Header() {
 
   const quickLinks = useMemo(
     () => [
-      { to: '/contact', label: 'Contact' },
-      { to: '/about', label: 'About' },
-      { to: '/services', label: 'Service' },
-      { to: '/info/delivery', label: 'Fast delivery' },
-      { to: '/info/faqs', label: 'FAQs' },
-      { to: '/info/pebble-guide', label: 'pebble-guide' },
+      { to: '/products', label: 'All Products', tone: 'primary' },
+      { to: `/products?category=${encodeURIComponent('Facade')}`, label: 'Facade', tone: 'primary' },
+      { to: '/about', label: 'About', tone: 'secondary' },
+      { to: '/services', label: 'Services', tone: 'secondary' },
+      { to: '/info/delivery', label: 'Delivery', tone: 'secondary' },
+      { to: '/info/faqs', label: 'FAQs', tone: 'secondary' },
+      { to: '/info/pebble-guide', label: 'Pebble Guide', tone: 'sub' },
+      { to: '/contact', label: 'Contact', tone: 'secondary' },
     ],
     [],
   )
@@ -363,33 +365,36 @@ export default function Header() {
         <div className="hidden border-t border-black/10 bg-white md:block">
           <Container className="py-2">
             <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2" aria-label="Categories">
-              <Link
-                to="/products"
-                className="text-xs font-semibold tracking-[0.12em] text-[#111111] transition-colors hover:text-black"
-              >
-                All Products
-              </Link>
-              {categories.map((cat) => (
-                <Link
-                  key={cat}
-                  to={`/products?category=${encodeURIComponent(cat)}`}
-                  className="text-xs font-semibold tracking-[0.12em] text-[#111111] transition-colors hover:text-black"
-                >
-                  {cat}
-                </Link>
-              ))}
+              {categories
+                .filter((cat) => cat !== 'Facade')
+                .map((cat) => (
+                  <Link
+                    key={cat}
+                    to={`/products?category=${encodeURIComponent(cat)}`}
+                    className="text-xs font-semibold tracking-[0.12em] text-[#111111] transition-colors hover:text-black"
+                  >
+                    {cat}
+                  </Link>
+                ))}
             </nav>
           </Container>
         </div>
 
-        <div className="hidden border-t border-blue-700 bg-blue-600 md:block">
+        <div className="hidden border-t border-black/10 bg-neutral-100 md:block">
           <Container className="py-2">
-            <nav className="flex flex-wrap items-center justify-center gap-x-10 gap-y-2" aria-label="Quick links">
+            <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2" aria-label="Quick links">
               {quickLinks.map((l) => (
                 <Link
                   key={l.to}
                   to={l.to}
-                  className="text-[0.7rem] font-semibold tracking-[0.22em] text-white/95 transition-colors hover:text-white"
+                  className={cn(
+                    'text-[0.7rem] font-semibold tracking-[0.22em] transition-colors',
+                    l.tone === 'primary'
+                      ? 'text-obsidian hover:text-black'
+                      : l.tone === 'sub'
+                        ? 'text-[0.65rem] font-semibold tracking-[0.3em] text-obsidian/55 hover:text-obsidian'
+                        : 'text-obsidian/70 hover:text-obsidian',
+                  )}
                 >
                   {l.label}
                 </Link>

@@ -16,6 +16,7 @@ const productSchema = new mongoose.Schema(
     name: { type: String, required: true },
     category: { type: String, required: true, index: true },
     price: { type: Number, required: true },
+    rating: { type: Number, default: null, min: 0, max: 5 },
     vatRate: { type: Number, default: null },
     stock: { type: Number, default: null },
     description: { type: String, required: true },

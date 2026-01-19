@@ -12,7 +12,7 @@ export default function Products() {
   const activeCategory = searchParams.get('category') || 'All'
   const q = (searchParams.get('q') || '').trim()
   const [sort, setSort] = useState('featured')
-  const [perPage, setPerPage] = useState(12)
+  const perPage = 9
   const [page, setPage] = useState(1)
 
   useEffect(() => {
@@ -55,7 +55,12 @@ export default function Products() {
     return next
   }, [filtered, sort])
 
-  const pageCount = useMemo(() => Math.max(1, Math.ceil(sorted.length / perPage)), [sorted.length, perPage])
+  const pageCount = useMemo(() => Math.max(1, Math.ceil(sorted.length / perPage)), [sorted.length])
+
+  useEffect(() => {
+    setPage((p) => Math.min(Math.max(1, p), pageCount))
+  }, [pageCount])
+
   const paged = useMemo(() => {
     const safePage = Math.min(Math.max(1, page), pageCount)
     const start = (safePage - 1) * perPage
@@ -104,7 +109,7 @@ export default function Products() {
 
           <div className="mb-6 flex flex-col justify-between gap-3 border-b border-black/10 pb-4 sm:flex-row sm:items-center">
             <p className="text-xs text-obsidian/70">
-              Showing products {showing.start} to {showing.end} of {showing.total}
+              Showing {showing.start}–{showing.end} of  products
             </p>
 
             <div className="flex flex-wrap items-center gap-4">
@@ -179,28 +184,8 @@ export default function Products() {
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
               >
-                Prev
+                Previous
               </button>
-              {Array.from({ length: pageCount }).slice(0, 7).map((_, i) => {
-                const n = i + 1
-                const active = n === page
-                return (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setPage(n)}
-                    className={
-                      'h-10 min-w-10 rounded-md border px-3 text-sm transition-all duration-500 ease-luxury ' +
-                      (active
-                        ? 'border-black/20 bg-neutral-100 text-obsidian'
-                        : 'border-black/10 bg-white text-obsidian/70 hover:border-black/20 hover:text-obsidian')
-                    }
-                    aria-label={`Page ${n}`}
-                  >
-                    {n}
-                  </button>
-                )
-              })}
               <button
                 type="button"
                 className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-blue-700 disabled:opacity-50"

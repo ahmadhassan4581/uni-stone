@@ -1,4 +1,5 @@
  import { useState } from 'react'
+ import { Clock, Mail, MapPin, Phone } from 'lucide-react'
  import { Link } from 'react-router-dom'
  import Container from './Container'
  import { apiFetch } from '../lib/api'
@@ -60,7 +61,7 @@
               </Link>
             
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/pebble-guide">
-                Pebble-guide
+                Pebble Guide
               </Link>
            
             </nav>
@@ -68,14 +69,22 @@
 
           <div className="md:col-span-4">
             <div className="mt-4 space-y-3 text-sm text-obsidian/65">
-              <p>📍 Unistone Yard, Dartford, Kent</p>
-              <p>📞 +447564892282</p>
-              <p>
-                ✉{' '}
-                <a className="text-[rgba(199,159,80)] transition-colors hover:text-gold-2" href="mailto:inquiry@unistone.co.uk">
-                  inquiry@unistone.co.uk
-                </a>
-              </p>
+              <div className="flex items-start gap-2">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-obsidian/65" />
+                <p>Unistone Yard, Dartford, Kent</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-obsidian/65" />
+                <p>+447564892282</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <Mail className="mt-0.5 h-5 w-5 shrink-0 text-obsidian/65" />
+                <p>
+                  <a className="text-blue-600 transition-colors hover:text-blue-700" href="mailto:inquiry@unistone.co.uk">
+                    inquiry@unistone.co.uk
+                  </a>
+                </p>
+              </div>
               <p>
                 You can also fill out our Contact Form{' '}
                 <Link className="text-[rgba(199,159,80)]  transition-colors hover:text-gold-2" to="/contact">
@@ -84,7 +93,10 @@
               </p>
 
               <div className="pt-2">
-                <p className="text-obsidian/50">🕒 Business Hours (UAE / GMT+4)</p>
+                <p className="flex items-center gap-2 text-obsidian/50">
+                  <Clock className="h-4 w-4 shrink-0 text-obsidian/50" />
+                  <span>Business Hours (UAE / GMT+4)</span>
+                </p>
                 <p className="text-obsidian/50">Monday – Friday: 9:00 AM – 5:00 PM</p>
               </div>
 

@@ -61,7 +61,7 @@ export default function Auth() {
                         className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
                         type="email"
                         name="email"
-                        placeholder="Email"
+                        placeholder="jhonedoe@123"
                         autoComplete="email"
                         required
                       />
@@ -73,7 +73,7 @@ export default function Auth() {
                         className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
                         type="password"
                         name="password"
-                        placeholder="Password"
+                        placeholder="Enter your password"
                         autoComplete="current-password"
                         required
                       />
@@ -84,7 +84,7 @@ export default function Auth() {
                     <Button
                       type="submit"
                       size="lg"
-                      variant="green"
+                      variant="blue"
                       className="w-full tracking-normal normal-case hover:translate-y-0 hover:scale-100"
                     >
                       {loading ? 'Please wait...' : 'Log In'}
@@ -92,7 +92,7 @@ export default function Auth() {
                   </div>
 
                   <div className="mt-4 text-center">
-                    <Link className="text-xs text-obsidian/65 hover:text-obsidian hover:underline" to="/contact">
+                    <Link className="text-xs text-blue-600 hover:text-blue-700 hover:underline" to="/contact">
                       Forgot password?
                     </Link>
                   </div>
@@ -198,7 +198,7 @@ export default function Auth() {
                     <Button
                       type="submit"
                       size="lg"
-                      variant="green"
+                      variant="blue"
                       className="w-full tracking-normal normal-case hover:translate-y-0 hover:scale-100"
                     >
                       {loading ? 'Please wait...' : 'Create Account'}

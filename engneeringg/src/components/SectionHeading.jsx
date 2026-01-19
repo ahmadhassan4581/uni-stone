@@ -1,6 +1,14 @@
 import { cn } from '../lib/cn'
 
-export default function SectionHeading({ eyebrow, title, subtitle, align = 'left', tone = 'dark', className }) {
+export default function SectionHeading({
+  eyebrow,
+  title,
+  subtitle,
+  align = 'left',
+  tone = 'dark',
+  className,
+  eyebrowClassName,
+}) {
   const alignClass = align === 'center' ? 'text-center items-center' : 'text-left items-start'
   const titleClass = tone === 'light' ? 'text-obsidian' : 'text-white'
   const subtitleClass = tone === 'light' ? 'text-obsidian/70' : 'text-white/70'
@@ -8,7 +16,7 @@ export default function SectionHeading({ eyebrow, title, subtitle, align = 'left
   return (
     <div className={cn('flex flex-col gap-4', alignClass, className)}>
       {eyebrow ? (
-        <p className="text-xs tracking-[0.35em] uppercase text-gold/80">{eyebrow}</p>
+        <p className={cn('text-xs tracking-[0.35em] uppercase text-gold/80', eyebrowClassName)}>{eyebrow}</p>
       ) : null}
       <h2 className={cn('font-display text-3xl leading-[1.05] tracking-[0.02em] sm:text-4xl', titleClass)}>
         {title}
