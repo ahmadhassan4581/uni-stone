@@ -13,6 +13,8 @@ export function CartProvider({ children }) {
   const { products } = useProducts()
   const productMap = useMemo(() => toMap(products), [products])
 
+  const [isMiniCartOpen, setIsMiniCartOpen] = useState(false)
+
   const [items, setItems] = useState(() => {
     try {
       const raw = localStorage.getItem('aurum_cart_v1')
@@ -56,6 +58,9 @@ export function CartProvider({ children }) {
 
   const clear = () => setItems([])
 
+  const openMiniCart = () => setIsMiniCartOpen(true)
+  const closeMiniCart = () => setIsMiniCartOpen(false)
+
   const detailedItems = useMemo(() => {
     return items
       .map((i) => {
@@ -83,8 +88,11 @@ export function CartProvider({ children }) {
       setQty,
       removeItem,
       clear,
+      isMiniCartOpen,
+      openMiniCart,
+      closeMiniCart,
     }),
-    [items, detailedItems, totalCount, subtotal],
+    [items, detailedItems, totalCount, subtotal, isMiniCartOpen],
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

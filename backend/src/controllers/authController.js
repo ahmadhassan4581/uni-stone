@@ -35,6 +35,7 @@ async function register(req, res, next) {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      wishlist: Array.isArray(user.wishlist) ? user.wishlist : [],
       token: generateToken(user._id),
     })
   } catch (err) {
@@ -69,6 +70,7 @@ async function login(req, res, next) {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      wishlist: Array.isArray(user.wishlist) ? user.wishlist : [],
       token: generateToken(user._id),
     })
   } catch (err) {
@@ -80,4 +82,57 @@ async function me(req, res) {
   res.json(req.user)
 }
 
-module.exports = { register, login, me }
+async function getWishlist(req, res) {
+  res.json({ wishlist: Array.isArray(req.user?.wishlist) ? req.user.wishlist : [] })
+}
+
+async function addWishlistItem(req, res, next) {
+  try {
+    const productId = String(req.body?.productId || '').trim()
+    if (!productId) {
+      res.status(400)
+      throw new Error('productId is required')
+    }
+
+    const user = await User.findById(req.user._id)
+    if (!user) {
+      res.status(401)
+      throw new Error('Not authorized')
+    }
+
+    const current = Array.isArray(user.wishlist) ? user.wishlist : []
+    if (!current.includes(productId)) current.push(productId)
+    user.wishlist = current
+    await user.save()
+
+    res.json({ wishlist: user.wishlist })
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function removeWishlistItem(req, res, next) {
+  try {
+    const productId = String(req.params?.productId || '').trim()
+    if (!productId) {
+      res.status(400)
+      throw new Error('productId is required')
+    }
+
+    const user = await User.findById(req.user._id)
+    if (!user) {
+      res.status(401)
+      throw new Error('Not authorized')
+    }
+
+    const current = Array.isArray(user.wishlist) ? user.wishlist : []
+    user.wishlist = current.filter((id) => id !== productId)
+    await user.save()
+
+    res.json({ wishlist: user.wishlist })
+  } catch (err) {
+    next(err)
+  }
+}
+
+module.exports = { register, login, me, getWishlist, addWishlistItem, removeWishlistItem }

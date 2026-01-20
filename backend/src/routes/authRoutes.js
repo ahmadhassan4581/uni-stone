@@ -1,7 +1,7 @@
 const express = require('express')
 const { body } = require('express-validator')
 
-const { register, login, me } = require('../controllers/authController')
+const { register, login, me, getWishlist, addWishlistItem, removeWishlistItem } = require('../controllers/authController')
 const { protect } = require('../middleware/authMiddleware')
 
 const router = express.Router()
@@ -30,5 +30,9 @@ router.post(
 )
 
 router.get('/me', protect, me)
+
+router.get('/wishlist', protect, getWishlist)
+router.post('/wishlist', protect, [body('productId').trim().notEmpty().withMessage('productId is required')], addWishlistItem)
+router.delete('/wishlist/:productId', protect, removeWishlistItem)
 
 module.exports = router

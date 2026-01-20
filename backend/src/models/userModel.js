@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, trim: true, lowercase: true, required: true, unique: true },
     password: { type: String, required: true },
     isAdmin: { type: Boolean, default: false },
+    wishlist: { type: [String], default: [] },
   },
   { timestamps: true },
 )

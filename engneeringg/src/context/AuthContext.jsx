@@ -33,7 +33,16 @@ export function AuthProvider({ children }) {
         method: 'POST',
         body: JSON.stringify({ email, password }),
       })
-      setAuth({ user: { _id: data._id, name: data.name, email: data.email, isAdmin: data.isAdmin }, token: data.token })
+      setAuth({
+        user: {
+          _id: data._id,
+          name: data.name,
+          email: data.email,
+          isAdmin: data.isAdmin,
+          wishlist: Array.isArray(data.wishlist) ? data.wishlist : [],
+        },
+        token: data.token,
+      })
       return data
     } catch (err) {
       const msg = err?.message || 'Login failed'
@@ -52,7 +61,16 @@ export function AuthProvider({ children }) {
         method: 'POST',
         body: JSON.stringify({ name, email, password, confirmPassword }),
       })
-      setAuth({ user: { _id: data._id, name: data.name, email: data.email, isAdmin: data.isAdmin }, token: data.token })
+      setAuth({
+        user: {
+          _id: data._id,
+          name: data.name,
+          email: data.email,
+          isAdmin: data.isAdmin,
+          wishlist: Array.isArray(data.wishlist) ? data.wishlist : [],
+        },
+        token: data.token,
+      })
       return data
     } catch (err) {
       const msg = err?.message || 'Signup failed'
@@ -80,6 +98,33 @@ export function AuthProvider({ children }) {
     }
   }
 
+  const addToWishlist = async (productId) => {
+    if (!token) throw new Error('Not authenticated')
+    const data = await apiFetch('/api/auth/wishlist', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ productId }),
+    })
+    setAuth((prev) => ({
+      ...prev,
+      user: prev.user ? { ...prev.user, wishlist: Array.isArray(data?.wishlist) ? data.wishlist : [] } : prev.user,
+    }))
+    return data
+  }
+
+  const removeFromWishlist = async (productId) => {
+    if (!token) throw new Error('Not authenticated')
+    const data = await apiFetch(`/api/auth/wishlist/${encodeURIComponent(productId)}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    setAuth((prev) => ({
+      ...prev,
+      user: prev.user ? { ...prev.user, wishlist: Array.isArray(data?.wishlist) ? data.wishlist : [] } : prev.user,
+    }))
+    return data
+  }
+
   const value = useMemo(
     () => ({
       user,
@@ -90,6 +135,8 @@ export function AuthProvider({ children }) {
       register,
       logout,
       refreshMe,
+      addToWishlist,
+      removeFromWishlist,
       isAuthenticated: Boolean(token),
     }),
     [user, token, loading, error],

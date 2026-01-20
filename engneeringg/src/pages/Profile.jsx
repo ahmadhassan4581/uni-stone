@@ -3,12 +3,20 @@ import { Link, useNavigate } from 'react-router-dom'
 import Breadcrumbs from '../components/Breadcrumbs'
 import Button from '../components/Button'
 import Container from '../components/Container'
+import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
 import { useAuth } from '../context/AuthContext'
+import { useProducts } from '../context/ProductsContext'
 
 export default function Profile() {
   const { user, isAuthenticated, logout } = useAuth()
+  const { products } = useProducts()
   const navigate = useNavigate()
+
+  const wishlistIds = Array.isArray(user?.wishlist) ? user.wishlist : []
+  const wishlistProducts = wishlistIds
+    .map((id) => products.find((p) => p.id === id))
+    .filter(Boolean)
 
   const cards = [
     {
@@ -110,6 +118,25 @@ export default function Profile() {
                 )
               })}
             </div>
+
+            {wishlistProducts.length ? (
+              <div className="mt-14">
+                <Reveal>
+                  <div className="border-b border-black/10 pb-4">
+                    <h2 className="font-display text-3xl tracking-[0.02em] text-obsidian sm:text-4xl">Wish List</h2>
+                    <div className="mt-3 h-1 w-28 bg-gold" />
+                  </div>
+                </Reveal>
+
+                <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {wishlistProducts.map((p, idx) => (
+                    <Reveal key={p.id || p.slug || p.name} delay={idx * 80}>
+                      <ProductCard product={p} tone="light" />
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </>
         )}
       </Container>

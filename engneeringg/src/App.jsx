@@ -1,14 +1,19 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import BlankLayout from './layouts/BlankLayout'
 import Layout from './layouts/Layout'
 import About from './pages/About'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import Contact from './pages/Contact'
+import DeliveryDetails from './pages/DeliveryDetails'
 import Home from './pages/Home'
 import InfoPage from './pages/InfoPage'
 import NotFound from './pages/NotFound'
 import Auth from './pages/Auth'
 import Payment from './pages/Payment'
+import CheckoutSummary from './pages/CheckoutSummary'
+import CheckoutPayment from './pages/CheckoutPayment'
+import CheckoutComplete from './pages/CheckoutComplete'
 import ProductDetails from './pages/ProductDetails'
 import Products from './pages/Products'
 import Profile from './pages/Profile'
@@ -19,6 +24,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route element={<BlankLayout />}>
+          <Route path="checkout/delivery" element={<DeliveryDetails />} />
+          <Route path="checkout/summary" element={<CheckoutSummary />} />
+          <Route path="checkout/payment" element={<CheckoutPayment />} />
+          <Route path="checkout/complete" element={<CheckoutComplete />} />
+        </Route>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />

@@ -1,5 +1,6 @@
 import { Lock } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useMemo, useRef, useState } from 'react'
 import Container from '../components/Container'
 import Button from '../components/Button'
 import { useCart } from '../context/CartContext'
@@ -13,6 +14,24 @@ function money(n) {
 
 export default function Checkout() {
   const { detailedItems, subtotal } = useCart()
+  const navigate = useNavigate()
+
+  const [email, setEmail] = useState('')
+  const [emailTouched, setEmailTouched] = useState(false)
+  const emailRef = useRef(null)
+
+  const isEmailValid = useMemo(() => {
+    const value = email.trim()
+    if (!value) return false
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  }, [email])
+
+  const emailError = useMemo(() => {
+    if (!emailTouched) return ''
+    if (!email.trim()) return 'Email is required.'
+    if (!isEmailValid) return 'Please enter a valid email address.'
+    return ''
+  }, [emailTouched, email, isEmailValid])
 
   const delivery = 60
   const vat = subtotal * 0.2
@@ -82,8 +101,17 @@ export default function Checkout() {
                   <input
                     type="email"
                     placeholder="Example: john.smith@gmail.com"
-                    className="mt-3 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none"
+                    ref={emailRef}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onBlur={() => setEmailTouched(true)}
+                    className={`mt-3 w-full rounded border px-3 py-2 text-sm focus:border-blue-600 focus:outline-none ${
+                      emailError ? 'border-red-400' : 'border-gray-300'
+                    }`}
                   />
+                  {emailError ? (
+                    <p className="mt-2 text-xs text-red-600">{emailError}</p>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -149,10 +177,19 @@ export default function Checkout() {
                 </div>
 
                 <Button
-                  to="/checkout/delivery"
-                  as={Link}
+                  type="button"
                   variant="blue"
                   className="mt-4 w-full text-sm"
+                  disabled={!isEmailValid}
+                  onClick={() => {
+                    setEmailTouched(true)
+                    if (!isEmailValid) {
+                      emailRef.current?.focus?.()
+                      return
+                    }
+                    localStorage.setItem('checkout_email', email.trim())
+                    navigate('/checkout/delivery')
+                  }}
                 >
                   <Lock className="mr-2 h-4 w-4" />
                   Delivery Details →

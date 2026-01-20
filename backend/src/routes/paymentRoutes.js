@@ -2,6 +2,7 @@ const express = require('express')
 
 const {
   stripeCheckout,
+  stripeCreatePaymentIntent,
   razorpayCreateOrder,
   razorpayVerify,
   paytmInitiate,
@@ -11,6 +12,7 @@ const {
 const router = express.Router()
 
 router.post('/stripe', stripeCheckout)
+router.post('/stripe/intent', stripeCreatePaymentIntent)
 
 router.post('/razorpay', razorpayCreateOrder)
 router.post('/razorpay/verify', razorpayVerify)

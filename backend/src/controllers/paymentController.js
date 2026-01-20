@@ -68,6 +68,31 @@ async function stripeCheckout(req, res, next) {
   }
 }
 
+async function stripeCreatePaymentIntent(req, res, next) {
+  try {
+    requireEnv(['STRIPE_SECRET_KEY'])
+
+    const Stripe = require('stripe')
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
+    const amount = normalizeAmount(req.body?.amount ?? req.body?.subtotal)
+    const currency = (req.body?.currency || 'USD').toLowerCase()
+
+    const intent = await stripe.paymentIntents.create({
+      amount: Math.round(amount * 100),
+      currency,
+      automatic_payment_methods: { enabled: true },
+      metadata: {
+        kind: req.body?.kind || 'cart',
+      },
+    })
+
+    res.json({ clientSecret: intent.client_secret })
+  } catch (err) {
+    next(err)
+  }
+}
+
 async function razorpayCreateOrder(req, res, next) {
   try {
     requireEnv(['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET'])
@@ -268,6 +293,7 @@ async function paytmCallback(req, res, next) {
 
 module.exports = {
   stripeCheckout,
+  stripeCreatePaymentIntent,
   razorpayCreateOrder,
   razorpayVerify,
   paytmInitiate,
