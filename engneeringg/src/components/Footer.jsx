@@ -93,10 +93,7 @@
               </p>
 
               <div className="pt-2">
-                <p className="flex items-center gap-2 text-obsidian/50">
-                  <Clock className="h-4 w-4 shrink-0 text-obsidian/50" />
-                  <span>Business Hours (UAE / GMT+4)</span>
-                </p>
+              
                 <p className="text-obsidian/50">Monday – Friday: 9:00 AM – 5:00 PM</p>
               </div>
 

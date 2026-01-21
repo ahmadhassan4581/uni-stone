@@ -3,9 +3,9 @@ import Container from '../components/Container'
 import { apiFetch } from '../lib/api'
 
 export default function Contact() {
-  const contactEmail = 'sales@marble-mosaics.com'
-  const contactPhone = '01273 891144'
-  const addressText = 'Marblemosaics Ltd, Unit 30, The Old Brickworks, Plumpton Green, East Sussex, BN7 3DF, GB.'
+  const contactEmail = 'inquiry@unistone.co.uk'
+  const contactPhone = '+447564892282'
+  const addressText = 'Unistone Yard, Dartford, Kent'
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -130,8 +130,11 @@ export default function Contact() {
 
           <button
             type="submit"
-            disabled={submitStatus === 'submitting'}
-            className="bg-blue-700 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+            disabled={submitStatus === 'submitting' || !humanChecked}
+            className={
+              'bg-blue-700 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-800 ' +
+              (submitStatus === 'submitting' || !humanChecked ? 'cursor-not-allowed opacity-60' : '')
+            }
           >
             {submitStatus === 'submitting' ? 'SENDING...' : 'SEND'}
           </button>
