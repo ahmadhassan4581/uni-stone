@@ -18,7 +18,16 @@ export default function Home() {
     refresh()
   }, [refresh])
 
-  const featured = useMemo(() => products.slice(0, 4), [products])
+  const featured = useMemo(() => {
+    const copy = [...products]
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1))
+      const tmp = copy[i]
+      copy[i] = copy[j]
+      copy[j] = tmp
+    }
+    return copy.slice(0, 9)
+  }, [products])
   const heroSlides = useMemo(
     () => [
       {
@@ -209,7 +218,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
                   <p className="text-2xl font-semibold text-[rgba(255,172,6)] drop-shadow sm:text-3xl"> Interiors</p>
-                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
+                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-[#2552ad] px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-[#1f4591]">
                     Shop Now
                   </span>
                 </div>
@@ -229,7 +238,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
                   <p className="text-2xl font-semibold text-[rgba(255,172,6)] drop-shadow sm:text-3xl">Finishes</p>
-                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
+                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-[#2552ad] px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-[#1f4591]">
                     Shop Now
                   </span>
                 </div>
@@ -249,7 +258,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/20" />
                 <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 px-6 text-center sm:bottom-10">
                   <p className="text-2xl font-semibold text-[rgba(255,172,6)] drop-shadow sm:text-3xl">Facade</p>
-                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-blue-700">
+                  <span className="inline-flex h-10 items-center justify-center rounded-sm bg-[#2552ad] px-6 text-sm font-semibold text-white shadow-sm transition-colors duration-300 hover:bg-[#1f4591]">
                     Shop Now
                   </span>
                 </div>

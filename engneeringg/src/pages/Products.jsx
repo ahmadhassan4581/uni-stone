@@ -180,7 +180,7 @@ export default function Products() {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+                className="inline-flex h-10 items-center justify-center rounded-md bg-[#2552ad] px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-[#1f4591] disabled:opacity-50"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
               >
@@ -188,7 +188,7 @@ export default function Products() {
               </button>
               <button
                 type="button"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+                className="inline-flex h-10 items-center justify-center rounded-md bg-[#2552ad] px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-[#1f4591] disabled:opacity-50"
                 onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
                 disabled={page >= pageCount}
               >

@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import Button from '../components/Button'
 import Container from '../components/Container'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 import { apiFetch } from '../lib/api'
 
 function money(n) {
@@ -22,6 +23,7 @@ function CardPaymentForm({ total }) {
   const elements = useElements()
   const navigate = useNavigate()
   const { detailedItems, clear } = useCart()
+  const { token } = useAuth()
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -51,6 +53,7 @@ function CardPaymentForm({ total }) {
 
       const order = await apiFetch('/api/orders', {
         method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: JSON.stringify({
           items: detailedItems.map((i) => ({ productId: i.productId, qty: i.qty })),
         }),

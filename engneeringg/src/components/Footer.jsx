@@ -131,7 +131,7 @@
                   />
                   <button
                     type="submit"
-                    className="h-11 rounded-md border border-blue-600 bg-blue-600 px-4 text-sm font-semibold tracking-[0.12em] uppercase text-white transition-colors hover:border-blue-700 hover:bg-blue-700"
+                    className="h-11 rounded-md border border-[#2552ad] bg-[#2552ad] px-4 text-sm font-semibold tracking-[0.12em] uppercase text-white transition-colors hover:border-[#1f4591] hover:bg-[#1f4591]"
                   >
                     Go
                   </button>

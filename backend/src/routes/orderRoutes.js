@@ -8,6 +8,7 @@ const router = express.Router()
 
 router.post(
   '/',
+  protect,
   [
     body('items').isArray({ min: 1 }).withMessage('Items are required'),
     body('items.*.productId').isString().withMessage('productId is required'),

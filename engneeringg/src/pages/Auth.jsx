@@ -23,9 +23,9 @@ export default function Auth() {
       <Container className="py-20 sm:py-24">
         <Reveal>
           <SectionHeading
-            eyebrow="Account"
-            title={isLogin ? 'Login' : 'Create Account'}
-            subtitle={isLogin ? 'View your recent orders and update your details.' : 'Create an account to manage your orders and details.'}
+            eyebrow=""
+            title=""
+            subtitle=""
             tone="light"
           />
         </Reveal>
@@ -34,11 +34,8 @@ export default function Auth() {
           <div className="mx-auto mt-12 grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_360px]">
             <Reveal>
               <div className="rounded-md bg-white p-8 shadow-sm">
-                <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Login' : 'Create Account'}</p>
-                <p className="mt-1 text-sm text-obsidian/60">{isLogin ? 'View your recent orders and update your details.' : 'Manage your orders and details.'}</p>
-
                 <form
-                  className="mt-8"
+                  className=""
                   onSubmit={(e) => {
                     e.preventDefault()
                     const form = new FormData(e.currentTarget)
@@ -105,7 +102,6 @@ export default function Auth() {
             <Reveal delay={130}>
               <div className="rounded-md bg-white p-8 shadow-sm">
                 <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Need an account?' : 'Already have an account?'}</p>
-                <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
                 <div className="mt-6">
                   <button
                     type="button"
@@ -122,11 +118,8 @@ export default function Auth() {
           <div className="mx-auto mt-12 w-full max-w-md">
             <Reveal>
               <div className="rounded-md bg-white p-8 shadow-sm">
-                <p className="text-sm font-semibold text-[#111111]">Create Account</p>
-                <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
-
                 <form
-                  className="mt-8"
+                  className=""
                   onSubmit={(e) => {
                     e.preventDefault()
                     const form = new FormData(e.currentTarget)

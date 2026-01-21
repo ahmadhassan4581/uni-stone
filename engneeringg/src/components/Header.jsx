@@ -344,7 +344,7 @@ export default function Header() {
             >
               <ShoppingBag className="h-5 w-5" />
               {totalCount ? (
-                <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[0.55rem] font-semibold text-white">
+                <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2552ad] px-1 text-[0.55rem] font-semibold text-white">
                   {totalCount}
                 </span>
               ) : null}
