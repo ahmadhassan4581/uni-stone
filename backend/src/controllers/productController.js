@@ -36,6 +36,7 @@ async function listProducts(req, res, next) {
       category: p.category,
       price: p.price,
       rating: p.rating ?? null,
+      numReviews: p.numReviews ?? 0,
       vatRate: p.vatRate ?? null,
       stock: p.stock ?? null,
       description: p.description,
@@ -68,6 +69,19 @@ async function getProductBySlug(req, res, next) {
       category: p.category,
       price: p.price,
       rating: p.rating ?? null,
+      numReviews: p.numReviews ?? 0,
+      reviews: Array.isArray(p.reviews)
+        ? p.reviews
+            .map((r) => ({
+              _id: r._id,
+              user: r.user,
+              name: r.name,
+              rating: r.rating,
+              comment: r.comment,
+              createdAt: r.createdAt,
+            }))
+            .sort((a, b) => new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0))
+        : [],
       vatRate: p.vatRate ?? null,
       stock: p.stock ?? null,
       description: p.description,
@@ -75,6 +89,89 @@ async function getProductBySlug(req, res, next) {
       specifications: Array.isArray(p.specifications) ? p.specifications : [],
       images: Array.isArray(p.images) && p.images.length ? p.images : [p.image].filter(Boolean),
       image: p.image,
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function addReview(req, res, next) {
+  try {
+    await ensureSeeded()
+
+    const { slug } = req.params
+    const product = await Product.findOne({ slug })
+    if (!product) {
+      res.status(404)
+      throw new Error('Product not found')
+    }
+
+    const rating = Number(req.body?.rating)
+    const comment = String(req.body?.comment || '').trim()
+    if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
+      res.status(400)
+      throw new Error('Rating must be between 1 and 5')
+    }
+
+    const userId = String(req.user?._id || '')
+    if (!userId) {
+      res.status(401)
+      throw new Error('Not authorized')
+    }
+
+    const alreadyReviewed = Array.isArray(product.reviews)
+      ? product.reviews.some((r) => String(r.user) === userId)
+      : false
+
+    if (alreadyReviewed) {
+      res.status(400)
+      throw new Error('You have already reviewed this product')
+    }
+
+    product.reviews.push({
+      user: req.user._id,
+      name: req.user.name,
+      rating,
+      comment,
+    })
+
+    product.numReviews = Array.isArray(product.reviews) ? product.reviews.length : 0
+    const avg = product.numReviews
+      ? product.reviews.reduce((sum, r) => sum + Number(r?.rating || 0), 0) / product.numReviews
+      : 0
+    product.rating = Number.isFinite(avg) ? Math.round(avg * 10) / 10 : null
+
+    await product.save()
+
+    res.status(201).json({
+      id: product.productId,
+      slug: product.slug,
+      sku: product.sku,
+      name: product.name,
+      category: product.category,
+      price: product.price,
+      rating: product.rating ?? null,
+      numReviews: product.numReviews ?? 0,
+      reviews: Array.isArray(product.reviews)
+        ? product.reviews
+            .map((r) => ({
+              _id: r._id,
+              user: r.user,
+              name: r.name,
+              rating: r.rating,
+              comment: r.comment,
+              createdAt: r.createdAt,
+            }))
+            .sort((a, b) => new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0))
+        : [],
+      vatRate: product.vatRate ?? null,
+      stock: product.stock ?? null,
+      description: product.description,
+      bullets: product.bullets,
+      specifications: Array.isArray(product.specifications) ? product.specifications : [],
+      images:
+        Array.isArray(product.images) && product.images.length ? product.images : [product.image].filter(Boolean),
+      image: product.image,
     })
   } catch (err) {
     next(err)
@@ -197,6 +294,7 @@ async function listProductsAdmin(req, res, next) {
 module.exports = {
   listProducts,
   getProductBySlug,
+  addReview,
   createProduct,
   updateProduct,
   deleteProduct,

@@ -3,6 +3,7 @@ const express = require('express')
 const {
   listProducts,
   getProductBySlug,
+  addReview,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -14,6 +15,8 @@ const router = express.Router()
 
 router.get('/', listProducts)
 router.get('/:slug', getProductBySlug)
+
+router.post('/:slug/reviews', protect, addReview)
 
 // Admin CRUD placeholders (no admin UI in frontend; left open for future use)
 router.post('/', protect, adminOnly, createProduct)

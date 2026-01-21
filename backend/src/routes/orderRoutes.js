@@ -13,6 +13,10 @@ router.post(
     body('items').isArray({ min: 1 }).withMessage('Items are required'),
     body('items.*.productId').isString().withMessage('productId is required'),
     body('items.*.qty').optional().isNumeric(),
+    body('deliveryDetails').optional().isObject(),
+    body('paymentMethod').optional().isString(),
+    body('paymentStatus').optional().isString(),
+    body('paymentReference').optional().isString(),
   ],
   createOrder,
 )

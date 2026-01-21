@@ -15,6 +15,34 @@ const orderItemSchema = new mongoose.Schema(
   { _id: false },
 )
 
+const orderAddressSchema = new mongoose.Schema(
+  {
+    fullName: { type: String, default: '' },
+    company: { type: String, default: '' },
+    address1: { type: String, default: '' },
+    town: { type: String, default: '' },
+    county: { type: String, default: '' },
+    postcode: { type: String, default: '' },
+    telephone: { type: String, default: '' },
+  },
+  { _id: false },
+)
+
+const orderDeliveryDetailsSchema = new mongoose.Schema(
+  {
+    fullName: { type: String, default: '' },
+    company: { type: String, default: '' },
+    address1: { type: String, default: '' },
+    town: { type: String, default: '' },
+    county: { type: String, default: '' },
+    postcode: { type: String, default: '' },
+    telephone: { type: String, default: '' },
+    billingSame: { type: Boolean, default: true },
+    billing: { type: orderAddressSchema, default: null },
+  },
+  { _id: false },
+)
+
 const orderSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -24,6 +52,9 @@ const orderSchema = new mongoose.Schema(
     total: { type: Number, required: true },
     status: { type: String, enum: ['created', 'paid', 'shipped', 'completed', 'cancelled'], default: 'created' },
     paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },
+    paymentMethod: { type: String, enum: ['card', 'telephone', 'unknown'], default: 'unknown' },
+    paymentReference: { type: String, default: '' },
+    deliveryDetails: { type: orderDeliveryDetailsSchema, default: null },
   },
   { timestamps: true },
 )

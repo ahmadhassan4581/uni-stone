@@ -1,8 +1,9 @@
 import { Lock } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
 import Container from '../components/Container'
+import logo from '../assets/logo.png'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { apiFetch } from '../lib/api'
@@ -64,7 +65,9 @@ export default function CheckoutSummary() {
     <section className="bg-white">
       <Container className="py-8">
         <div className="mb-6 text-center">
-          <h1 className="text-lg font-semibold">Marblemosaics Ltd</h1>
+          <Link to="/" aria-label="Go to home" className="inline-flex items-center justify-center">
+            <img src={logo} alt="UniStone" className="h-10 w-auto" />
+          </Link>
         </div>
 
         {/* Progress */}
@@ -273,6 +276,9 @@ export default function CheckoutSummary() {
                         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
                         body: JSON.stringify({
                           items: detailedItems.map((i) => ({ productId: i.productId, qty: i.qty })),
+                          deliveryDetails,
+                          paymentMethod: 'telephone',
+                          paymentStatus: 'pending',
                         }),
                       })
 
@@ -303,6 +309,26 @@ export default function CheckoutSummary() {
                 ) : null}
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-14 flex flex-col items-center justify-center gap-3 py-10 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-black/10">
+            <Lock className="h-6 w-6 text-black/70" />
+          </div>
+          <div>
+            <p className="text-base font-semibold text-[#111111]">Secure Checkout</p>
+            <p className="text-sm text-black/50">128-bit Secure Encryption</p>
+          </div>
+
+          <div className="mt-2 flex items-center justify-center text-xs text-black/70">
+            <Link to="/info/terms" className="px-3 hover:underline">
+              Terms &amp; Conditions
+            </Link>
+            <span className="h-4 w-px bg-black/20" />
+            <Link to="/info/privacy" className="px-3 hover:underline">
+              Privacy Policy
+            </Link>
           </div>
         </div>
       </Container>

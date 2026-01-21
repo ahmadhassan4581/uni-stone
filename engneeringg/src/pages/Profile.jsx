@@ -15,6 +15,8 @@ export default function Profile() {
   const { products } = useProducts()
   const navigate = useNavigate()
 
+  const [activeTab, setActiveTab] = useState('orders')
+
   const [ordersLoading, setOrdersLoading] = useState(false)
   const [ordersError, setOrdersError] = useState('')
   const [orders, setOrders] = useState([])
@@ -145,20 +147,36 @@ export default function Profile() {
                 const Icon = card.icon
                 return (
                   <Reveal key={card.key} delay={idx * 70}>
-                    <Link
-                      to={card.to}
-                      className="flex flex-col items-center justify-center rounded-md border border-black/20 bg-white px-10 py-12 text-center transition-colors hover:bg-neutral-50"
-                    >
-                      <Icon className={`h-7 w-7 ${card.iconClass}`} />
-                      <p className="mt-4 text-sm font-semibold text-obsidian">{card.title}</p>
-                      <p className="mt-1 text-xs text-obsidian/60">{card.subtitle}</p>
-                    </Link>
+                    {card.key === 'orders' || card.key === 'wishlist' ? (
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab(card.key)}
+                        className={
+                          'flex w-full flex-col items-center justify-center rounded-md border px-10 py-12 text-center transition-colors ' +
+                          (activeTab === card.key ? 'border-black/40 bg-neutral-50' : 'border-black/20 bg-white hover:bg-neutral-50')
+                        }
+                      >
+                        <Icon className={`h-7 w-7 ${card.iconClass}`} />
+                        <p className="mt-4 text-sm font-semibold text-obsidian">{card.title}</p>
+                        <p className="mt-1 text-xs text-obsidian/60">{card.subtitle}</p>
+                      </button>
+                    ) : (
+                      <Link
+                        to={card.to}
+                        className="flex flex-col items-center justify-center rounded-md border border-black/20 bg-white px-10 py-12 text-center transition-colors hover:bg-neutral-50"
+                      >
+                        <Icon className={`h-7 w-7 ${card.iconClass}`} />
+                        <p className="mt-4 text-sm font-semibold text-obsidian">{card.title}</p>
+                        <p className="mt-1 text-xs text-obsidian/60">{card.subtitle}</p>
+                      </Link>
+                    )}
                   </Reveal>
                 )
               })}
             </div>
 
-            <div className="mt-14">
+            {activeTab === 'orders' ? (
+              <div className="mt-14">
               <Reveal>
                 <div className="border-b border-black/10 pb-4">
                   <div className="flex items-end justify-between gap-4">
@@ -225,8 +243,7 @@ export default function Profile() {
                 )}
               </div>
             </div>
-
-            {wishlistProducts.length ? (
+            ) : (
               <div className="mt-14">
                 <Reveal>
                   <div className="border-b border-black/10 pb-4">
@@ -235,15 +252,26 @@ export default function Profile() {
                   </div>
                 </Reveal>
 
-                <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {wishlistProducts.map((p, idx) => (
-                    <Reveal key={p.id || p.slug || p.name} delay={idx * 80}>
-                      <ProductCard product={p} tone="light" />
-                    </Reveal>
-                  ))}
-                </div>
+                {wishlistProducts.length ? (
+                  <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {wishlistProducts.map((p, idx) => (
+                      <Reveal key={p.id || p.slug || p.name} delay={idx * 80}>
+                        <ProductCard product={p} tone="light" />
+                      </Reveal>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-10 rounded-xl border border-black/10 bg-neutral-50 p-8">
+                    <p className="text-sm text-obsidian/70">Your wish list is empty.</p>
+                    <div className="mt-6">
+                      <Button as={Link} to="/products" variant="blue" size="lg">
+                        Explore Products
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
-            ) : null}
+            )}
           </>
         )}
       </Container>

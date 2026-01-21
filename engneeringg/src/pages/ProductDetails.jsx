@@ -12,6 +12,7 @@ import Container from '../components/Container'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { useProducts } from '../context/ProductsContext'
+import { apiFetch } from '../lib/api'
 
 function money(n) {
   return new Intl.NumberFormat(undefined, {
@@ -29,7 +30,7 @@ export default function ProductDetails() {
   const navigate = useNavigate()
   const { products, loading, refresh } = useProducts()
   const { addItem, openMiniCart } = useCart()
-  const { isAuthenticated, user, addToWishlist, removeFromWishlist } = useAuth()
+  const { isAuthenticated, user, token, addToWishlist, removeFromWishlist } = useAuth()
 
   const product = useMemo(
     () => products.find(p => p.slug === slug),
@@ -39,37 +40,70 @@ export default function ProductDetails() {
   const [selectedImage, setSelectedImage] = useState('')
   const [activeTab, setActiveTab] = useState('info')
 
+  const [details, setDetails] = useState(null)
+  const [reviewRating, setReviewRating] = useState('5')
+  const [reviewComment, setReviewComment] = useState('')
+  const [reviewSubmitting, setReviewSubmitting] = useState(false)
+  const [reviewError, setReviewError] = useState('')
+
   useEffect(() => {
     refresh()
   }, [refresh])
 
+  useEffect(() => {
+    let alive = true
+    const run = async () => {
+      try {
+        const data = await apiFetch(`/api/products/${encodeURIComponent(slug)}`)
+        if (!alive) return
+        setDetails(data)
+      } catch {
+        if (!alive) return
+        setDetails(null)
+      }
+    }
+
+    run()
+    return () => {
+      alive = false
+    }
+  }, [slug])
+
+  const data = details || product
+
   const images = useMemo(() => {
-    if (Array.isArray(product?.images) && product.images.length)
-      return product.images
-    if (product?.image) return [product.image]
+    if (Array.isArray(data?.images) && data.images.length)
+      return data.images
+    if (data?.image) return [data.image]
     return []
-  }, [product])
+  }, [data])
 
   useEffect(() => {
     setSelectedImage(images[0] || '')
   }, [images])
 
-  if (loading || !product) return null
+  if (loading || !data) return null
 
-  const inStock = !product.stock || Number(product.stock) > 0
-  const incVat = vatInclusivePrice(product.price, product.vatRate)
-  const categoryLabel = String(product.category || 'Products').trim() || 'Products'
+  const inStock = !data.stock || Number(data.stock) > 0
+  const incVat = vatInclusivePrice(data.price, data.vatRate)
+  const categoryLabel = String(data.category || 'Products').trim() || 'Products'
   const wishlistIds = Array.isArray(user?.wishlist) ? user.wishlist : []
-  const isWishlisted = wishlistIds.includes(product.id)
-  const specs = Array.isArray(product?.specifications)
-    ? product.specifications
+  const isWishlisted = wishlistIds.includes(data.id)
+  const specs = Array.isArray(data?.specifications)
+    ? data.specifications
         .map((row) => ({
           label: String(row?.label || '').trim(),
           value: String(row?.value || '').trim(),
         }))
         .filter((row) => row.label || row.value)
     : []
-  const bullets = Array.isArray(product?.bullets) ? product.bullets.map((b) => String(b || '').trim()).filter(Boolean) : []
+  const bullets = Array.isArray(data?.bullets) ? data.bullets.map((b) => String(b || '').trim()).filter(Boolean) : []
+  const numReviews = Number(data?.numReviews || 0)
+  const avgRating = data?.rating ?? null
+  const reviews = Array.isArray(data?.reviews) ? data.reviews : []
+  const hasReviewed = isAuthenticated
+    ? reviews.some((r) => String(r?.user || '') === String(user?._id || ''))
+    : false
 
   return (
     <section className="bg-white">
@@ -78,9 +112,9 @@ export default function ProductDetails() {
         {/* TOP HEADER */}
         <div className="flex items-center justify-between border-b pb-4 text-sm">
           <h2 className="font-medium text-gray-800">{categoryLabel}</h2>
-          <p className="text-gray-400">
+          <p className="text-gray-600">
             Home / {categoryLabel} /{' '}
-            <span className="text-gray-600">{product.name}</span>
+            <span className="text-gray-600">{data.name}</span>
           </p>
         </div>
 
@@ -92,7 +126,7 @@ export default function ProductDetails() {
             <div className="border border-gray-200">
               <img
                 src={selectedImage}
-                alt={product.name}
+                alt={data.name}
                 className="w-full object-cover"
               />
             </div>
@@ -121,14 +155,20 @@ export default function ProductDetails() {
           {/* MIDDLE – DETAILS */}
           <div className="lg:col-span-5 space-y-4">
             <h1 className="text-2xl font-semibold leading-snug">
-              {product.name}
+              {data.name}
             </h1>
 
             <p className="text-lg font-semibold">
               {money(incVat)}{' '}
               <span className="text-sm font-normal text-gray-500">
-                {money(product.price)} (ex. VAT)
+                {money(data.price)} (ex. VAT)
               </span>
+            </p>
+
+            <p className="text-sm text-gray-600">
+              <span className="font-medium text-gray-800">{avgRating ?? '—'}</span> / 5
+              <span className="mx-2 text-gray-300">|</span>
+              {numReviews} reviews
             </p>
 
             <p className="flex items-center gap-2 text-sm">
@@ -150,7 +190,7 @@ export default function ProductDetails() {
                 size="lg"
                 className="w-full"
                 onClick={() => {
-                  addItem(product.id, 1)
+                  addItem(data.id, 1)
                   openMiniCart()
                 }}
               >
@@ -166,10 +206,10 @@ export default function ProductDetails() {
                     return
                   }
                   if (isWishlisted) {
-                    await removeFromWishlist(product.id)
+                    await removeFromWishlist(data.id)
                     return
                   }
-                  await addToWishlist(product.id)
+                  await addToWishlist(data.id)
                 }}
               >
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black">
@@ -205,7 +245,7 @@ export default function ProductDetails() {
         </div>
 
         <div className="mt-6 text-sm text-gray-700 leading-7">
-          {activeTab === 'info' && <p>{product.description}</p>}
+          {activeTab === 'info' && <p>{data.description}</p>}
           {activeTab === 'specs' && (
             specs.length ? (
               <div className="overflow-x-auto border border-gray-200 bg-white">
@@ -239,7 +279,117 @@ export default function ProductDetails() {
               <p>No specifications available.</p>
             )
           )}
-          {activeTab === 'reviews' && <p>No reviews yet.</p>}
+          {activeTab === 'reviews' && (
+            <div>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="font-medium text-gray-900">Customer Reviews</p>
+                <p className="text-gray-600">
+                  <span className="font-medium text-gray-900">{avgRating ?? '—'}</span> / 5 ({numReviews})
+                </p>
+              </div>
+
+              <div className="mt-6">
+                {reviews.length ? (
+                  <div className="space-y-4">
+                    {reviews.map((r) => (
+                      <div key={r._id || `${r.user}-${r.createdAt}`} className="rounded-md border border-gray-200 bg-white p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="font-medium text-gray-900">{r.name || 'User'}</p>
+                          <p className="text-sm text-gray-600">{r.rating} / 5</p>
+                        </div>
+                        {r.comment ? <p className="mt-2 text-gray-700">{r.comment}</p> : null}
+                        {r.createdAt ? (
+                          <p className="mt-2 text-xs text-gray-400">{new Date(r.createdAt).toLocaleString()}</p>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-600">No reviews yet.</p>
+                )}
+              </div>
+
+              <div className="mt-10 rounded-md border border-gray-200 bg-gray-50 p-5">
+                {!isAuthenticated ? (
+                  <div>
+                    <p className="font-medium text-gray-900">Write a review</p>
+                    <p className="mt-2 text-gray-600">Please login to submit a review.</p>
+                    <div className="mt-4">
+                      <Button variant="blue" size="md" onClick={() => navigate('/auth')}>
+                        Login
+                      </Button>
+                    </div>
+                  </div>
+                ) : hasReviewed ? (
+                  <div>
+                    <p className="font-medium text-gray-900">Write a review</p>
+                    <p className="mt-2 text-gray-600">You have already reviewed this product.</p>
+                  </div>
+                ) : (
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault()
+                      setReviewError('')
+                      setReviewSubmitting(true)
+                      try {
+                        const payload = {
+                          rating: Number(reviewRating),
+                          comment: reviewComment,
+                        }
+                        const updated = await apiFetch(`/api/products/${encodeURIComponent(slug)}/reviews`, {
+                          method: 'POST',
+                          headers: { Authorization: `Bearer ${token}` },
+                          body: JSON.stringify(payload),
+                        })
+                        setDetails(updated)
+                        setReviewComment('')
+                        setReviewRating('5')
+                        await refresh()
+                      } catch (err) {
+                        setReviewError(err?.message || 'Failed to submit review')
+                      } finally {
+                        setReviewSubmitting(false)
+                      }
+                    }}
+                    className="space-y-3"
+                  >
+                    <p className="font-medium text-gray-900">Write a review</p>
+
+                    {reviewError ? <p className="text-sm text-red-700">{reviewError}</p> : null}
+
+                    <label className="block">
+                      <span className="text-sm font-medium text-gray-900">Rating</span>
+                      <select
+                        className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-900"
+                        value={reviewRating}
+                        onChange={(e) => setReviewRating(e.target.value)}
+                      >
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                      </select>
+                    </label>
+
+                    <label className="block">
+                      <span className="text-sm font-medium text-gray-900">Comment</span>
+                      <textarea
+                        className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-900"
+                        rows={4}
+                        value={reviewComment}
+                        onChange={(e) => setReviewComment(e.target.value)}
+                      />
+                    </label>
+
+                    <Button type="submit" variant="blue" size="md" disabled={reviewSubmitting}>
+                      {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+                    </Button>
+                  </form>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </Container>
     </section>

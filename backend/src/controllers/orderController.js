@@ -10,7 +10,7 @@ async function createOrder(req, res, next) {
       return res.json({ errors: errors.array() })
     }
 
-    const { items } = req.body
+    const { items, deliveryDetails, paymentMethod, paymentStatus, paymentReference } = req.body
 
     const normalized = []
     for (const item of items) {
@@ -37,12 +37,22 @@ async function createOrder(req, res, next) {
     }
 
     const subtotal = normalized.reduce((sum, i) => sum + i.lineTotal, 0)
+
+    const method = paymentMethod === 'card' || paymentMethod === 'telephone' ? paymentMethod : 'unknown'
+    const inferredPaymentStatus = method === 'card' ? 'paid' : 'pending'
+    const statusValue = method === 'card' ? 'paid' : 'created'
+
     const order = await Order.create({
       user: req.user?._id,
       items: normalized,
       subtotal,
       total: subtotal,
       currency: 'USD',
+      deliveryDetails: deliveryDetails && typeof deliveryDetails === 'object' ? deliveryDetails : null,
+      paymentMethod: method,
+      paymentReference: typeof paymentReference === 'string' ? paymentReference : '',
+      paymentStatus: paymentStatus === 'paid' || paymentStatus === 'failed' || paymentStatus === 'pending' ? paymentStatus : inferredPaymentStatus,
+      status: statusValue,
     })
 
     res.status(201).json(order)

@@ -5,6 +5,7 @@ import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-
 import { loadStripe } from '@stripe/stripe-js'
 import Button from '../components/Button'
 import Container from '../components/Container'
+import logo from '../assets/logo.png'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { apiFetch } from '../lib/api'
@@ -51,16 +52,20 @@ function CardPaymentForm({ total }) {
         return
       }
 
+      const deliveryDetailsRaw = localStorage.getItem('checkout_delivery_details')
+      const deliveryDetails = deliveryDetailsRaw ? JSON.parse(deliveryDetailsRaw) : null
+
       const order = await apiFetch('/api/orders', {
         method: 'POST',
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: JSON.stringify({
           items: detailedItems.map((i) => ({ productId: i.productId, qty: i.qty })),
+          deliveryDetails,
+          paymentMethod: 'card',
+          paymentStatus: 'paid',
+          paymentReference: result?.paymentIntent?.id || '',
         }),
       })
-
-      const deliveryDetailsRaw = localStorage.getItem('checkout_delivery_details')
-      const deliveryDetails = deliveryDetailsRaw ? JSON.parse(deliveryDetailsRaw) : null
 
       localStorage.setItem(
         'checkout_last_order',
@@ -176,7 +181,9 @@ export default function CheckoutPayment() {
     <section className="bg-white">
       <Container className="py-8">
         <div className="mb-6 text-center">
-          <h1 className="text-lg font-semibold">Marblemosaics Ltd</h1>
+          <Link to="/" aria-label="Go to home" className="inline-flex items-center justify-center">
+            <img src={logo} alt="UniStone" className="h-10 w-auto" />
+          </Link>
         </div>
 
         <div className="mb-8 flex items-center justify-between text-[11px]">
@@ -216,15 +223,6 @@ export default function CheckoutPayment() {
             <Link to="/checkout/summary" className="mt-6 inline-block text-xs text-blue-600 hover:underline">
               ← Back to Order Summary
             </Link>
-
-            <div className="mt-10 text-center text-[11px] text-gray-500">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-gray-200">
-                <Lock className="h-4 w-4" />
-              </div>
-              <p className="mt-2 font-semibold text-gray-700">Secure Checkout</p>
-              <p className="mt-1">128-bit Secure Encryption</p>
-              <p className="mt-4">Terms &amp; Conditions | Privacy Policy</p>
-            </div>
           </div>
 
           <div className="lg:col-span-5">
@@ -238,6 +236,26 @@ export default function CheckoutPayment() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-14 flex flex-col items-center justify-center gap-3 py-10 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-black/10">
+            <Lock className="h-6 w-6 text-black/70" />
+          </div>
+          <div>
+            <p className="text-base font-semibold text-[#111111]">Secure Checkout</p>
+            <p className="text-sm text-black/50">128-bit Secure Encryption</p>
+          </div>
+
+          <div className="mt-2 flex items-center justify-center text-xs text-black/70">
+            <Link to="/info/terms" className="px-3 hover:underline">
+              Terms &amp; Conditions
+            </Link>
+            <span className="h-4 w-px bg-black/20" />
+            <Link to="/info/privacy" className="px-3 hover:underline">
+              Privacy Policy
+            </Link>
           </div>
         </div>
       </Container>

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
 import Container from '../components/Container'
+import logo from '../assets/logo.png'
 
 function money(n) {
   return new Intl.NumberFormat('en-GB', {
@@ -14,10 +15,23 @@ function money(n) {
 export default function CheckoutComplete() {
   const navigate = useNavigate()
   const [data, setData] = useState(null)
+  const [fallbackDeliveryDetails, setFallbackDeliveryDetails] = useState(null)
+  const [fallbackPaymentMethod, setFallbackPaymentMethod] = useState('unknown')
 
   useEffect(() => {
     const raw = localStorage.getItem('checkout_last_order')
-    if (!raw) return
+    if (!raw) {
+      const ddRaw = localStorage.getItem('checkout_delivery_details')
+      if (ddRaw) {
+        try {
+          setFallbackDeliveryDetails(JSON.parse(ddRaw))
+        } catch {
+          // ignore
+        }
+      }
+      setFallbackPaymentMethod(localStorage.getItem('checkout_payment_method') || 'unknown')
+      return
+    }
     try {
       setData(JSON.parse(raw))
     } catch {
@@ -26,7 +40,8 @@ export default function CheckoutComplete() {
   }, [])
 
   const order = data?.order || null
-  const deliveryDetails = data?.deliveryDetails || null
+  const paymentMethod = order?.paymentMethod || data?.paymentMethod || fallbackPaymentMethod || 'unknown'
+  const deliveryDetails = order?.deliveryDetails || data?.deliveryDetails || fallbackDeliveryDetails || null
 
   const items = useMemo(() => {
     if (Array.isArray(order?.items)) return order.items
@@ -64,11 +79,19 @@ export default function CheckoutComplete() {
     ].filter(Boolean)
   }, [deliveryDetails])
 
+  const completionTitle = paymentMethod === 'card' ? 'Payment Complete' : 'Order Received'
+  const completionBody =
+    paymentMethod === 'card'
+      ? 'Your payment was successful and your order has been placed.'
+      : 'Your order has been received. We will contact you to take payment over the telephone.'
+
   return (
     <section className="bg-white">
       <Container className="py-8">
         <div className="mb-6 text-center">
-          <h1 className="text-lg font-semibold">Marblemosaics Ltd</h1>
+          <Link to="/" aria-label="Go to home" className="inline-flex items-center justify-center">
+            <img src={logo} alt="UniStone" className="h-10 w-auto" />
+          </Link>
         </div>
 
         <div className="mb-8 flex items-center justify-between text-[11px]">
@@ -94,10 +117,8 @@ export default function CheckoutComplete() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="mt-0.5 h-5 w-5 text-green-600" />
               <div className="text-xs">
-                <p className="font-semibold text-green-800">Congratulations! Your order has been placed</p>
-                <p className="mt-2 text-green-700">
-                  We sent an email to confirm your order details and receipt.
-                </p>
+                <p className="font-semibold text-green-800">{completionTitle}</p>
+                <p className="mt-2 text-green-700">{completionBody}</p>
               </div>
             </div>
           </div>
@@ -173,13 +194,24 @@ export default function CheckoutComplete() {
             </div>
           </div>
 
-          <div className="mt-10 text-center text-[11px] text-gray-500">
-            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-gray-200">
-              <Lock className="h-4 w-4" />
+          <div className="mt-14 flex flex-col items-center justify-center gap-3 py-10 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full border border-black/10">
+              <Lock className="h-6 w-6 text-black/70" />
             </div>
-            <p className="mt-2 font-semibold text-gray-700">Secure Checkout</p>
-            <p className="mt-1">128-bit Secure Encryption</p>
-            <p className="mt-4">Terms &amp; Conditions | Privacy Policy</p>
+            <div>
+              <p className="text-base font-semibold text-[#111111]">Secure Checkout</p>
+              <p className="text-sm text-black/50">128-bit Secure Encryption</p>
+            </div>
+
+            <div className="mt-2 flex items-center justify-center text-xs text-black/70">
+              <Link to="/info/terms" className="px-3 hover:underline">
+                Terms &amp; Conditions
+              </Link>
+              <span className="h-4 w-px bg-black/20" />
+              <Link to="/info/privacy" className="px-3 hover:underline">
+                Privacy Policy
+              </Link>
+            </div>
           </div>
         </div>
       </Container>
