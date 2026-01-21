@@ -12,6 +12,8 @@ export default function Auth() {
   const navigate = useNavigate()
   const { login, register, loading, error, isAuthenticated } = useAuth()
 
+  const [nameValue, setNameValue] = useState('')
+
   const isLogin = mode === 'login'
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function Auth() {
         {isLogin ? (
           <div className="mx-auto mt-12 grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_360px]">
             <Reveal>
-              <div className="rounded-md bg-white p-8 shadow-sm">
+              <div className="rounded-md border border-black/10 bg-white p-8">
                 <form
                   className=""
                   onSubmit={(e) => {
@@ -51,7 +53,12 @@ export default function Auth() {
                     run().catch(() => {})
                   }}
                 >
-                  <div className="grid gap-5">
+                  <div>
+                    <h2 className="text-base font-semibold text-[#111111]">Login</h2>
+                    <p className="mt-1 text-sm text-obsidian/60">View your recent orders and update your details.</p>
+                  </div>
+
+                  <div className="mt-6 grid gap-5">
                     <label className="grid gap-2">
                       <span className="text-xs font-medium text-[#111111]">Email Address</span>
                       <input
@@ -100,15 +107,16 @@ export default function Auth() {
             </Reveal>
 
             <Reveal delay={130}>
-              <div className="rounded-md bg-white p-8 shadow-sm">
-                <p className="text-sm font-semibold text-[#111111]">{isLogin ? 'Need an account?' : 'Already have an account?'}</p>
+              <div className="flex h-full flex-col items-center justify-center rounded-md border border-black/10 bg-white p-8 text-center">
+                <p className="text-sm font-semibold text-[#111111]">Need an account?</p>
+                <p className="mt-2 text-sm text-obsidian/60">Manage your orders and details.</p>
                 <div className="mt-6">
                   <button
                     type="button"
-                    onClick={() => setMode(isLogin ? 'signup' : 'login')}
+                    onClick={() => setMode('signup')}
                     className="text-sm font-semibold text-blue-600 hover:text-blue-700"
                   >
-                    {isLogin ? 'Create Account' : 'Log In'}
+                    Create Account
                   </button>
                 </div>
               </div>
@@ -117,7 +125,7 @@ export default function Auth() {
         ) : (
           <div className="mx-auto mt-12 w-full max-w-md">
             <Reveal>
-              <div className="rounded-md bg-white p-8 shadow-sm">
+              <div className="rounded-md border border-black/10 bg-white p-8">
                 <form
                   className=""
                   onSubmit={(e) => {
@@ -137,50 +145,49 @@ export default function Auth() {
                     run().catch(() => {})
                   }}
                 >
-                  <div className="grid gap-5">
+                  <div>
+                    <h2 className="text-base font-semibold text-[#111111]">Create Account</h2>
+                    <p className="mt-1 text-sm text-obsidian/60">Manage your orders and saved addresses.</p>
+                  </div>
+
+                  <div className="mt-6 grid gap-5">
                     <label className="grid gap-2">
-                      <span className="text-xs font-medium text-[#111111]">Full Name</span>
+                      <span className="text-xs font-medium text-[#111111]">* Full Name</span>
                       <input
                         className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
                         type="text"
                         name="name"
-                        placeholder="Your name"
+                        placeholder="Example: John Smith"
                         autoComplete="name"
+                        maxLength={50}
+                        value={nameValue}
+                        onChange={(e) => setNameValue(e.target.value)}
                         required
                       />
+                      <div className="text-right text-xs text-obsidian/60">{nameValue.length}/50</div>
                     </label>
 
                     <label className="grid gap-2">
-                      <span className="text-xs font-medium text-[#111111]">Email Address</span>
+                      <span className="text-xs font-medium text-[#111111]">* Email Address</span>
+                      <span className="text-xs text-obsidian/60">You will use this email address to log in to your account</span>
                       <input
                         className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
                         type="email"
                         name="email"
-                        placeholder="Email"
+                        placeholder="Example: john@example.com"
                         autoComplete="email"
                         required
                       />
                     </label>
 
                     <label className="grid gap-2">
-                      <span className="text-xs font-medium text-[#111111]">Password</span>
+                      <span className="text-xs font-medium text-[#111111]">* Password</span>
+                      <span className="text-xs text-obsidian/60">Must be at least 8 characters long.</span>
                       <input
                         className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
                         type="password"
                         name="password"
-                        placeholder="Password"
-                        autoComplete="new-password"
-                        required
-                      />
-                    </label>
-
-                    <label className="grid gap-2">
-                      <span className="text-xs font-medium text-[#111111]">Confirm Password</span>
-                      <input
-                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Confirm Password"
+                        placeholder=""
                         autoComplete="new-password"
                         required
                       />
@@ -198,18 +205,14 @@ export default function Auth() {
                     </Button>
                   </div>
 
-                  <div className="mt-6 rounded-md bg-white p-6 shadow-sm">
-                    <p className="text-sm font-semibold text-[#111111]">Already have an account?</p>
-                    <p className="mt-1 text-sm text-obsidian/60">Manage your orders and details.</p>
-                    <div className="mt-4">
-                      <button
-                        type="button"
-                        onClick={() => setMode('login')}
-                        className="text-sm font-semibold text-blue-600 hover:text-blue-700"
-                      >
-                        Log In
-                      </button>
-                    </div>
+                  <div className="mt-4 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setMode('login')}
+                      className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+                    >
+                      Already have an account? Log In
+                    </button>
                   </div>
 
                   {error ? <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
