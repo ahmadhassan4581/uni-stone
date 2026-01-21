@@ -26,8 +26,7 @@ export default function AdminLayout() {
       <div className="flex min-h-dvh">
         <aside className="w-64 border-r border-slate-200 bg-white p-4">
           <div className="mb-6">
-            <p className="text-xs font-semibold tracking-widest text-slate-500">ADMIN PANEL</p>
-            <p className="mt-2 text-lg font-semibold">Aurum Civil</p>
+            <p className="mt-2 text-lg font-semibold">Unistone</p>
           </div>
 
           <nav className="space-y-2">
