@@ -122,6 +122,7 @@ export default function Header() {
   const quickLinks = useMemo(
     () => [
       { to: '/products', label: 'All Products', tone: 'primary' },
+      { to: '/', label: 'Home', tone: 'primary' },
       { to: `/products?category=${encodeURIComponent('Facade')}`, label: 'Facade', tone: 'primary' },
       { to: '/about', label: 'About', tone: 'secondary' },
       { to: '/services', label: 'Services', tone: 'secondary' },
@@ -361,24 +362,6 @@ export default function Header() {
             <Menu className="h-5 w-5" />
           </button>
         </Container>
-
-        <div className="hidden border-t border-black/10 bg-white md:block">
-          <Container className="py-2">
-            <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2" aria-label="Categories">
-              {categories
-                .filter((cat) => cat !== 'Facade')
-                .map((cat) => (
-                  <Link
-                    key={cat}
-                    to={`/products?category=${encodeURIComponent(cat)}`}
-                    className="text-xs font-semibold tracking-[0.12em] text-[#111111] transition-colors hover:text-black"
-                  >
-                    {cat}
-                  </Link>
-                ))}
-            </nav>
-          </Container>
-        </div>
 
         <div className="hidden border-t border-black/10 bg-neutral-100 md:block">
           <Container className="py-2">

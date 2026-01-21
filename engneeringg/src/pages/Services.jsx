@@ -61,15 +61,7 @@ export default function Services() {
   return (
     <section className="bg-white">
       <Container className="py-20 sm:py-24">
-        <Reveal>
-          <SectionHeading
-            eyebrow="SERVICES"
-            eyebrowClassName="text-gold-bright"
-            title="Our Core Services"
-            subtitle="Precision-driven stone solutions designed for architectural excellence and long-term performance."
-            tone="light"
-          />
-        </Reveal>
+      
 
         <div className="mt-12 grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-2">
           {SERVICES.map((s, idx) => {
@@ -114,20 +106,7 @@ export default function Services() {
           </div>
         </Reveal>
 
-        <Reveal delay={330}>
-          <div className="mt-12 rounded-xl bg-white p-9 shadow-sm">
-            <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Call to action</p>
-            <h2 className="mt-5 font-display text-3xl leading-[1.05] tracking-[0.03em] text-obsidian">Book a Free Stone Consultation</h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-obsidian/70">
-              Get expert guidance on selecting the right stone for your project.
-            </p>
-            <div className="mt-7">
-              <Button as={Link} to="/payment" size="lg" variant="blue" className="tracking-normal normal-case">
-                Book Consultation
-              </Button>
-            </div>
-          </div>
-        </Reveal>
+
       </Container>
     </section>
   )
