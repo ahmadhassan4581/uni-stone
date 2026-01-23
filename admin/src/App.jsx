@@ -9,6 +9,7 @@ import Newsletter from './pages/Newsletter'
 import Orders from './pages/Orders'
 import Users from './pages/Users'
 import Consultations from './pages/Consultations'
+import Reviews from './pages/Reviews'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="contacts" element={<Contacts />} />
             <Route path="newsletter" element={<Newsletter />} />
             <Route path="orders" element={<Orders />} />
+            <Route path="reviews" element={<Reviews />} />
             <Route path="consultations" element={<Consultations />} />
             <Route path="users" element={<Users />} />
           </Route>

@@ -291,6 +291,137 @@ async function listProductsAdmin(req, res, next) {
   }
 }
 
+async function listAllReviewsAdmin(req, res, next) {
+  try {
+    await ensureSeeded()
+
+    const products = await Product.find(
+      { 'reviews.0': { $exists: true } },
+      { productId: 1, slug: 1, name: 1, reviews: 1 },
+    ).lean()
+
+    const rows = []
+    for (const p of products) {
+      const reviews = Array.isArray(p?.reviews) ? p.reviews : []
+      for (const r of reviews) {
+        rows.push({
+          _id: r?._id,
+          productId: p?.productId,
+          productSlug: p?.slug,
+          productName: p?.name,
+          user: r?.user,
+          name: r?.name,
+          rating: r?.rating,
+          comment: r?.comment,
+          createdAt: r?.createdAt,
+        })
+      }
+    }
+
+    rows.sort((a, b) => new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0))
+    res.json(rows)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function updateReviewAdmin(req, res, next) {
+  try {
+    const { slug, reviewId } = req.params
+    const product = await Product.findOne({ slug })
+    if (!product) {
+      res.status(404)
+      throw new Error('Product not found')
+    }
+
+    const review = product.reviews.id(reviewId)
+    if (!review) {
+      res.status(404)
+      throw new Error('Review not found')
+    }
+
+    const nextRatingRaw = req.body?.rating
+    if (nextRatingRaw !== undefined) {
+      const nextRating = Number(nextRatingRaw)
+      if (!Number.isFinite(nextRating) || nextRating < 1 || nextRating > 5) {
+        res.status(400)
+        throw new Error('Rating must be between 1 and 5')
+      }
+      review.rating = nextRating
+    }
+
+    if (req.body?.comment !== undefined) {
+      review.comment = String(req.body?.comment || '').trim()
+    }
+
+    product.numReviews = Array.isArray(product.reviews) ? product.reviews.length : 0
+    const avg = product.numReviews
+      ? product.reviews.reduce((sum, r) => sum + Number(r?.rating || 0), 0) / product.numReviews
+      : 0
+    product.rating = Number.isFinite(avg) ? Math.round(avg * 10) / 10 : null
+
+    await product.save()
+
+    res.json({
+      _id: review._id,
+      user: review.user,
+      name: review.name,
+      rating: review.rating,
+      comment: review.comment,
+      createdAt: review.createdAt,
+      product: {
+        productId: product.productId,
+        slug: product.slug,
+        name: product.name,
+        rating: product.rating ?? null,
+        numReviews: product.numReviews ?? 0,
+      },
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function deleteReviewAdmin(req, res, next) {
+  try {
+    const { slug, reviewId } = req.params
+    const product = await Product.findOne({ slug })
+    if (!product) {
+      res.status(404)
+      throw new Error('Product not found')
+    }
+
+    const review = product.reviews.id(reviewId)
+    if (!review) {
+      res.status(404)
+      throw new Error('Review not found')
+    }
+
+    review.deleteOne()
+
+    product.numReviews = Array.isArray(product.reviews) ? product.reviews.length : 0
+    const avg = product.numReviews
+      ? product.reviews.reduce((sum, r) => sum + Number(r?.rating || 0), 0) / product.numReviews
+      : 0
+    product.rating = Number.isFinite(avg) ? Math.round(avg * 10) / 10 : null
+
+    await product.save()
+
+    res.json({
+      message: 'Deleted',
+      product: {
+        productId: product.productId,
+        slug: product.slug,
+        name: product.name,
+        rating: product.rating ?? null,
+        numReviews: product.numReviews ?? 0,
+      },
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
 module.exports = {
   listProducts,
   getProductBySlug,
@@ -299,4 +430,7 @@ module.exports = {
   updateProduct,
   deleteProduct,
   listProductsAdmin,
+  listAllReviewsAdmin,
+  updateReviewAdmin,
+  deleteReviewAdmin,
 }

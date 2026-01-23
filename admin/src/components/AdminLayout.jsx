@@ -35,6 +35,7 @@ export default function AdminLayout() {
             <SideLink to="/contacts" label="Contacts" />
             <SideLink to="/newsletter" label="Newsletter" />
             <SideLink to="/orders" label="Orders" />
+            <SideLink to="/reviews" label="Reviews" />
             <SideLink to="/consultations" label="Consultations" />
             <SideLink to="/users" label="Users" />
           </nav>

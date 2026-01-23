@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator')
 const Order = require('../models/orderModel')
 const Product = require('../models/productModel')
+const { sendMailIfConfigured, sendCustomerMailIfConfigured } = require('../utils/mailer')
 
 async function createOrder(req, res, next) {
   try {
@@ -55,6 +56,38 @@ async function createOrder(req, res, next) {
       status: statusValue,
     })
 
+    try {
+      const to = process.env.ORDER_NOTIFY_EMAIL
+      const lines = [
+        `Order ID: ${order._id}`,
+        `Status: ${order.status}`,
+        `Payment: ${order.paymentStatus} (${order.paymentMethod})`,
+        `Total: ${order.total} ${order.currency}`,
+        '',
+        'Items:',
+        ...normalized.map((i) => `- ${i.name} (${i.productId}) x${i.qty} = ${i.lineTotal}`),
+      ]
+
+      if (to) {
+        await sendMailIfConfigured({
+          to,
+          subject: `New Order Received (${order._id})`,
+          text: lines.join('\n'),
+        })
+      }
+
+      const customerEmail = req.user?.email
+      if (customerEmail) {
+        await sendCustomerMailIfConfigured({
+          to: customerEmail,
+          subject: 'Your order has been received',
+          text: ['Thanks for your order.', '', ...lines].join('\n'),
+        })
+      }
+    } catch (e) {
+      console.error('Order email failed:', e?.message || e)
+    }
+
     res.status(201).json(order)
   } catch (err) {
     next(err)
@@ -101,4 +134,27 @@ async function getOrder(req, res, next) {
   }
 }
 
-module.exports = { createOrder, listOrders, listAllOrders, getOrder }
+async function updateOrderStatus(req, res, next) {
+  try {
+    const order = await Order.findById(req.params.id)
+    if (!order) {
+      res.status(404)
+      throw new Error('Order not found')
+    }
+
+    const nextStatus = String(req.body?.status || '').trim()
+    const allowed = ['created', 'paid', 'shipped', 'completed', 'cancelled']
+    if (!allowed.includes(nextStatus)) {
+      res.status(400)
+      throw new Error('Invalid status')
+    }
+
+    order.status = nextStatus
+    const saved = await order.save()
+    res.json(saved)
+  } catch (err) {
+    next(err)
+  }
+}
+
+module.exports = { createOrder, listOrders, listAllOrders, getOrder, updateOrderStatus }

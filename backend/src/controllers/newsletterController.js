@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator')
 const NewsletterSubscription = require('../models/newsletterModel')
+const { sendMailIfConfigured, sendCustomerMailIfConfigured } = require('../utils/mailer')
 
 async function createNewsletterSubscription(req, res, next) {
   try {
@@ -15,6 +16,27 @@ async function createNewsletterSubscription(req, res, next) {
     let doc = await NewsletterSubscription.findOne({ email })
     if (!doc) {
       doc = await NewsletterSubscription.create({ email, source })
+    }
+
+    try {
+      const to = process.env.NEWSLETTER_NOTIFY_EMAIL
+      if (to) {
+        await sendMailIfConfigured({
+          to,
+          subject: 'New Newsletter Subscription',
+          text: [`Email: ${email}`, `Source: ${source}`].join('\n'),
+        })
+      }
+
+      if (email) {
+        await sendCustomerMailIfConfigured({
+          to: email,
+          subject: 'You are subscribed to our newsletter',
+          text: ['Thanks for subscribing to our newsletter.'].join('\n'),
+        })
+      }
+    } catch (e) {
+      console.error('Newsletter email failed:', e?.message || e)
     }
 
     res.status(201).json(doc)

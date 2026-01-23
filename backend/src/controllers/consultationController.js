@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator')
 const Consultation = require('../models/consultationModel')
+const { sendMailIfConfigured, sendCustomerMailIfConfigured } = require('../utils/mailer')
 
 const TRACK_FEES = {
   'Free Stone Consultation': 0,
@@ -9,24 +10,8 @@ const TRACK_FEES = {
 }
 
 async function sendConsultationEmailIfConfigured(payload) {
-  const host = process.env.SMTP_HOST
-  const port = process.env.SMTP_PORT
-  const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS
   const to = process.env.CONSULTATION_NOTIFY_EMAIL
-  const from = process.env.SMTP_FROM || user
-  const customerFrom = process.env.SMTP_CUSTOMER_FROM || from
-
-  if (!host || !port || !user || !pass || !to || !from) return
-
-  const nodemailer = require('nodemailer')
-
-  const transporter = nodemailer.createTransport({
-    host,
-    port: Number(port),
-    secure: Number(port) === 465,
-    auth: { user, pass },
-  })
+  if (!to) return
 
   const lines = [
     `Track: ${payload.track}`,
@@ -38,16 +23,14 @@ async function sendConsultationEmailIfConfigured(payload) {
     `Notes: ${payload.notes || ''}`,
   ]
 
-  await transporter.sendMail({
-    from,
+  await sendMailIfConfigured({
     to,
     subject: `New Consultation Request (${payload.track})`,
     text: lines.join('\n'),
   })
 
   if (payload.customerEmail) {
-    await transporter.sendMail({
-      from: customerFrom,
+    await sendCustomerMailIfConfigured({
       to: payload.customerEmail,
       subject: 'Your consultation request has been received',
       text: [
