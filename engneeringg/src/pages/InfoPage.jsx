@@ -10,6 +10,7 @@ const TITLES = {
   terms: 'Terms',
   privacy: 'Privacy Policy',
   sitemap: 'Sitemap',
+  'pebble-guide': 'Pebble Guide',
 }
 
 export default function InfoPage() {
@@ -23,7 +24,9 @@ export default function InfoPage() {
   return (
     <section className="bg-white">
       <Container className="py-20 sm:py-24">
-        <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Information</p>
+        {slug !== 'pebble-guide' && (
+          <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Information</p>
+        )}
         <h1 className="mt-6 font-display text-4xl tracking-[0.03em] text-obsidian sm:text-5xl">{title}</h1>
 
         {slug === 'privacy' ? (
@@ -501,6 +504,12 @@ export default function InfoPage() {
               </ul>
               <p>Click here for more information on how to contact us.</p>
             </div>
+          </div>
+        ) : slug === 'pebble-guide' ? (
+          <div className="mt-10 space-y-6 text-sm leading-7 text-obsidian/70">
+            <p>
+              Marblemosaics Ltd pebble and mosaic tiles can be used in an extensive variety of installations. They are appropriate for both indoor and outdoor applications. Commercial applications include flooring, feature walls, bar surfaces, and walkways in projects ranging from restaurants to medical facilities, public parks, and corporate offices. Residential installations include pools and pool decks, patios, landscaping, fountains, water features, kitchen backsplashes, flooring, shower floors, baths, wet rooms, hallways, fireplaces and BBQ areas.
+            </p>
           </div>
         ) : (
           <p className="mt-6 max-w-2xl text-sm leading-7 text-obsidian/70">
