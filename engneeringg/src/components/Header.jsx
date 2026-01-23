@@ -100,9 +100,9 @@ export default function Header() {
   const links = useMemo(
     () => [
       { to: '/', label: 'Home' },
+      { to: '/products', label: 'All Products' },
       { to: '/about', label: 'About' },
       { to: '/services', label: 'Services' },
-      { to: '/products', label: 'Products' },
       { to: '/payment', label: 'Request a Call' },
       { to: '/contact', label: 'Contact' },
     ],
@@ -121,9 +121,8 @@ export default function Header() {
 
   const quickLinks = useMemo(
     () => [
-      { to: '/products', label: 'All Products', tone: 'primary' },
       { to: '/', label: 'Home', tone: 'primary' },
-      { to: `/products?category=${encodeURIComponent('Facade')}`, label: 'Facade', tone: 'primary' },
+      { to: '/products', label: 'All Products', tone: 'primary' },
       { to: '/about', label: 'About', tone: 'secondary' },
       { to: '/services', label: 'Services', tone: 'secondary' },
       { to: '/info/delivery', label: 'Delivery', tone: 'secondary' },
