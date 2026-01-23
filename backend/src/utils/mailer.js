@@ -40,7 +40,7 @@ function getTransporter() {
   return cachedTransporter
 }
 
-async function sendMailIfConfigured({ to, subject, text, from }) {
+async function sendMailIfConfigured({ to, subject, text, from, cc, bcc }) {
   const transporter = getTransporter()
   if (!transporter) return false
 
@@ -50,6 +50,8 @@ async function sendMailIfConfigured({ to, subject, text, from }) {
   await transporter.sendMail({
     from: from || cfg.from,
     to,
+    cc,
+    bcc,
     subject,
     text,
   })

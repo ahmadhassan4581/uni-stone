@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 function SideLink({ to, label }) {
@@ -8,25 +8,50 @@ function SideLink({ to, label }) {
       end={to === '/'}
       className={({ isActive }) =>
         [
-          'block rounded-md px-3 py-2 text-sm font-medium transition',
-          isActive ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100',
+          'group relative flex items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold transition',
+          isActive
+            ? 'bg-slate-900 text-white shadow-sm'
+            : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900',
         ].join(' ')
       }
     >
-      {label}
+      <span>{label}</span>
+      <span className="pointer-events-none absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r bg-white/0 transition group-hover:bg-slate-900/10" />
     </NavLink>
   )
 }
 
 export default function AdminLayout() {
   const { user, logout } = useAuth()
+  const location = useLocation()
+
+  const titleMap = {
+    '/': 'Dashboard',
+    '/products': 'Products',
+    '/contacts': 'Contacts',
+    '/newsletter': 'Newsletter',
+    '/orders': 'Orders',
+    '/reviews': 'Reviews',
+    '/consultations': 'Consultations',
+    '/users': 'Users',
+  }
+
+  const pageTitle = titleMap[location.pathname] || 'Admin'
+  const initials = String(user?.email || 'A')
+    .split('@')[0]
+    .slice(0, 2)
+    .toUpperCase()
 
   return (
-    <div className="min-h-dvh bg-slate-50 text-slate-900">
+    <div className="min-h-dvh bg-gradient-to-b from-slate-50 to-white text-slate-900">
       <div className="flex min-h-dvh">
-        <aside className="w-64 border-r border-slate-200 bg-white p-4">
-          <div className="mb-6">
-            <p className="mt-2 text-lg font-semibold">Unistone</p>
+        <aside className="w-72 border-r border-slate-200 bg-white/80 p-4 backdrop-blur">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-sm font-bold text-white">U</div>
+            <div>
+              <p className="text-base font-semibold leading-tight">Unistone</p>
+              <p className="text-xs text-slate-500">Admin Panel</p>
+            </div>
           </div>
 
           <nav className="space-y-2">
@@ -40,21 +65,50 @@ export default function AdminLayout() {
             <SideLink to="/users" label="Users" />
           </nav>
 
-          <div className="mt-8 border-t border-slate-200 pt-4">
-            <p className="text-xs text-slate-500">Signed in as</p>
-            <p className="mt-1 truncate text-sm font-medium">{user?.email}</p>
+          <div className="mt-8 rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-sm font-bold text-slate-700">
+                {initials}
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-slate-500">Signed in</p>
+                <p className="truncate text-sm font-semibold text-slate-800">{user?.email}</p>
+              </div>
+            </div>
+
             <button
               type="button"
               onClick={logout}
-              className="mt-3 w-full rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+              className="mt-3 w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
             >
               Logout
             </button>
           </div>
         </aside>
 
-        <main className="flex-1 p-6">
-          <Outlet />
+        <main className="flex-1">
+          <div className="sticky top-0 z-10 border-b border-slate-200 bg-white/70 backdrop-blur">
+            <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Admin</p>
+                <h1 className="text-xl font-semibold text-slate-900">{pageTitle}</h1>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="hidden text-right sm:block">
+                  <p className="text-xs text-slate-500">Signed in as</p>
+                  <p className="max-w-[280px] truncate text-sm font-semibold text-slate-800">{user?.email}</p>
+                </div>
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-100 text-sm font-bold text-slate-700">
+                  {initials}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-6xl p-6">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

@@ -6,7 +6,7 @@ const { listContacts, updateContact, deleteContact } = require('../controllers/c
 const { listAllOrders, getOrder, updateOrderStatus } = require('../controllers/orderController')
 const { listConsultations, updateConsultation } = require('../controllers/consultationController')
 const { listProductsAdmin, listAllReviewsAdmin, updateReviewAdmin, deleteReviewAdmin } = require('../controllers/productController')
-const { listNewsletterSubscriptions, deleteNewsletterSubscription } = require('../controllers/newsletterController')
+const { listNewsletterSubscriptions, deleteNewsletterSubscription, sendNewsletterToAll } = require('../controllers/newsletterController')
 
 const router = express.Router()
 
@@ -32,6 +32,7 @@ router.get('/consultations', listConsultations)
 router.put('/consultations/:id', updateConsultation)
 
 router.get('/newsletter', listNewsletterSubscriptions)
+router.post('/newsletter/send', sendNewsletterToAll)
 router.delete('/newsletter/:id', deleteNewsletterSubscription)
 
 module.exports = router
