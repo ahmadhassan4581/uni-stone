@@ -19,6 +19,9 @@ import Products from './pages/Products'
 import Profile from './pages/Profile'
 import MyOrders from './pages/MyOrders'
 import Services from './pages/Services'
+import Account from './pages/Account'
+import Wishlist from './pages/Wishlist'
+import Addresses from './pages/Addresses'
 
 export default function App() {
   return (
@@ -41,8 +44,10 @@ export default function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="auth" element={<Auth />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="account" element={<Auth />} />
+          <Route path="account" element={<Account />} />
           <Route path="account/profile" element={<Profile />} />
+          <Route path="account/wishlist" element={<Wishlist />} />
+          <Route path="account/addresses" element={<Addresses />} />
           <Route path="orders" element={<MyOrders />} />
           <Route path="payment" element={<Payment />} />
           <Route path="info/:slug" element={<InfoPage />} />

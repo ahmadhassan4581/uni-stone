@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
 import Container from '../components/Container'
@@ -10,11 +10,27 @@ import { useAuth } from '../context/AuthContext'
 export default function Auth() {
   const [mode, setMode] = useState('login')
   const navigate = useNavigate()
-  const { login, register, loading, error, isAuthenticated } = useAuth()
+  const location = useLocation()
+  const { login, register, forgotPassword, resetPassword, loading, error, isAuthenticated } = useAuth()
 
   const [nameValue, setNameValue] = useState('')
+  const [forgotEmail, setForgotEmail] = useState('')
+  const [forgotOk, setForgotOk] = useState(false)
+  const [resetOk, setResetOk] = useState(false)
+
+  const params = new URLSearchParams(location.search)
+  const resetToken = String(params.get('resetToken') || '')
 
   const isLogin = mode === 'login'
+  const isSignup = mode === 'signup'
+  const isForgot = mode === 'forgot'
+  const isReset = mode === 'reset'
+
+  useEffect(() => {
+    if (resetToken) {
+      setMode('reset')
+    }
+  }, [resetToken])
 
   useEffect(() => {
     if (isAuthenticated) navigate('/')
@@ -96,9 +112,16 @@ export default function Auth() {
                   </div>
 
                   <div className="mt-4 text-center">
-                    <Link className="text-xs text-blue-600 hover:text-blue-700 hover:underline" to="/contact">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('forgot')
+                        setForgotOk(false)
+                      }}
+                      className="text-xs text-blue-600 hover:text-blue-700 hover:underline"
+                    >
                       Forgot password?
-                    </Link>
+                    </button>
                   </div>
 
                   {error ? <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
@@ -119,6 +142,155 @@ export default function Auth() {
                     Create Account
                   </button>
                 </div>
+              </div>
+            </Reveal>
+          </div>
+        ) : isForgot ? (
+          <div className="mx-auto mt-12 w-full max-w-md">
+            <Reveal>
+              <div className="rounded-md border border-black/10 bg-white p-8">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    const run = async () => {
+                      await forgotPassword({ email: forgotEmail })
+                      setForgotOk(true)
+                    }
+                    run().catch(() => {})
+                  }}
+                >
+                  <div>
+                    <h2 className="text-base font-semibold text-[#111111]">Forgot Password</h2>
+                    <p className="mt-1 text-sm text-obsidian/60">Enter your email and we will send a reset link.</p>
+                  </div>
+
+                  <div className="mt-6 grid gap-5">
+                    <label className="grid gap-2">
+                      <span className="text-xs font-medium text-[#111111]">Email Address</span>
+                      <input
+                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
+                        type="email"
+                        name="email"
+                        value={forgotEmail}
+                        onChange={(e) => setForgotEmail(e.target.value)}
+                        placeholder="john@example.com"
+                        autoComplete="email"
+                        required
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mt-6">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      variant="blue"
+                      className="w-full tracking-normal normal-case hover:translate-y-0 hover:scale-100"
+                    >
+                      {loading ? 'Please wait...' : 'Send Reset Link'}
+                    </Button>
+                  </div>
+
+                  {forgotOk ? (
+                    <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+                      If this email exists, a reset link has been sent.
+                    </div>
+                  ) : null}
+
+                  <div className="mt-4 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setMode('login')}
+                      className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+                    >
+                      Back to login
+                    </button>
+                  </div>
+
+                  {error ? <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+                </form>
+              </div>
+            </Reveal>
+          </div>
+        ) : isReset ? (
+          <div className="mx-auto mt-12 w-full max-w-md">
+            <Reveal>
+              <div className="rounded-md border border-black/10 bg-white p-8">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    const form = new FormData(e.currentTarget)
+                    const password = String(form.get('password') || '')
+                    const confirmPassword = String(form.get('confirmPassword') || '')
+
+                    const run = async () => {
+                      await resetPassword({ token: resetToken, password, confirmPassword })
+                      setResetOk(true)
+                      setMode('login')
+                      navigate('/account', { replace: true })
+                    }
+
+                    run().catch(() => {})
+                  }}
+                >
+                  <div>
+                    <h2 className="text-base font-semibold text-[#111111]">Reset Password</h2>
+                    <p className="mt-1 text-sm text-obsidian/60">Set a new password for your account.</p>
+                  </div>
+
+                  <div className="mt-6 grid gap-5">
+                    <label className="grid gap-2">
+                      <span className="text-xs font-medium text-[#111111]">New Password</span>
+                      <input
+                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
+                        type="password"
+                        name="password"
+                        autoComplete="new-password"
+                        required
+                      />
+                    </label>
+
+                    <label className="grid gap-2">
+                      <span className="text-xs font-medium text-[#111111]">Confirm Password</span>
+                      <input
+                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
+                        type="password"
+                        name="confirmPassword"
+                        autoComplete="new-password"
+                        required
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mt-6">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      variant="blue"
+                      className="w-full tracking-normal normal-case hover:translate-y-0 hover:scale-100"
+                    >
+                      {loading ? 'Please wait...' : 'Reset Password'}
+                    </Button>
+                  </div>
+
+                  {resetOk ? (
+                    <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+                      Password reset successful. You can now log in.
+                    </div>
+                  ) : null}
+
+                  <div className="mt-4 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setMode('login')}
+                      className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+                    >
+                      Back to login
+                    </button>
+                  </div>
+
+                  {error ? <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+                </form>
               </div>
             </Reveal>
           </div>
@@ -187,6 +359,18 @@ export default function Auth() {
                         className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
                         type="password"
                         name="password"
+                        placeholder=""
+                        autoComplete="new-password"
+                        required
+                      />
+                    </label>
+
+                    <label className="grid gap-2">
+                      <span className="text-xs font-medium text-[#111111]">* Confirm Password</span>
+                      <input
+                        className="h-11 rounded-md border border-black/20 bg-white px-4 text-sm text-[#111111] outline-none focus:border-black/40"
+                        type="password"
+                        name="confirmPassword"
                         placeholder=""
                         autoComplete="new-password"
                         required

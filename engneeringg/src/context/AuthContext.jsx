@@ -53,6 +53,42 @@ export function AuthProvider({ children }) {
     }
   }
 
+  const forgotPassword = async ({ email }) => {
+    setLoading(true)
+    setError('')
+    try {
+      const data = await apiFetch('/api/auth/forgot-password', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      })
+      return data
+    } catch (err) {
+      const msg = err?.message || 'Failed to request password reset'
+      setError(msg)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const resetPassword = async ({ token: resetToken, password, confirmPassword }) => {
+    setLoading(true)
+    setError('')
+    try {
+      const data = await apiFetch('/api/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({ token: resetToken, password, confirmPassword }),
+      })
+      return data
+    } catch (err) {
+      const msg = err?.message || 'Failed to reset password'
+      setError(msg)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const register = async ({ name, email, password, confirmPassword }) => {
     setLoading(true)
     setError('')
@@ -112,6 +148,24 @@ export function AuthProvider({ children }) {
     return data
   }
 
+  const getAddresses = async () => {
+    if (!token) throw new Error('Not authenticated')
+    const data = await apiFetch('/api/auth/addresses', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    return Array.isArray(data?.addresses) ? data.addresses : []
+  }
+
+  const updateAddresses = async (addresses) => {
+    if (!token) throw new Error('Not authenticated')
+    const data = await apiFetch('/api/auth/addresses', {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ addresses }),
+    })
+    return Array.isArray(data?.addresses) ? data.addresses : []
+  }
+
   const removeFromWishlist = async (productId) => {
     if (!token) throw new Error('Not authenticated')
     const data = await apiFetch(`/api/auth/wishlist/${encodeURIComponent(productId)}`, {
@@ -133,10 +187,14 @@ export function AuthProvider({ children }) {
       error,
       login,
       register,
+      forgotPassword,
+      resetPassword,
       logout,
       refreshMe,
       addToWishlist,
       removeFromWishlist,
+      getAddresses,
+      updateAddresses,
       isAuthenticated: Boolean(token),
     }),
     [user, token, loading, error],
