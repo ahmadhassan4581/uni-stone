@@ -57,7 +57,7 @@ async function createOrder(req, res, next) {
     })
 
     try {
-      const to = process.env.ORDER_NOTIFY_EMAIL
+      const to = process.env.ORDER_NOTIFY_EMAIL || process.env.ADMIN_EMAIL
       const lines = [
         `Order ID: ${order._id}`,
         `Status: ${order.status}`,
