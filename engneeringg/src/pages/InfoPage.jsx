@@ -24,9 +24,6 @@ export default function InfoPage() {
   return (
     <section className="bg-white">
       <Container className="py-20 sm:py-24">
-        {slug !== 'pebble-guide' && (
-          <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Information</p>
-        )}
         <h1 className="mt-6 font-display text-4xl tracking-[0.03em] text-obsidian sm:text-5xl">{title}</h1>
 
         {slug === 'privacy' ? (

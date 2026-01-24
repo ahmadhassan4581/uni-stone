@@ -113,7 +113,7 @@ export default function Products() {
             </p>
 
             <div className="flex flex-wrap items-center gap-4">
-              <label className="flex items-center gap-2 text-xs text-obsidian/70">
+              {/* <label className="flex items-center gap-2 text-xs text-obsidian/70">
                 <span>Categories:</span>
                 <select
                   value={activeCategory}
@@ -129,7 +129,7 @@ export default function Products() {
                     </option>
                   ))}
                 </select>
-              </label>
+              </label> */}
 
               <label className="flex items-center gap-2 text-xs text-obsidian/70">
                 <span>Sort by:</span>

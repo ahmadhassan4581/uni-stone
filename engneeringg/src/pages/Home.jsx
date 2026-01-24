@@ -200,7 +200,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white">
+      {/* <section className="bg-white">
         <Container className="py-5 sm:py-6">
           <Reveal>
             <div className="grid gap-4 md:grid-cols-3">
@@ -266,7 +266,7 @@ export default function Home() {
             </div>
           </Reveal>
         </Container>
-      </section>
+      </section> */}
 
       <section className="bg-white">
         <Container className="py-16 sm:py-20">
