@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Menu, Search, ShoppingBag, User, X } from 'lucide-react'
+import { MapPin, Menu, Phone, Search, ShoppingBag, User, X } from 'lucide-react'
 import { cn } from '../lib/cn'
 import logo from '../assets/logo.png'
 import { useCart } from '../context/CartContext'
@@ -268,6 +268,33 @@ export default function Header() {
 
   return (
     <>
+      <div className="hidden border-b border-black/10 bg-white md:block">
+        <Container className="flex items-center justify-between py-2">
+          <div className="flex items-center gap-6 text-[0.7rem] text-obsidian/70">
+            <div className="inline-flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              <a className="hover:text-obsidian" href="tel:+447564892282">
+                +44 7564 892282
+              </a>
+            </div>
+            <div className="inline-flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              <span>Unistone Yard, Dartford, Kent</span>
+            </div>
+          </div>
+
+          <div className="flex items-center text-[0.65rem] font-semibold tracking-[0.26em] text-obsidian/70">
+            <Link to="/consultation" className="transition-colors hover:text-obsidian">
+              BOOK CONSULTATION
+            </Link>
+            <span className="mx-5 h-4 w-px bg-black/20" />
+            <Link to="/products" className="transition-colors hover:text-obsidian">
+              EXPLORE CATALOG
+            </Link>
+          </div>
+        </Container>
+      </div>
+
       <header className="sticky top-0 z-50 border-b border-black/30 bg-white">
         <Container className="flex items-center gap-4 py-2">
           <Link
