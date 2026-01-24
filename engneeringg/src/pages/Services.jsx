@@ -102,21 +102,16 @@ export default function Services() {
         </div>
 
         <Reveal delay={250}>
-          <div className="mt-14 overflow-hidden rounded-2xl border border-black/10 bg-neutral-50">
+          <div className="mt-14 overflow-hidden rounded-md border border-black/10 bg-white">
             <div className="p-9">
-              <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Why UniStone</p>
-              <ul className="mt-6 list-disc pl-5 text-sm leading-7 text-obsidian/70">
-              <li>Material-first, project-driven approach</li>
-              <li>Deep expertise in natural stone applications</li>
-              <li>Transparent guidance with no hidden agendas</li>
-              <li>Trusted by architects, builders, and developers</li>
-              </ul>
-              <div className="mt-7 flex flex-wrap gap-3">
+              <p className="text-xs tracking-[0.35em] uppercase text-gold/80">CALL TO ACTION</p>
+              <h3 className="mt-4 font-display text-2xl tracking-[0.02em] text-obsidian">Book a Free Stone Consultation</h3>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-obsidian/70">
+                Get expert guidance on selecting the right stone for your project.
+              </p>
+              <div className="mt-7">
                 <Button as={Link} to="/consultation" variant="blue" size="lg">
-                  Book a Consultation
-                </Button>
-                <Button as={Link} to="/products" variant="light" size="lg">
-                  Explore Products
+                  Book Consultation
                 </Button>
               </div>
             </div>
