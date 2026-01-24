@@ -370,7 +370,7 @@ export default function Home() {
                   <Button as={Link} to="/contact" size="lg" variant="blue">
                     Request a Quote
                   </Button>
-                  <Button as={Link} to="/payment" size="lg" variant="light">
+                  <Button as={Link} to="/consultation" size="lg" variant="light">
                     Request a Call
                   </Button>
                 </div>

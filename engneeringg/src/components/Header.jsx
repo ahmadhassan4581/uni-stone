@@ -39,7 +39,7 @@ export default function Header() {
       { keys: ['products', 'product', 'all products', 'shop'], to: '/products' },
       { keys: ['about', 'about us'], to: '/about' },
       { keys: ['services', 'service'], to: '/services' },
-      { keys: ['consultation', 'consult', 'request a call', 'call'], to: '/payment' },
+      { keys: ['consultation', 'consult', 'request a call', 'call'], to: '/consultation' },
       { keys: ['contact', 'contact us'], to: '/contact' },
       { keys: ['faq', 'faqs'], to: '/info/faqs' },
       { keys: ['delivery'], to: '/info/delivery' },
@@ -103,7 +103,7 @@ export default function Header() {
       { to: '/products', label: 'All Products' },
       { to: '/about', label: 'About' },
       { to: '/services', label: 'Services' },
-      { to: '/payment', label: 'Request a Call' },
+      { to: '/consultation', label: 'Request a Call' },
       { to: '/contact', label: 'Contact' },
     ],
     [],
@@ -256,7 +256,7 @@ export default function Header() {
                   <Button as={Link} to="/contact" onClick={() => setOpen(false)} variant="blue">
                     Request a Quote
                   </Button>
-                  <Button as={Link} to="/payment" onClick={() => setOpen(false)} variant="light">
+                  <Button as={Link} to="/consultation" onClick={() => setOpen(false)} variant="light">
                     Request a Call
                   </Button>
                 </div>

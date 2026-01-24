@@ -61,17 +61,24 @@ export default function Services() {
   return (
     <section className="bg-white">
       <Container className="py-20 sm:py-24">
-      
+        <Reveal>
+          <SectionHeading
+            eyebrow=""
+            title="Our core services"
+            subtitle="Four focused services to take your stone project from concept to completion."
+            tone="light"
+          />
+        </Reveal>
 
-        <div className="mt-12 grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-2">
+        <div className="mt-12 grid auto-rows-fr gap-6 sm:grid-cols-2">
           {SERVICES.map((s, idx) => {
             const Icon = s.icon
             return (
               <Reveal key={s.key} delay={idx * 90} className="h-full">
-                <div className="flex h-full flex-col rounded-xl bg-neutral-50 p-8 shadow-sm">
+                <div className="group flex h-full flex-col rounded-2xl bg-white p-8 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
-                      <Icon className="h-5 w-5 text-gold/90" />
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-neutral-50 ring-1 ring-black/10 transition group-hover:ring-black/20">
+                      <Icon className="h-5 w-5 text-gold" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs tracking-[0.35em] uppercase text-gold/80">{s.title}</p>
@@ -95,18 +102,26 @@ export default function Services() {
         </div>
 
         <Reveal delay={250}>
-          <div className="mt-14 rounded-xl bg-neutral-50 p-9 shadow-sm">
-            <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Why UniStone</p>
-            <ul className="mt-6 list-disc pl-5 text-sm leading-7 text-obsidian/70">
+          <div className="mt-14 overflow-hidden rounded-2xl border border-black/10 bg-neutral-50">
+            <div className="p-9">
+              <p className="text-xs tracking-[0.35em] uppercase text-gold/80">Why UniStone</p>
+              <ul className="mt-6 list-disc pl-5 text-sm leading-7 text-obsidian/70">
               <li>Material-first, project-driven approach</li>
               <li>Deep expertise in natural stone applications</li>
               <li>Transparent guidance with no hidden agendas</li>
               <li>Trusted by architects, builders, and developers</li>
-            </ul>
+              </ul>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Button as={Link} to="/consultation" variant="blue" size="lg">
+                  Book a Consultation
+                </Button>
+                <Button as={Link} to="/products" variant="light" size="lg">
+                  Explore Products
+                </Button>
+              </div>
+            </div>
           </div>
         </Reveal>
-
-
       </Container>
     </section>
   )

@@ -36,7 +36,7 @@
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/products">
                 Catalog
               </Link>
-              <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/payment">
+              <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/consultation">
                 Consultation
               </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/contact">
