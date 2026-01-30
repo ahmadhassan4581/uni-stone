@@ -105,15 +105,15 @@ export default function Services() {
           <div className="mt-14 overflow-hidden rounded-md border border-black/10 bg-white">
             <div className="p-9">
               <p className="text-xs tracking-[0.35em] uppercase text-gold/80">CALL TO ACTION</p>
-              <h3 className="mt-4 font-display text-2xl tracking-[0.02em] text-obsidian">Book a Free Stone Consultation</h3>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-obsidian/70">
-                Get expert guidance on selecting the right stone for your project.
-              </p>
-              <div className="mt-7">
+              <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <h3 className="font-display text-2xl tracking-[0.02em] text-obsidian">Book a Free Stone Consultation</h3>
                 <Button as={Link} to="/consultation" variant="blue" size="lg">
                   Book Consultation
                 </Button>
               </div>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-obsidian/70">
+                Get expert guidance on selecting the right stone for your project.
+              </p>
             </div>
           </div>
         </Reveal>
