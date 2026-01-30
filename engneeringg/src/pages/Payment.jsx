@@ -385,7 +385,7 @@ export default function Payment() {
               </ul>
 
               <p className="mt-8 text-sm leading-7 text-obsidian/70">
-                <span className="font-bold text-obsidian">Enjoy a complimentary stone consultation for a limited period. Reserve your slot now and make the right stone choice with confidence.</span>
+                <span className="font-bold text-obsidian">* Enjoy a complimentary stone consultation for a limited period. Reserve your slot now and make the right stone choice with confidence.</span>
               </p>
             </div>
           </Reveal>
