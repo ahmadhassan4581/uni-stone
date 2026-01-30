@@ -79,7 +79,7 @@ export default function Products() {
     setSlug(p.slug || '')
     setSku(p.sku || '')
     setName(p.name || '')
-    setCategory(p.category || 'Structural')
+    setCategory(p.category || 'All Products')
     setPrice(String(p.price ?? ''))
     setVatRate(String(p.vatRate ?? ''))
     setStock(String(p.stock ?? ''))
@@ -172,7 +172,7 @@ export default function Products() {
     }
   }
 
-  const categories = useMemo(() => ['Structural', 'Finishes', 'Facade', 'Interiors'], [])
+  const categories = useMemo(() => ['All Products', 'Structural', 'Finishes', 'Facade', 'Interiors'], [])
 
   return (
     <div>
