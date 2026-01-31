@@ -34,7 +34,7 @@
                 Services
               </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/products">
-                Catalog
+                Catlog
               </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/consultation">
                 Consultation
