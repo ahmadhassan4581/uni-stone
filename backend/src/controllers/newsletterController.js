@@ -2,6 +2,24 @@ const { validationResult } = require('express-validator')
 const NewsletterSubscription = require('../models/newsletterModel')
 const { sendMailIfConfigured, sendCustomerMailIfConfigured } = require('../utils/mailer')
 
+function escapeHtml(input) {
+  return String(input)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+function isValidHttpUrl(value) {
+  try {
+    const u = new URL(String(value || ''))
+    return u.protocol === 'http:' || u.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 async function createNewsletterSubscription(req, res, next) {
   try {
     const errors = validationResult(req)
@@ -71,6 +89,8 @@ async function sendNewsletterToAll(req, res, next) {
   try {
     const subject = String(req.body?.subject || '').trim()
     const message = String(req.body?.message || '').trim()
+    const imageUrlRaw = String(req.body?.imageUrl || '').trim()
+    const imageUrl = imageUrlRaw && isValidHttpUrl(imageUrlRaw) ? imageUrlRaw : ''
 
     if (!subject || !message) {
       res.status(400)
@@ -92,11 +112,21 @@ async function sendNewsletterToAll(req, res, next) {
     for (let i = 0; i < uniqueEmails.length; i += batchSize) {
       const batch = uniqueEmails.slice(i, i + batchSize)
       try {
+        const html = [
+          '<div style="font-family:Arial,Helvetica,sans-serif;line-height:1.5;">',
+          `<p>${escapeHtml(message).replace(/\n/g, '<br/>')}</p>`,
+          imageUrl
+            ? `<p style="margin-top:16px;"><img src="${escapeHtml(imageUrl)}" alt="Newsletter image" style="max-width:100%;height:auto;" /></p>`
+            : '',
+          '</div>',
+        ].join('')
+
         const ok = await sendMailIfConfigured({
           to: process.env.NEWSLETTER_NOTIFY_EMAIL || process.env.ADMIN_EMAIL || process.env.SMTP_FROM || process.env.SMTP_USER,
           bcc: batch,
           subject,
           text: message,
+          html,
         })
         if (ok) sentBatches += 1
         else failedBatches += 1

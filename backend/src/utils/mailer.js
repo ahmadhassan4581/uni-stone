@@ -40,7 +40,7 @@ function getTransporter() {
   return cachedTransporter
 }
 
-async function sendMailIfConfigured({ to, subject, text, from, cc, bcc }) {
+async function sendMailIfConfigured({ to, subject, text, html, from, cc, bcc, attachments }) {
   const transporter = getTransporter()
   if (!transporter) return false
 
@@ -54,6 +54,8 @@ async function sendMailIfConfigured({ to, subject, text, from, cc, bcc }) {
     bcc,
     subject,
     text,
+    html,
+    attachments,
   })
 
   return true

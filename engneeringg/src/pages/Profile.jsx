@@ -102,19 +102,7 @@ export default function Profile() {
               </div>
             </Reveal>
 
-            <div className="mt-6 max-w-3xl">
-              <Reveal>
-                <div className="p-6">
-                  <div className="flex flex-col gap-3">
-                    <div>
-                      <p className="text-xs tracking-[0.35em] uppercase text-obsidian/60">Account</p>
-                      <p className="mt-2 text-sm text-obsidian/70">Signed in as</p>
-                      <p className="mt-1 font-mono text-xs text-obsidian/70">{user?.email || ''}</p>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
+
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2">
               {cards.map((card, idx) => {

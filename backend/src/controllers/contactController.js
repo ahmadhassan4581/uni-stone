@@ -76,4 +76,43 @@ async function deleteContact(req, res, next) {
   }
 }
 
-module.exports = { createContact, listContacts, updateContact, deleteContact }
+async function sendContactEmailAdmin(req, res, next) {
+  try {
+    const contact = await Contact.findById(req.params.id)
+    if (!contact) {
+      res.status(404)
+      throw new Error('Contact not found')
+    }
+
+    const to = String(contact.email || '').trim()
+    if (!to) {
+      res.status(400)
+      throw new Error('Contact email is missing')
+    }
+
+    const subject = String(req.body?.subject || '').trim()
+    const message = String(req.body?.message || '').trim()
+
+    if (!subject || !message) {
+      res.status(400)
+      throw new Error('Subject and message are required')
+    }
+
+    const ok = await sendMailIfConfigured({
+      to,
+      subject,
+      text: message,
+    })
+
+    if (!ok) {
+      res.status(500)
+      throw new Error('Email service is not configured')
+    }
+
+    res.json({ ok: true })
+  } catch (err) {
+    next(err)
+  }
+}
+
+module.exports = { createContact, listContacts, updateContact, deleteContact, sendContactEmailAdmin }

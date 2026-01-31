@@ -11,6 +11,8 @@ export default function Newsletter() {
   const [sendOpen, setSendOpen] = useState(false)
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
+  const [imageFile, setImageFile] = useState(null)
+  const [imageUrl, setImageUrl] = useState('')
   const [sending, setSending] = useState(false)
   const [sendResult, setSendResult] = useState(null)
 
@@ -42,11 +44,20 @@ export default function Newsletter() {
     setError('')
     setSendResult(null)
     try {
+      let uploadedUrl = imageUrl
+      if (imageFile) {
+        const fd = new FormData()
+        fd.append('image', imageFile)
+        const uploaded = await apiFetch('/api/admin/upload', { method: 'POST', body: fd }, token)
+        uploadedUrl = uploaded?.url || ''
+        setImageUrl(uploadedUrl)
+      }
+
       const data = await apiFetch(
         '/api/admin/newsletter/send',
         {
           method: 'POST',
-          body: JSON.stringify({ subject, message }),
+          body: JSON.stringify({ subject, message, imageUrl: uploadedUrl }),
         },
         token,
       )
@@ -108,6 +119,24 @@ export default function Newsletter() {
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Newsletter subject"
                 />
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-slate-700">Image (optional)</label>
+                <input
+                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    setImageFile(e.target.files?.[0] || null)
+                    setImageUrl('')
+                  }}
+                />
+                {imageUrl ? (
+                  <div className="mt-3 overflow-hidden rounded-md border border-slate-200">
+                    <img src={imageUrl} alt="Newsletter" className="max-h-48 w-full object-contain" />
+                  </div>
+                ) : null}
               </div>
 
               <div>
