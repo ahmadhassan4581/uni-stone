@@ -3,8 +3,10 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
 export async function apiFetch(path, options = {}, token) {
   const url = path.startsWith('http') ? path : `${API_BASE}${path}`
 
+  const isFormData = typeof FormData !== 'undefined' && options?.body instanceof FormData
+
   const headers = {
-    'Content-Type': 'application/json',
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     ...(options.headers || {}),
   }
 

@@ -2,6 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { apiFetch } from '../lib/api'
 import { useAuth } from '../context/AuthContext'
 
+function uniq(arr) {
+  return Array.from(new Set((Array.isArray(arr) ? arr : []).filter(Boolean)))
+}
+
 function Field({ label, value, onChange, type = 'text', required }) {
   return (
     <label className="block">
@@ -25,6 +29,10 @@ export default function Products() {
 
   const [editing, setEditing] = useState(null)
 
+  const [mainImageFile, setMainImageFile] = useState(null)
+  const [galleryFiles, setGalleryFiles] = useState([])
+  const [uploading, setUploading] = useState(false)
+
   const [productId, setProductId] = useState('')
   const [slug, setSlug] = useState('')
   const [sku, setSku] = useState('')
@@ -41,6 +49,9 @@ export default function Products() {
 
   const resetForm = () => {
     setEditing(null)
+    setMainImageFile(null)
+    setGalleryFiles([])
+    setUploading(false)
     setProductId('')
     setSlug('')
     setSku('')
@@ -54,6 +65,24 @@ export default function Products() {
     setSpecifications([])
     setImage('')
     setImages('')
+  }
+
+  const uploadMainImageIfNeeded = async () => {
+    if (!mainImageFile) return null
+    const fd = new FormData()
+    fd.append('image', mainImageFile)
+    const res = await apiFetch('/api/admin/upload', { method: 'POST', body: fd }, token)
+    return res?.url || null
+  }
+
+  const uploadGalleryIfNeeded = async () => {
+    const files = Array.isArray(galleryFiles) ? galleryFiles : []
+    if (!files.length) return []
+    const fd = new FormData()
+    for (const f of files.slice(0, 5)) fd.append('images', f)
+    const res = await apiFetch('/api/admin/uploads', { method: 'POST', body: fd }, token)
+    const uploaded = Array.isArray(res?.images) ? res.images : []
+    return uploaded.map((x) => x?.url).filter(Boolean)
   }
 
   const load = async () => {
@@ -111,13 +140,23 @@ export default function Products() {
     e.preventDefault()
     setError('')
 
-    const parsedImages = images
-      .split(',')
-      .map((url) => url.trim())
-      .filter(Boolean)
-      .slice(0, 5)
-    const normalizedImages = parsedImages.length ? parsedImages : (image ? [image] : [])
-    const mainImage = image || normalizedImages[0] || ''
+    setUploading(true)
+    try {
+      const [uploadedMain, uploadedGallery] = await Promise.all([uploadMainImageIfNeeded(), uploadGalleryIfNeeded()])
+
+      if (uploadedMain) setImage(uploadedMain)
+
+      const currentManualImages = images
+        .split(',')
+        .map((url) => url.trim())
+        .filter(Boolean)
+
+      const mergedGallery = uniq([...uploadedGallery, ...currentManualImages])
+      if (mergedGallery.length) setImages(mergedGallery.join(', '))
+
+      const parsedImages = mergedGallery.slice(0, 5)
+      const normalizedImages = parsedImages.length ? parsedImages : (uploadedMain ? [uploadedMain] : image ? [image] : [])
+      const mainImage = uploadedMain || image || normalizedImages[0] || ''
 
     const normalizedSpecs = (Array.isArray(specifications) ? specifications : [])
       .map((row) => ({
@@ -149,7 +188,6 @@ export default function Products() {
       image: mainImage,
     }
 
-    try {
       if (editing?._id) {
         await apiFetch(`/api/products/${editing._id}`, { method: 'PUT', body: JSON.stringify(payload) }, token)
       } else {
@@ -159,6 +197,8 @@ export default function Products() {
       await load()
     } catch (err) {
       setError(err?.message || 'Save failed')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -269,8 +309,25 @@ export default function Products() {
             <p className="text-sm font-semibold">{editing ? 'Edit Product' : 'Create Product'}</p>
             <div className="mt-4 grid gap-3">
               <Field label="Product ID" value={productId} onChange={setProductId} required />
-              <Field label="Main Image" value={image} onChange={setImage} required />
-              <Field label="Images (comma separated)" value={images} onChange={setImages} />
+              <label className="block">
+                <span className="text-sm font-medium">Main Image (upload)</span>
+                <input
+                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-900"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setMainImageFile(e.target.files?.[0] || null)}
+                />
+              </label>
+              <label className="block">
+                <span className="text-sm font-medium">Gallery Images (upload up to 5)</span>
+                <input
+                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-900"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => setGalleryFiles(Array.from(e.target.files || []).slice(0, 5))}
+                />
+              </label>
             </div>
 
             {editing ? (
@@ -402,15 +459,26 @@ export default function Products() {
               </div>
             </div>
 
-            <Field label="Images (up to 5, comma separated)" value={images} onChange={setImages} required={!image.trim()} />
-            <Field label="Main Image URL" value={image} onChange={setImage} required={!images.trim()} />
+            <Field
+              label="Images (up to 5, comma separated)"
+              value={images}
+              onChange={setImages}
+              required={!galleryFiles.length && !image.trim() && !mainImageFile}
+            />
+            <Field
+              label="Main Image URL"
+              value={image}
+              onChange={setImage}
+              required={!mainImageFile && !images.trim() && !galleryFiles.length}
+            />
 
             <div className="mt-6 flex gap-3">
               <button
                 type="submit"
+                disabled={uploading}
                 className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
               >
-                {editing ? 'Update Product' : 'Create Product'}
+                {uploading ? 'Uploading...' : editing ? 'Update Product' : 'Create Product'}
               </button>
               <button
                 type="button"

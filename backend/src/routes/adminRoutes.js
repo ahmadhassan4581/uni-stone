@@ -1,4 +1,5 @@
 const express = require('express')
+const multer = require('multer')
 
 const { protect, adminOnly } = require('../middleware/authMiddleware')
 const { listUsers } = require('../controllers/userController')
@@ -7,14 +8,23 @@ const { listAllOrders, getOrder, updateOrderStatus } = require('../controllers/o
 const { listConsultations, updateConsultation } = require('../controllers/consultationController')
 const { listProductsAdmin, listAllReviewsAdmin, updateReviewAdmin, deleteReviewAdmin } = require('../controllers/productController')
 const { listNewsletterSubscriptions, deleteNewsletterSubscription, sendNewsletterToAll } = require('../controllers/newsletterController')
+const { uploadSingleImage, uploadMultipleImages } = require('../controllers/uploadController')
 
 const router = express.Router()
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+})
 
 router.use(protect, adminOnly)
 
 router.get('/users', listUsers)
 
 router.get('/products', listProductsAdmin)
+
+router.post('/upload', upload.single('image'), uploadSingleImage)
+router.post('/uploads', upload.array('images', 5), uploadMultipleImages)
 
 router.get('/reviews', listAllReviewsAdmin)
 router.put('/reviews/:slug/:reviewId', updateReviewAdmin)
