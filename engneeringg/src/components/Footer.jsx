@@ -30,9 +30,6 @@
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/about">
                 About Us
               </Link>
-              <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/services">
-                Services
-              </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/products">
                 All Products
               </Link>

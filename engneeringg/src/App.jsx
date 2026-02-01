@@ -18,7 +18,6 @@ import ProductDetails from './pages/ProductDetails'
 import Products from './pages/Products'
 import Profile from './pages/Profile'
 import MyOrders from './pages/MyOrders'
-import Services from './pages/Services'
 import Account from './pages/Account'
 import Wishlist from './pages/Wishlist'
 import Addresses from './pages/Addresses'
@@ -36,7 +35,6 @@ export default function App() {
         <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
-          <Route path="services" element={<Services />} />
           <Route path="products" element={<Products />} />
           <Route path="products/:slug" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
