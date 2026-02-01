@@ -34,7 +34,7 @@
                 Services
               </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/products">
-                Catlog
+                All Products
               </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/consultation">
                 Consultation
@@ -60,9 +60,6 @@
                 Delivery
               </Link>
             
-              <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/pebble-guide">
-                Pebble Guide
-              </Link>
            
             </nav>
           </div>
