@@ -268,150 +268,148 @@ export default function Header() {
 
   return (
     <>
-      <div className="hidden border-b border-black/10 bg-white md:block">
-        <Container className="flex items-center justify-between py-2">
-          <div className="flex items-center gap-6 text-[0.7rem] text-obsidian/70">
-            <div className="inline-flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              <a className="hover:text-obsidian" href="tel:+447564892282">
-                +44 7564 892282
-              </a>
+      <div className="sticky top-0 z-50 bg-white">
+        <div className="hidden border-b border-black/10 bg-white md:block">
+          <Container className="flex items-center justify-between py-2">
+            <div className="flex items-center gap-6 text-[0.7rem] text-obsidian/70">
+              <div className="inline-flex items-center gap-2">
+                <Phone className="h-4 w-4" />
+                <a className="hover:text-obsidian" href="tel:+447564892282">
+                  +44 7564 892282
+                </a>
+              </div>
+              <div className="inline-flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                <span>Unistone Yard, Dartford, Kent</span>
+              </div>
             </div>
-            <div className="inline-flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              <span>Unistone Yard, Dartford, Kent</span>
-            </div>
-          </div>
 
-          <div className="flex items-center text-[0.65rem] font-semibold tracking-[0.26em] text-obsidian/70">
-            <Link to="/consultation" className="transition-colors hover:text-obsidian">
-              BOOK CONSULTATION
-            </Link>
-            <span className="mx-5 h-4 w-px bg-black/20" />
-            <Link to="/products" className="transition-colors hover:text-obsidian">
-              EXPLORE CATALOG
-            </Link>
-          </div>
-        </Container>
-      </div>
-
-      <header className="sticky top-0 z-50 border-b border-black/30 bg-white">
-        <Container className="flex items-center gap-4 py-2">
-          <Link
-            to="/"
-            className="flex shrink-0 items-center border-0 bg-transparent px-2 py-0.5 outline-none [-webkit-tap-highlight-color:transparent] hover:border-0 hover:bg-transparent focus:border-0 focus:bg-transparent focus:outline-none active:border-0 active:bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            aria-label="Unistone"
-          >
-            <span className="inline-flex h-10 w-28 shrink-0 items-center justify-center sm:h-11 sm:w-32">
-              <img
-                src={logo}
-                alt="Unistone"
-                className="h-full w-full object-contain"
-              />
-            </span>
-            <span className="sr-only">Unistone</span>
-          </Link>
-
-          <div className="hidden flex-1 md:block">
-            <div className="mx-auto max-w-3xl">
-              <form
-                className="flex items-center border-b border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60"
-                onSubmit={submitSearch}
-              >
-                <label className="sr-only" htmlFor="site-search">
-                  Search
-                </label>
-                <input
-                  id="site-search"
-                  placeholder="Search for products..."
-                  className="h-10 w-full bg-transparent px-4 text-sm text-[#111111] outline-none placeholder:text-[#222222]"
-                  value={searchQuery}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                />
-                <button
-                  type="submit"
-                  className="inline-flex h-10 w-11 items-center justify-center bg-transparent text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
-                  aria-label="Search"
-                  title="Search"
-                >
-                  <Search className="h-5 w-5" />
-                </button>
-              </form>
-              {searchFeedback.type === 'error' && searchFeedback.message ? (
-                <div className="mt-2 px-4 text-xs text-red-700">{searchFeedback.message}</div>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="hidden items-center gap-1.5 md:flex">
-            {isAuthenticated ? (
-              <Link
-                to="/account/profile"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
-                aria-label="Account"
-                title="Account"
-              >
-                <User className="h-5 w-5" />
+            <div className="flex items-center text-[0.65rem] font-semibold tracking-[0.26em] text-obsidian/70">
+              <Link to="/consultation" className="transition-colors hover:text-obsidian">
+                BOOK CONSULTATION
               </Link>
-            ) : (
-              <Link
-                to="/account"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
-                aria-label="Account"
-                title="Account"
-              >
-                <User className="h-5 w-5" />
+              <span className="mx-5 h-4 w-px bg-black/20" />
+              <Link to="/products" className="transition-colors hover:text-obsidian">
+                EXPLORE CATALOG
               </Link>
-            )}
-
-            <Link
-              to="/cart"
-              className="relative inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
-              aria-label={`Cart (${totalCount})`}
-            >
-              <ShoppingBag className="h-5 w-5" />
-              {totalCount ? (
-                <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2552ad] px-1 text-[0.55rem] font-semibold text-white">
-                  {totalCount}
-                </span>
-              ) : null}
-            </Link>
-          </div>
-
-          <button
-            type="button"
-            className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-md border border-black/10 bg-white text-[#111111] transition-all duration-500 ease-luxury hover:border-black/20 hover:text-black md:hidden"
-            aria-label="Open menu"
-            aria-expanded={open}
-            onClick={() => setOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        </Container>
-
-        <div className="hidden border-t border-black/10 bg-neutral-100 md:block">
-          <Container className="py-2">
-            <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2" aria-label="Quick links">
-              {quickLinks.map((l) => (
-                <Link
-                  key={l.to}
-                  to={l.to}
-                  className={cn(
-                    'text-[0.7rem] font-semibold tracking-[0.22em] transition-colors',
-                    l.tone === 'primary'
-                      ? 'text-obsidian hover:text-black'
-                      : l.tone === 'sub'
-                        ? 'text-[0.65rem] font-semibold tracking-[0.3em] text-obsidian/55 hover:text-obsidian'
-                        : 'text-obsidian/70 hover:text-obsidian',
-                  )}
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </nav>
+            </div>
           </Container>
         </div>
-      </header>
+
+        <header className="border-b border-black/30 bg-white">
+          <Container className="flex items-center gap-4 py-2">
+            <Link
+              to="/"
+              className="flex shrink-0 items-center border-0 bg-transparent px-2 py-0.5 outline-none [-webkit-tap-highlight-color:transparent] hover:border-0 hover:bg-transparent focus:border-0 focus:bg-transparent focus:outline-none active:border-0 active:bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              aria-label="Unistone"
+            >
+              <span className="inline-flex h-10 w-28 shrink-0 items-center justify-center sm:h-11 sm:w-32">
+                <img src={logo} alt="Unistone" className="h-full w-full object-contain" />
+              </span>
+              <span className="sr-only">Unistone</span>
+            </Link>
+
+            <div className="hidden flex-1 md:block">
+              <div className="mx-auto max-w-3xl">
+                <form
+                  className="flex items-center border-b border-black/30 bg-white transition-colors duration-500 ease-luxury focus-within:border-black/60"
+                  onSubmit={submitSearch}
+                >
+                  <label className="sr-only" htmlFor="site-search">
+                    Search
+                  </label>
+                  <input
+                    id="site-search"
+                    placeholder="Search for products..."
+                    className="h-10 w-full bg-transparent px-4 text-sm text-[#111111] outline-none placeholder:text-[#222222]"
+                    value={searchQuery}
+                    onChange={(e) => onSearchChange(e.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    className="inline-flex h-10 w-11 items-center justify-center bg-transparent text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
+                    aria-label="Search"
+                    title="Search"
+                  >
+                    <Search className="h-5 w-5" />
+                  </button>
+                </form>
+                {searchFeedback.type === 'error' && searchFeedback.message ? (
+                  <div className="mt-2 px-4 text-xs text-red-700">{searchFeedback.message}</div>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="hidden items-center gap-1.5 md:flex">
+              {isAuthenticated ? (
+                <Link
+                  to="/account/profile"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
+                  aria-label="Account"
+                  title="Account"
+                >
+                  <User className="h-5 w-5" />
+                </Link>
+              ) : (
+                <Link
+                  to="/account"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
+                  aria-label="Account"
+                  title="Account"
+                >
+                  <User className="h-5 w-5" />
+                </Link>
+              )}
+
+              <Link
+                to="/cart"
+                className="relative inline-flex h-9 w-9 items-center justify-center rounded-md text-[#111111] transition-colors duration-500 ease-luxury hover:text-blue-700"
+                aria-label={`Cart (${totalCount})`}
+              >
+                <ShoppingBag className="h-5 w-5" />
+                {totalCount ? (
+                  <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2552ad] px-1 text-[0.55rem] font-semibold text-white">
+                    {totalCount}
+                  </span>
+                ) : null}
+              </Link>
+            </div>
+
+            <button
+              type="button"
+              className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-md border border-black/10 bg-white text-[#111111] transition-all duration-500 ease-luxury hover:border-black/20 hover:text-black md:hidden"
+              aria-label="Open menu"
+              aria-expanded={open}
+              onClick={() => setOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </Container>
+
+          <div className="hidden border-t border-black/10 bg-neutral-100 md:block">
+            <Container className="py-2">
+              <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2" aria-label="Quick links">
+                {quickLinks.map((l) => (
+                  <Link
+                    key={l.to}
+                    to={l.to}
+                    className={cn(
+                      'text-[0.7rem] font-semibold tracking-[0.22em] transition-colors',
+                      l.tone === 'primary'
+                        ? 'text-obsidian hover:text-black'
+                        : l.tone === 'sub'
+                          ? 'text-[0.65rem] font-semibold tracking-[0.3em] text-obsidian/55 hover:text-obsidian'
+                          : 'text-obsidian/70 hover:text-obsidian',
+                    )}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </nav>
+            </Container>
+          </div>
+        </header>
+      </div>
 
       {mobileMenu}
     </>

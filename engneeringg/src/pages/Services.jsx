@@ -104,7 +104,7 @@ export default function Services() {
         <Reveal delay={250}>
           <div className="mt-14 overflow-hidden rounded-md border border-black/10 bg-white">
             <div className="p-9">
-              <p className="text-xs tracking-[0.35em] uppercase text-gold/80">CALL TO ACTION</p>
+    
               <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <h3 className="font-display text-2xl tracking-[0.02em] text-obsidian">Book a Free Stone Consultation</h3>
                 <Button as={Link} to="/consultation" variant="blue" size="lg">

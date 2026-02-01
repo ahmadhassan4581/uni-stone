@@ -46,6 +46,22 @@ export default function Home() {
         ctaLabel: 'Shop Now',
         ctaTo: '/products',
       },
+      {
+        src: 'https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?auto=format&fit=crop&w=3200&q=90',
+        alt: 'Modern building facade detail',
+        title: 'Luxury Finishes',
+        subtitle: 'Premium surfaces and materials curated for enduring outdoor spaces.',
+        ctaLabel: 'Shop Now',
+        ctaTo: '/products',
+      },
+      {
+        src: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=3200&q=90',
+        alt: 'Architectural planning and design',
+        title: 'Designed to Last',
+        subtitle: 'Trusted supply, consistent quality, and dependable nationwide delivery.',
+        ctaLabel: 'Shop Now',
+        ctaTo: '/products',
+      },
     ],
     [],
   )
