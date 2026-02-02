@@ -91,7 +91,16 @@ export default function MiniCartModal() {
                   </div>
 
                   <div className="col-span-2 flex items-center justify-center">
-                    <QuantityControl value={item.qty} onChange={(v) => setQty(item.productId, v)} size="sm" tone="light" />
+                    <QuantityControl
+                      value={item.qty}
+                      onChange={(v) => setQty(item.productId, v)}
+                      size="sm"
+                      tone="light"
+                      max={Math.min(
+                        20,
+                        Number.isFinite(Number(item?.product?.stock)) ? Math.max(0, Number(item.product.stock)) : 20,
+                      )}
+                    />
                   </div>
 
                   <div className="col-span-2 text-right text-xs font-semibold text-gray-900">

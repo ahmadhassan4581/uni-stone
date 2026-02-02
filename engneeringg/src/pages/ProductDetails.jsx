@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Button from '../components/Button'
 import Container from '../components/Container'
+import QuantityControl from '../components/QuantityControl'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { useProducts } from '../context/ProductsContext'
@@ -39,6 +40,7 @@ export default function ProductDetails() {
 
   const [selectedImage, setSelectedImage] = useState('')
   const [activeTab, setActiveTab] = useState('info')
+  const [qty, setQty] = useState(1)
 
   const [details, setDetails] = useState(null)
   const [reviewRating, setReviewRating] = useState('5')
@@ -85,6 +87,10 @@ export default function ProductDetails() {
   if (loading || !data) return null
 
   const inStock = !data.stock || Number(data.stock) > 0
+  const stockValue = Number(data?.stock)
+  const hasStockValue = Number.isFinite(stockValue) && stockValue >= 0
+  const maxPerItem = 20
+  const maxAllowed = Math.min(maxPerItem, hasStockValue ? stockValue : maxPerItem)
   const incVat = vatInclusivePrice(data.price, data.vatRate)
   const categoryLabel = String(data.category || 'Products').trim() || 'Products'
   const wishlistIds = Array.isArray(user?.wishlist) ? user.wishlist : []
@@ -180,22 +186,46 @@ export default function ProductDetails() {
               <span className="text-gray-600">Stock Status:</span>
               <span className={inStock ? 'text-green-600' : 'text-red-600'}>{inStock ? 'In Stock' : 'Out of Stock'}</span>
             </p>
+
+            <p className="text-sm text-gray-600">
+              <span className="font-medium text-gray-800">Stock:</span>{' '}
+              {hasStockValue ? stockValue : 'Available'}
+            </p>
           </div>
 
           {/* RIGHT – CART BOX */}
           <div className="lg:col-span-3">
             <div className="bg-gray-100 p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-800">Quantity</p>
+                <QuantityControl
+                  value={qty}
+                  onChange={(v) => setQty(Math.min(Math.max(1, Number(v) || 1), Math.max(1, maxAllowed)))}
+                  min={1}
+                  max={Math.max(1, maxAllowed)}
+                  tone="light"
+                  size="sm"
+                />
+              </div>
+
               <Button
                 variant="blue"
                 size="lg"
                 className="w-full"
+                disabled={!inStock}
                 onClick={() => {
-                  addItem(data.id, 1)
+                  addItem(data.id, qty)
                   openMiniCart()
                 }}
               >
                 Add to Cart
               </Button>
+
+              {hasStockValue && stockValue > 20 ? (
+                <p className="mt-3 text-xs text-gray-600">For orders above 20 quantity, please contact us.</p>
+              ) : null}
+
+              {!inStock ? <p className="mt-3 text-xs text-red-600">Out of stock. Please contact us.</p> : null}
 
               <button
                 type="button"

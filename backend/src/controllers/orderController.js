@@ -18,10 +18,29 @@ async function createOrder(req, res, next) {
       const productId = item.productId
       const qty = Math.max(1, Number(item.qty) || 1)
 
+      if (qty > 20) {
+        res.status(400)
+        throw new Error('For orders above 20 quantity, please contact us.')
+      }
+
       const product = await Product.findOne({ productId })
       if (!product) {
         res.status(400)
         throw new Error(`Invalid productId: ${productId}`)
+      }
+
+      const stockValue = Number(product.stock)
+      const hasStock = Number.isFinite(stockValue) && stockValue >= 0
+      if (hasStock) {
+        const updated = await Product.findOneAndUpdate(
+          { productId, stock: { $gte: qty } },
+          { $inc: { stock: -qty } },
+          { new: true },
+        )
+        if (!updated) {
+          res.status(400)
+          throw new Error(`Insufficient stock for ${product.name}. Available: ${Math.max(0, stockValue)}`)
+        }
       }
 
       normalized.push({
