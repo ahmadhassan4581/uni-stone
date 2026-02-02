@@ -3,7 +3,6 @@
  import { Link } from 'react-router-dom'
  import Container from './Container'
  import { apiFetch } from '../lib/api'
- import finalCatalog from '../assets/final_catalog.pdf'
  
  export default function Footer() {
   const [newsletterEmail, setNewsletterEmail] = useState('')
@@ -35,7 +34,12 @@
                 All Products
               </Link>
 
-              <a className="block text-obsidian/65 transition-colors hover:text-obsidian" href={finalCatalog} download>
+              <a
+                className="block text-obsidian/65 transition-colors hover:text-obsidian"
+                href="https://drive.google.com/file/d/1mqS6R8cMEIyQpTgBs8vV5opBta84cau8/view?usp=sharing"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Digital Brochure
               </a>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/consultation">
