@@ -26,7 +26,7 @@ export default function Home() {
       copy[i] = copy[j]
       copy[j] = tmp
     }
-    return copy.slice(0, 9)
+    return copy.slice(0, 16)
   }, [products])
   const heroSlides = useMemo(
     () => [
@@ -293,7 +293,7 @@ export default function Home() {
             </div>
           </Reveal>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((p, idx) => (
               <Reveal key={p.id || p.name} delay={idx * 80}>
                 <ProductCard product={p} tone="light" />
