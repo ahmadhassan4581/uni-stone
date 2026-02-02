@@ -113,173 +113,190 @@ export default function Products() {
         <div className="mt-12">
           {error ? <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div> : null}
 
-          <div className="mb-6 flex flex-col justify-between gap-3 border-b border-black/10 pb-4 sm:flex-row sm:items-center">
-            <p className="text-xs text-obsidian/70">
-              Showing {showing.start}–{showing.end} of {showing.total} products
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4">
-              {/* <label className="flex items-center gap-2 text-xs text-obsidian/70">
-                <span>Categories:</span>
-                <select
-                  value={activeCategory}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="h-9 rounded border border-black/20 bg-white px-2 text-xs text-obsidian/80 outline-none"
-                >
-                  <option value="All" className="bg-white">
+          <div className="grid gap-10 md:grid-cols-12 md:items-start">
+            <aside className="md:col-span-3">
+              <div className="rounded-lg bg-white p-6">
+                <p className="text-sm font-semibold text-obsidian">Categories</p>
+                <div className="mt-4 grid gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setCategory('All')}
+                    className={
+                      'text-left text-sm transition-colors ' +
+                      (activeCategory === 'All' ? 'font-semibold text-obsidian' : 'text-obsidian/60 hover:text-obsidian')
+                    }
+                  >
                     All Products
-                  </option>
+                  </button>
                   {categories.map((c) => (
-                    <option key={c} value={c} className="bg-white">
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setCategory(c)}
+                      className={
+                        'text-left text-sm transition-colors ' +
+                        (activeCategory === c ? 'font-semibold text-obsidian' : 'text-obsidian/60 hover:text-obsidian')
+                      }
+                    >
                       {c}
-                    </option>
+                    </button>
                   ))}
-                </select>
-              </label> */}
+                </div>
+              </div>
+            </aside>
 
-              <label className="flex items-center gap-2 text-xs text-obsidian/70">
-                <span>Sort by:</span>
-                <select
-                  value={sort}
-                  onChange={(e) => {
-                    setSort(e.target.value)
-                    setPage(1)
-                  }}
-                  className="h-9 rounded border border-black/20 bg-white px-2 text-xs text-obsidian/80 outline-none"
-                >
-                  <option value="featured" className="bg-white">
-                    Most popular
-                  </option>
-                  <option value="price_asc" className="bg-white">
-                    Price: Low → High
-                  </option>
-                  <option value="price_desc" className="bg-white">
-                    Price: High → Low
-                  </option>
-                  <option value="name_asc" className="bg-white">
-                    Name: A → Z
-                  </option>
-                  <option value="name_desc" className="bg-white">
-                    Name: Z → A
-                  </option>
-                </select>
-              </label>
+            <div className="md:col-span-9">
+              <div className="mb-6 flex flex-col justify-between gap-3 border-b border-black/10 pb-4 sm:flex-row sm:items-center">
+                <p className="text-xs text-obsidian/70">
+                  Showing {showing.start}–{showing.end} of {showing.total} products
+                </p>
 
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-obsidian/70">Grid:</span>
-                <div className="flex overflow-hidden rounded border border-black/20 bg-white">
+                <div className="flex flex-wrap items-center gap-4">
+                  <label className="flex items-center gap-2 text-xs text-obsidian/70">
+                    <span>Sort by:</span>
+                    <select
+                      value={sort}
+                      onChange={(e) => {
+                        setSort(e.target.value)
+                        setPage(1)
+                      }}
+                      className="h-9 rounded border border-black/20 bg-white px-2 text-xs text-obsidian/80 outline-none"
+                    >
+                      <option value="featured" className="bg-white">
+                        Most popular
+                      </option>
+                      <option value="price_asc" className="bg-white">
+                        Price: Low → High
+                      </option>
+                      <option value="price_desc" className="bg-white">
+                        Price: High → Low
+                      </option>
+                      <option value="name_asc" className="bg-white">
+                        Name: A → Z
+                      </option>
+                      <option value="name_desc" className="bg-white">
+                        Name: Z → A
+                      </option>
+                    </select>
+                  </label>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-obsidian/70">Grid:</span>
+                    <div className="flex overflow-hidden rounded border border-black/20 bg-white">
+                      <button
+                        type="button"
+                        className={
+                          'grid h-9 w-9 place-items-center transition-colors ' +
+                          (perPage === 4 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
+                        }
+                        onClick={() => {
+                          setPerPage(4)
+                          setPage(1)
+                        }}
+                        aria-label="2 by 2 grid"
+                      >
+                        <span className="grid grid-cols-2 gap-0.5">
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        className={
+                          'grid h-9 w-9 place-items-center transition-colors ' +
+                          (perPage === 9 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
+                        }
+                        onClick={() => {
+                          setPerPage(9)
+                          setPage(1)
+                        }}
+                        aria-label="3 by 3 grid"
+                      >
+                        <span className="grid grid-cols-3 gap-0.5">
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        className={
+                          'grid h-9 w-9 place-items-center transition-colors ' +
+                          (perPage === 16 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
+                        }
+                        onClick={() => {
+                          setPerPage(16)
+                          setPage(1)
+                        }}
+                        aria-label="4 by 4 grid"
+                      >
+                        <span className="grid grid-cols-4 gap-0.5">
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className={gridColsClass}>
+                {loading ? (
+                  <div className="text-sm text-obsidian/60">Loading...</div>
+                ) : (
+                  paged.map((p, idx) => (
+                    <Reveal key={p.id || p.name} delay={idx * 40}>
+                      <ProductCard product={p} tone="light" />
+                    </Reveal>
+                  ))
+                )}
+              </div>
+
+              <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-black/10 pt-8 sm:flex-row">
+                <p className="text-sm text-obsidian/60">
+                  Page {page} of {pageCount}
+                </p>
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
-                    className={
-                      'grid h-9 w-9 place-items-center transition-colors ' +
-                      (perPage === 4 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
-                    }
-                    onClick={() => {
-                      setPerPage(4)
-                      setPage(1)
-                    }}
-                    aria-label="2 by 2 grid"
+                    className="inline-flex h-10 items-center justify-center rounded-md bg-[#2552ad] px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-[#1f4591] disabled:opacity-50"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page <= 1}
                   >
-                    <span className="grid grid-cols-2 gap-0.5">
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                    </span>
+                    Previous
                   </button>
                   <button
                     type="button"
-                    className={
-                      'grid h-9 w-9 place-items-center transition-colors ' +
-                      (perPage === 9 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
-                    }
-                    onClick={() => {
-                      setPerPage(9)
-                      setPage(1)
-                    }}
-                    aria-label="3 by 3 grid"
+                    className="inline-flex h-10 items-center justify-center rounded-md bg-[#2552ad] px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-[#1f4591] disabled:opacity-50"
+                    onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                    disabled={page >= pageCount}
                   >
-                    <span className="grid grid-cols-3 gap-0.5">
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    className={
-                      'grid h-9 w-9 place-items-center transition-colors ' +
-                      (perPage === 16 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
-                    }
-                    onClick={() => {
-                      setPerPage(16)
-                      setPage(1)
-                    }}
-                    aria-label="4 by 4 grid"
-                  >
-                    <span className="grid grid-cols-4 gap-0.5">
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                    </span>
+                    Next
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className={gridColsClass}>
-            {loading ? (
-              <div className="text-sm text-obsidian/60">Loading...</div>
-            ) : (
-              paged.map((p, idx) => (
-                <Reveal key={p.id || p.name} delay={idx * 40}>
-                  <ProductCard product={p} tone="light" />
-                </Reveal>
-              ))
-            )}
-          </div>
-
-          <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-black/10 pt-8 sm:flex-row">
-            <p className="text-sm text-obsidian/60">
-              Page {page} of {pageCount}
-            </p>
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-[#2552ad] px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-[#1f4591] disabled:opacity-50"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
-              >
-                Previous
-              </button>
-              <button
-                type="button"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-[#2552ad] px-4 text-xs font-semibold tracking-[0.18em] uppercase text-white transition-colors hover:bg-[#1f4591] disabled:opacity-50"
-                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-                disabled={page >= pageCount}
-              >
-                Next
-              </button>
             </div>
           </div>
         </div>
