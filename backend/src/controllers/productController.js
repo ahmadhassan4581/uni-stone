@@ -35,6 +35,8 @@ async function listProducts(req, res, next) {
       name: p.name,
       category: p.category,
       price: p.price,
+      saleEnabled: Boolean(p.saleEnabled),
+      salePrice: p.salePrice ?? null,
       rating: p.rating ?? null,
       numReviews: p.numReviews ?? 0,
       vatRate: p.vatRate ?? null,
@@ -68,6 +70,8 @@ async function getProductBySlug(req, res, next) {
       name: p.name,
       category: p.category,
       price: p.price,
+      saleEnabled: Boolean(p.saleEnabled),
+      salePrice: p.salePrice ?? null,
       rating: p.rating ?? null,
       numReviews: p.numReviews ?? 0,
       reviews: Array.isArray(p.reviews)
@@ -185,6 +189,7 @@ async function createProduct(req, res, next) {
     if (payload.vatRate === '' || payload.vatRate === undefined) payload.vatRate = null
     if (payload.stock === '' || payload.stock === undefined) payload.stock = null
     if (payload.rating === '' || payload.rating === undefined) payload.rating = null
+    if (payload.salePrice === '' || payload.salePrice === undefined) payload.salePrice = null
 
     if (payload.vatRate !== null) {
       const raw = typeof payload.vatRate === 'string' ? payload.vatRate.replace('%', '').trim() : payload.vatRate
@@ -200,6 +205,16 @@ async function createProduct(req, res, next) {
     if (payload.rating !== null) {
       const n = Number(payload.rating)
       payload.rating = Number.isFinite(n) ? Math.max(0, Math.min(5, n)) : null
+    }
+
+    payload.saleEnabled = Boolean(payload.saleEnabled)
+    if (payload.salePrice !== null) {
+      const n = Number(payload.salePrice)
+      payload.salePrice = Number.isFinite(n) ? n : null
+    }
+    if (payload.saleEnabled && (payload.salePrice === null || payload.salePrice <= 0)) {
+      res.status(400)
+      throw new Error('Sale price is required when sale is enabled')
     }
 
     if (Array.isArray(payload.specifications)) {
@@ -228,6 +243,7 @@ async function updateProduct(req, res, next) {
     if (payload.vatRate === '' || payload.vatRate === undefined) payload.vatRate = null
     if (payload.stock === '' || payload.stock === undefined) payload.stock = null
     if (payload.rating === '' || payload.rating === undefined) payload.rating = null
+    if (payload.salePrice === '' || payload.salePrice === undefined) payload.salePrice = null
 
     if (payload.vatRate !== null) {
       const raw = typeof payload.vatRate === 'string' ? payload.vatRate.replace('%', '').trim() : payload.vatRate
@@ -243,6 +259,16 @@ async function updateProduct(req, res, next) {
     if (payload.rating !== null) {
       const n = Number(payload.rating)
       payload.rating = Number.isFinite(n) ? Math.max(0, Math.min(5, n)) : null
+    }
+
+    payload.saleEnabled = Boolean(payload.saleEnabled)
+    if (payload.salePrice !== null) {
+      const n = Number(payload.salePrice)
+      payload.salePrice = Number.isFinite(n) ? n : null
+    }
+    if (payload.saleEnabled && (payload.salePrice === null || payload.salePrice <= 0)) {
+      res.status(400)
+      throw new Error('Sale price is required when sale is enabled')
     }
 
     if (Array.isArray(payload.specifications)) {

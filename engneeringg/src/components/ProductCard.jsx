@@ -36,7 +36,12 @@ export default function ProductCard({ product, className, actions, tone = 'dark'
   const filledCount = rating === null ? 0 : Math.round(rating)
   const defaultVatRate = 20
   const vatRate = Number.isFinite(Number(product?.vatRate)) ? Number(product.vatRate) : defaultVatRate
-  const incVat = vatInclusivePrice(product?.price, vatRate)
+  const saleEnabled = Boolean(product?.saleEnabled)
+  const salePriceValue = Number(product?.salePrice)
+  const hasSalePrice = Number.isFinite(salePriceValue) && salePriceValue > 0
+  const isOnSale = saleEnabled && hasSalePrice
+  const basePrice = isOnSale ? salePriceValue : product?.price
+  const incVat = vatInclusivePrice(basePrice, vatRate)
   const reviewCount = Number.isFinite(Number(product?.reviewCount))
     ? Number(product.reviewCount)
     : Number.isFinite(Number(product?.reviewsCount))
@@ -66,6 +71,11 @@ export default function ProductCard({ product, className, actions, tone = 'dark'
               loading="lazy"
               className="h-full w-full object-cover"
             />
+            {isOnSale ? (
+              <div className="absolute left-3 top-3 grid h-12 w-12 place-items-center rounded-full bg-red-600 text-[11px] font-semibold text-white">
+                SALE
+              </div>
+            ) : null}
           </div>
         </button>
       ) : (
@@ -77,6 +87,11 @@ export default function ProductCard({ product, className, actions, tone = 'dark'
               loading="lazy"
               className="h-full w-full object-cover"
             />
+            {isOnSale ? (
+              <div className="absolute left-3 top-3 grid h-12 w-12 place-items-center rounded-full bg-red-600 text-[11px] font-semibold text-white">
+                SALE
+              </div>
+            ) : null}
           </div>
         </Link>
       )}
@@ -97,7 +112,12 @@ export default function ProductCard({ product, className, actions, tone = 'dark'
         </h3>
 
         <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <p className={cn('text-sm font-semibold', priceClass)}>{money(product.price)}</p>
+          {isOnSale ? (
+            <p className={cn('text-sm font-semibold text-black/40 line-through', tone === 'light' ? '' : 'text-white/40')}>
+              {money(product.price)}
+            </p>
+          ) : null}
+          <p className={cn('text-sm font-semibold', priceClass)}>{money(isOnSale ? salePriceValue : product.price)}</p>
           <p className={cn('text-xs', tone === 'light' ? 'text-obsidian/55' : 'text-white/55')}>
             <span className="font-semibold">{money(incVat)}</span>
             <span className="ml-1">(incl. VAT)</span>

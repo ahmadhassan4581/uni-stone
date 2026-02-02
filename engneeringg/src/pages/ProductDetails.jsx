@@ -91,7 +91,12 @@ export default function ProductDetails() {
   const hasStockValue = Number.isFinite(stockValue) && stockValue >= 0
   const maxPerItem = 20
   const maxAllowed = Math.min(maxPerItem, hasStockValue ? stockValue : maxPerItem)
-  const incVat = vatInclusivePrice(data.price, data.vatRate)
+  const saleEnabled = Boolean(data?.saleEnabled)
+  const salePriceValue = Number(data?.salePrice)
+  const hasSalePrice = Number.isFinite(salePriceValue) && salePriceValue > 0
+  const isOnSale = saleEnabled && hasSalePrice
+  const basePrice = isOnSale ? salePriceValue : data.price
+  const incVat = vatInclusivePrice(basePrice, data.vatRate)
   const categoryLabel = String(data.category || 'Products').trim() || 'Products'
   const wishlistIds = Array.isArray(user?.wishlist) ? user.wishlist : []
   const isWishlisted = wishlistIds.includes(data.id)
@@ -165,10 +170,13 @@ export default function ProductDetails() {
             </h1>
 
             <p className="text-lg font-semibold">
-              {money(incVat)}{' '}
-              <span className="text-sm font-normal text-gray-500">
-                {money(data.price)} (ex. VAT)
-              </span>
+              {isOnSale ? (
+                <span className="mr-2 text-sm font-semibold text-gray-400 line-through">{money(data.price)}</span>
+              ) : null}
+              <span className={isOnSale ? 'text-red-600' : ''}>{money(basePrice)}</span>{' '}
+              <span className="text-sm font-normal text-gray-500">(ex. VAT)</span>
+              <span className="ml-2 text-sm font-semibold text-gray-800">{money(incVat)}</span>
+              <span className="text-sm font-normal text-gray-500"> Inc VAT</span>
             </p>
 
             <p className="text-sm text-gray-600">

@@ -39,6 +39,8 @@ export default function Products() {
   const [name, setName] = useState('')
   const [category, setCategory] = useState('Structural')
   const [price, setPrice] = useState('')
+  const [saleEnabled, setSaleEnabled] = useState(false)
+  const [salePrice, setSalePrice] = useState('')
   const [vatRate, setVatRate] = useState('')
   const [stock, setStock] = useState('')
   const [description, setDescription] = useState('')
@@ -58,6 +60,8 @@ export default function Products() {
     setName('')
     setCategory('Structural')
     setPrice('')
+    setSaleEnabled(false)
+    setSalePrice('')
     setVatRate('')
     setStock('')
     setDescription('')
@@ -110,6 +114,8 @@ export default function Products() {
     setName(p.name || '')
     setCategory(p.category || 'All Products')
     setPrice(String(p.price ?? ''))
+    setSaleEnabled(Boolean(p.saleEnabled))
+    setSalePrice(String(p.salePrice ?? ''))
     setVatRate(String(p.vatRate ?? ''))
     setStock(String(p.stock ?? ''))
     setDescription(p.description || '')
@@ -140,6 +146,11 @@ export default function Products() {
     e.preventDefault()
     setError('')
 
+    if (saleEnabled && !(Number(salePrice) > 0)) {
+      setError('Sale price is required when sale is enabled')
+      return
+    }
+
     setUploading(true)
     try {
       const [uploadedMain, uploadedGallery] = await Promise.all([uploadMainImageIfNeeded(), uploadGalleryIfNeeded()])
@@ -168,6 +179,7 @@ export default function Products() {
     const vatRateRaw = String(vatRate).trim()
     const vatRateValue = vatRateRaw === '' ? null : Number(vatRateRaw.replace('%', '').trim())
     const stockValue = String(stock).trim() === '' ? null : Number(stock)
+    const salePriceValue = String(salePrice).trim() === '' ? null : Number(salePrice)
 
     const payload = {
       productId,
@@ -176,6 +188,8 @@ export default function Products() {
       name,
       category,
       price: Number(price),
+      saleEnabled,
+      salePrice: Number.isFinite(salePriceValue) ? salePriceValue : null,
       vatRate: Number.isFinite(vatRateValue) ? vatRateValue : null,
       stock: Number.isFinite(stockValue) ? stockValue : null,
       description,
@@ -379,6 +393,19 @@ export default function Products() {
             </label>
 
             <Field label="Price" value={price} onChange={setPrice} type="number" required />
+
+            <label className="flex items-center gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+              <input type="checkbox" checked={saleEnabled} onChange={(e) => setSaleEnabled(e.target.checked)} />
+              <span className="text-sm font-medium">Enable Sale</span>
+            </label>
+
+            <Field
+              label="Sale Price"
+              value={salePrice}
+              onChange={setSalePrice}
+              type="number"
+              required={saleEnabled}
+            />
             <Field label="VAT (e.g. 20 or 20%)" value={vatRate} onChange={setVatRate} type="text" />
             <Field label="Stock" value={stock} onChange={setStock} type="number" />
 
