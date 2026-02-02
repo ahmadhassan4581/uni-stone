@@ -12,7 +12,7 @@ export default function Products() {
   const activeCategory = searchParams.get('category') || 'All'
   const q = (searchParams.get('q') || '').trim()
   const [sort, setSort] = useState('featured')
-  const perPage = 9
+  const [perPage, setPerPage] = useState(9)
   const [page, setPage] = useState(1)
 
   useEffect(() => {
@@ -83,6 +83,12 @@ export default function Products() {
     setPage(1)
   }
 
+  const gridColsClass = useMemo(() => {
+    if (perPage === 4) return 'grid gap-10 sm:grid-cols-2 lg:grid-cols-2'
+    if (perPage === 16) return 'grid gap-10 sm:grid-cols-2 lg:grid-cols-4'
+    return 'grid gap-10 sm:grid-cols-2 lg:grid-cols-3'
+  }, [perPage])
+
   return (
     <section className="bg-white">
       <Container className="py-20 sm:py-24">
@@ -109,7 +115,7 @@ export default function Products() {
 
           <div className="mb-6 flex flex-col justify-between gap-3 border-b border-black/10 pb-4 sm:flex-row sm:items-center">
             <p className="text-xs text-obsidian/70">
-              Showing {showing.start}–{showing.end} of  products
+              Showing {showing.start}–{showing.end} of {showing.total} products
             </p>
 
             <div className="flex flex-wrap items-center gap-4">
@@ -158,10 +164,90 @@ export default function Products() {
                   </option>
                 </select>
               </label>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-obsidian/70">Grid:</span>
+                <div className="flex overflow-hidden rounded border border-black/20 bg-white">
+                  <button
+                    type="button"
+                    className={
+                      'grid h-9 w-9 place-items-center transition-colors ' +
+                      (perPage === 4 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
+                    }
+                    onClick={() => {
+                      setPerPage(4)
+                      setPage(1)
+                    }}
+                    aria-label="2 by 2 grid"
+                  >
+                    <span className="grid grid-cols-2 gap-0.5">
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      'grid h-9 w-9 place-items-center transition-colors ' +
+                      (perPage === 9 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
+                    }
+                    onClick={() => {
+                      setPerPage(9)
+                      setPage(1)
+                    }}
+                    aria-label="3 by 3 grid"
+                  >
+                    <span className="grid grid-cols-3 gap-0.5">
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      'grid h-9 w-9 place-items-center transition-colors ' +
+                      (perPage === 16 ? 'bg-[#2552ad] text-white' : 'text-obsidian/70 hover:bg-black/5')
+                    }
+                    onClick={() => {
+                      setPerPage(16)
+                      setPage(1)
+                    }}
+                    aria-label="4 by 4 grid"
+                  >
+                    <span className="grid grid-cols-4 gap-0.5">
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                      <span className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={gridColsClass}>
             {loading ? (
               <div className="text-sm text-obsidian/60">Loading...</div>
             ) : (
