@@ -7,6 +7,9 @@ const {
   razorpayVerify,
   paytmInitiate,
   paytmCallback,
+  paypalConfig,
+  paypalCreateOrder,
+  paypalCaptureOrder,
 } = require('../controllers/paymentController')
 
 const router = express.Router()
@@ -24,5 +27,9 @@ router.post(
   express.json({ type: '*/*' }),
   paytmCallback,
 )
+
+router.get('/paypal/config', paypalConfig)
+router.post('/paypal/create-order', paypalCreateOrder)
+router.post('/paypal/capture-order', paypalCaptureOrder)
 
 module.exports = router

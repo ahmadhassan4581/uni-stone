@@ -79,9 +79,9 @@ export default function CheckoutComplete() {
     ].filter(Boolean)
   }, [deliveryDetails])
 
-  const completionTitle = paymentMethod === 'card' ? 'Payment Complete' : 'Order Received'
+  const completionTitle = paymentMethod === 'card' || paymentMethod === 'paypal' ? 'Payment Complete' : 'Order Received'
   const completionBody =
-    paymentMethod === 'card'
+    paymentMethod === 'card' || paymentMethod === 'paypal'
       ? 'Your payment was successful and your order has been placed.'
       : 'Your order has been received. We will contact you to take payment over the telephone.'
 

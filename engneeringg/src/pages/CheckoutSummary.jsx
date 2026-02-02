@@ -28,6 +28,11 @@ export default function CheckoutSummary() {
   const [telephone, setTelephone] = useState('')
   const [acceptTerms, setAcceptTerms] = useState(false)
 
+  const [paypalClientId, setPaypalClientId] = useState('')
+  const [paypalReady, setPaypalReady] = useState(false)
+  const [paypalLoading, setPaypalLoading] = useState(false)
+  const [paypalError, setPaypalError] = useState('')
+
   const [placingOrder, setPlacingOrder] = useState(false)
   const [placeOrderError, setPlaceOrderError] = useState('')
 
@@ -50,6 +55,143 @@ export default function CheckoutSummary() {
   }, [acceptTerms, paymentMethod, telephone])
 
   const ctaLabel = paymentMethod === 'telephone' ? 'Place Order →' : 'Pay For Order →'
+
+  useEffect(() => {
+    if (paymentMethod !== 'paypal') return
+
+    let alive = true
+
+    async function ensurePayPal() {
+      try {
+        setPaypalError('')
+        setPaypalLoading(true)
+
+        const cfg = await apiFetch('/api/payments/paypal/config')
+        const clientId = String(cfg?.clientId || '').trim()
+        if (!clientId) throw new Error('Missing PayPal client id')
+        if (!alive) return
+        setPaypalClientId(clientId)
+
+        if (window.paypal?.Buttons) {
+          setPaypalReady(true)
+          return
+        }
+
+        const scriptId = 'paypal-js'
+        const existing = document.getElementById(scriptId)
+        if (existing) {
+          existing.addEventListener('load', () => setPaypalReady(true))
+          existing.addEventListener('error', () => setPaypalError('Failed to load PayPal SDK'))
+          return
+        }
+
+        const s = document.createElement('script')
+        s.id = scriptId
+        s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=GBP&intent=capture`
+        s.async = true
+        s.onload = () => {
+          if (!alive) return
+          setPaypalReady(true)
+        }
+        s.onerror = () => {
+          if (!alive) return
+          setPaypalError('Failed to load PayPal SDK')
+        }
+        document.body.appendChild(s)
+      } catch (err) {
+        if (!alive) return
+        setPaypalError(err?.message || 'Failed to initialise PayPal')
+      } finally {
+        if (!alive) return
+        setPaypalLoading(false)
+      }
+    }
+
+    ensurePayPal()
+
+    return () => {
+      alive = false
+    }
+  }, [paymentMethod])
+
+  useEffect(() => {
+    if (paymentMethod !== 'paypal') return
+    if (!paypalReady) return
+    if (!window.paypal?.Buttons) return
+
+    const container = document.getElementById('paypal-buttons')
+    if (!container) return
+    container.innerHTML = ''
+
+    try {
+      window.paypal
+        .Buttons({
+          style: { layout: 'vertical' },
+          createOrder: async () => {
+            const resp = await apiFetch('/api/payments/paypal/create-order', {
+              method: 'POST',
+              body: JSON.stringify({ amount: total, currency: 'GBP', kind: 'cart' }),
+            })
+            if (!resp?.id) throw new Error('Unable to start PayPal payment')
+            return resp.id
+          },
+          onApprove: async (data) => {
+            setPlacingOrder(true)
+            setPlaceOrderError('')
+            try {
+              localStorage.setItem('checkout_payment_method', 'paypal')
+              localStorage.setItem('checkout_accept_terms', acceptTerms ? '1' : '0')
+
+              const capture = await apiFetch('/api/payments/paypal/capture-order', {
+                method: 'POST',
+                body: JSON.stringify({ orderId: data?.orderID }),
+              })
+
+              const captureId =
+                capture?.purchase_units?.[0]?.payments?.captures?.[0]?.id ||
+                capture?.id ||
+                data?.orderID ||
+                ''
+
+              const order = await apiFetch('/api/orders', {
+                method: 'POST',
+                headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+                body: JSON.stringify({
+                  items: detailedItems.map((i) => ({ productId: i.productId, qty: i.qty })),
+                  deliveryDetails,
+                  paymentMethod: 'paypal',
+                  paymentStatus: 'paid',
+                  paymentReference: String(captureId),
+                }),
+              })
+
+              localStorage.setItem(
+                'checkout_last_order',
+                JSON.stringify({
+                  order,
+                  placedAt: new Date().toISOString(),
+                  paymentMethod: 'paypal',
+                  paymentReference: String(captureId),
+                  deliveryDetails,
+                }),
+              )
+              clear()
+              navigate('/checkout/complete')
+            } catch (err) {
+              setPlaceOrderError(err?.message || 'Failed to place order')
+            } finally {
+              setPlacingOrder(false)
+            }
+          },
+          onError: () => {
+            setPlaceOrderError('PayPal payment failed')
+          },
+        })
+        .render(container)
+    } catch (e) {
+      setPaypalError('Failed to render PayPal buttons')
+    }
+  }, [acceptTerms, clear, deliveryDetails, detailedItems, navigate, paypalReady, paymentMethod, token, total])
 
   const addressLines = useMemo(() => {
     if (!deliveryDetails) return []
@@ -109,6 +251,20 @@ export default function CheckoutSummary() {
                   <div className="flex-1">
                     <p className="font-semibold text-gray-900">Card</p>
                     <p className="mt-1 text-[11px] text-gray-600">Powered by ClearAccept</p>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-3 rounded border border-gray-200 bg-white p-4">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="paypal"
+                    checked={paymentMethod === 'paypal'}
+                    onChange={() => setPaymentMethod('paypal')}
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-gray-900">PayPal</p>
+                    <p className="mt-1 text-[11px] text-gray-600">Pay securely with PayPal</p>
                   </div>
                 </label>
 
@@ -255,7 +411,7 @@ export default function CheckoutSummary() {
                   type="button"
                   variant="blue"
                   className="mt-4 w-full text-sm"
-                  disabled={!isValid}
+                  disabled={!isValid || paymentMethod === 'paypal'}
                   onClick={async () => {
                     if (!isValid || placingOrder) return
 
@@ -266,6 +422,10 @@ export default function CheckoutSummary() {
 
                     if (paymentMethod === 'card') {
                       navigate('/checkout/payment')
+                      return
+                    }
+
+                    if (paymentMethod === 'paypal') {
                       return
                     }
 
@@ -303,6 +463,22 @@ export default function CheckoutSummary() {
                 >
                   {placingOrder ? 'Placing...' : ctaLabel}
                 </Button>
+
+                {paymentMethod === 'paypal' ? (
+                  <div className="mt-4">
+                    {!acceptTerms ? (
+                      <p className="text-xs text-gray-600">Please accept Terms &amp; Conditions to continue with PayPal.</p>
+                    ) : paypalLoading ? (
+                      <p className="text-xs text-gray-600">Loading PayPal...</p>
+                    ) : paypalError ? (
+                      <p className="text-xs text-red-600">{paypalError}</p>
+                    ) : paypalClientId && paypalReady ? (
+                      <div id="paypal-buttons" />
+                    ) : (
+                      <p className="text-xs text-gray-600">Preparing PayPal...</p>
+                    )}
+                  </div>
+                ) : null}
 
                 {placeOrderError ? (
                   <p className="mt-3 text-xs text-red-600">{placeOrderError}</p>

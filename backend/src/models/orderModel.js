@@ -52,7 +52,7 @@ const orderSchema = new mongoose.Schema(
     total: { type: Number, required: true },
     status: { type: String, enum: ['created', 'paid', 'shipped', 'completed', 'cancelled'], default: 'created' },
     paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },
-    paymentMethod: { type: String, enum: ['card', 'telephone', 'unknown'], default: 'unknown' },
+    paymentMethod: { type: String, enum: ['card', 'telephone', 'paypal', 'unknown'], default: 'unknown' },
     paymentReference: { type: String, default: '' },
     deliveryDetails: { type: orderDeliveryDetailsSchema, default: null },
   },

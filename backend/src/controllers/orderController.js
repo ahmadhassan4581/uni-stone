@@ -39,9 +39,10 @@ async function createOrder(req, res, next) {
 
     const subtotal = normalized.reduce((sum, i) => sum + i.lineTotal, 0)
 
-    const method = paymentMethod === 'card' || paymentMethod === 'telephone' ? paymentMethod : 'unknown'
-    const inferredPaymentStatus = method === 'card' ? 'paid' : 'pending'
-    const statusValue = method === 'card' ? 'paid' : 'created'
+    const method =
+      paymentMethod === 'card' || paymentMethod === 'telephone' || paymentMethod === 'paypal' ? paymentMethod : 'unknown'
+    const inferredPaymentStatus = method === 'card' || method === 'paypal' ? 'paid' : 'pending'
+    const statusValue = method === 'card' || method === 'paypal' ? 'paid' : 'created'
 
     const order = await Order.create({
       user: req.user?._id,

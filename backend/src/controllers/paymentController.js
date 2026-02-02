@@ -29,6 +29,167 @@ function normalizeAmount(amount) {
   return n
 }
 
+function paypalHost() {
+  const env = String(process.env.PAYPAL_ENV || 'SANDBOX').toUpperCase()
+  return env === 'LIVE' ? 'api-m.paypal.com' : 'api-m.sandbox.paypal.com'
+}
+
+function httpsRequest({ host, path, method, headers, body }) {
+  return new Promise((resolve, reject) => {
+    const data = body ? JSON.stringify(body) : ''
+    const req = https.request(
+      {
+        host,
+        path,
+        method,
+        headers: {
+          ...(headers || {}),
+          ...(body
+            ? {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(data),
+              }
+            : {}),
+        },
+      },
+      (resp) => {
+        let raw = ''
+        resp.on('data', (chunk) => {
+          raw += chunk
+        })
+        resp.on('end', () => {
+          resolve({ statusCode: resp.statusCode || 0, raw })
+        })
+      },
+    )
+
+    req.on('error', reject)
+    if (data) req.write(data)
+    req.end()
+  })
+}
+
+async function paypalAccessToken() {
+  requireEnv(['PAYPAL_CLIENT_ID', 'PAYPAL_CLIENT_SECRET'])
+
+  const host = paypalHost()
+  const basic = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64')
+
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      {
+        host,
+        path: '/v1/oauth2/token',
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${basic}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      },
+      (resp) => {
+        let raw = ''
+        resp.on('data', (c) => (raw += c))
+        resp.on('end', () => {
+          try {
+            const data = JSON.parse(raw || '{}')
+            if ((resp.statusCode || 0) >= 400) {
+              reject(httpError(400, data?.error_description || 'PayPal auth failed'))
+              return
+            }
+            if (!data?.access_token) {
+              reject(httpError(400, 'PayPal auth failed'))
+              return
+            }
+            resolve(String(data.access_token))
+          } catch (e) {
+            reject(e)
+          }
+        })
+      },
+    )
+
+    req.on('error', reject)
+    req.write('grant_type=client_credentials')
+    req.end()
+  })
+}
+
+async function paypalConfig(req, res, next) {
+  try {
+    requireEnv(['PAYPAL_CLIENT_ID'])
+    res.json({ clientId: process.env.PAYPAL_CLIENT_ID })
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function paypalCreateOrder(req, res, next) {
+  try {
+    const amount = normalizeAmount(req.body?.amount ?? req.body?.subtotal)
+    const currency = String(req.body?.currency || 'GBP').toUpperCase()
+
+    const accessToken = await paypalAccessToken()
+    const host = paypalHost()
+
+    const result = await httpsRequest({
+      host,
+      path: '/v2/checkout/orders',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: {
+        intent: 'CAPTURE',
+        purchase_units: [
+          {
+            amount: {
+              currency_code: currency,
+              value: amount.toFixed(2),
+            },
+          },
+        ],
+      },
+    })
+
+    const parsed = JSON.parse(result.raw || '{}')
+    if (result.statusCode >= 400) {
+      throw httpError(400, parsed?.message || parsed?.details?.[0]?.description || 'Unable to create PayPal order')
+    }
+
+    res.json({ id: parsed.id })
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function paypalCaptureOrder(req, res, next) {
+  try {
+    const orderId = String(req.body?.orderId || '').trim()
+    if (!orderId) throw httpError(400, 'Missing orderId')
+
+    const accessToken = await paypalAccessToken()
+    const host = paypalHost()
+
+    const result = await httpsRequest({
+      host,
+      path: `/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+
+    const parsed = JSON.parse(result.raw || '{}')
+    if (result.statusCode >= 400) {
+      throw httpError(400, parsed?.message || parsed?.details?.[0]?.description || 'Unable to capture PayPal order')
+    }
+
+    res.json(parsed)
+  } catch (err) {
+    next(err)
+  }
+}
+
 async function stripeCheckout(req, res, next) {
   try {
     requireEnv(['STRIPE_SECRET_KEY'])
@@ -298,4 +459,7 @@ module.exports = {
   razorpayVerify,
   paytmInitiate,
   paytmCallback,
+  paypalConfig,
+  paypalCreateOrder,
+  paypalCaptureOrder,
 }
