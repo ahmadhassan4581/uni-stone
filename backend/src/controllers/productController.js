@@ -12,12 +12,13 @@ async function listProducts(req, res, next) {
   try {
     await ensureSeeded()
 
-    const { category, slug, q, sort } = req.query
+    const { category, slug, q, sort, onSale } = req.query
 
     const filter = {}
     if (category) filter.category = category
     if (slug) filter.slug = slug
     if (q) filter.name = { $regex: String(q), $options: 'i' }
+    if (String(onSale || '').toLowerCase() === 'true') filter.saleEnabled = true
 
     const query = Product.find(filter)
 

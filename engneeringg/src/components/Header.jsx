@@ -37,6 +37,7 @@ export default function Header() {
     const pageMatches = [
       { keys: ['home'], to: '/' },
       { keys: ['products', 'product', 'all products', 'shop'], to: '/products' },
+      { keys: ['sale', 'offers', 'discount'], to: '/sale' },
       { keys: ['about', 'about us'], to: '/about' },
       { keys: ['consultation', 'consult', 'request a call', 'call'], to: '/consultation' },
       { keys: ['contact', 'contact us'], to: '/contact' },
@@ -103,6 +104,7 @@ export default function Header() {
       { to: '/about', label: 'About' },
       { to: '/consultation', label: 'Request a Call' },
       { to: '/contact', label: 'Contact' },
+      { to: '/sale', label: 'Sale' },
     ],
     [],
   )
@@ -124,6 +126,7 @@ export default function Header() {
       { to: '/about', label: 'About', tone: 'secondary' },
       { to: '/info/delivery', label: 'Delivery', tone: 'secondary' },
       { to: '/info/faqs', label: 'FAQs', tone: 'secondary' },
+      { to: '/sale', label: 'Sale', tone: 'secondary' },
       { to: '/contact', label: 'Contact', tone: 'secondary' },
     ],
     [],

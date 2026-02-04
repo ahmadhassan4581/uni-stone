@@ -21,6 +21,7 @@ import MyOrders from './pages/MyOrders'
 import Account from './pages/Account'
 import Wishlist from './pages/Wishlist'
 import Addresses from './pages/Addresses'
+import Sale from './pages/Sale'
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="products" element={<Products />} />
+          <Route path="sale" element={<Sale />} />
           <Route path="products/:slug" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />

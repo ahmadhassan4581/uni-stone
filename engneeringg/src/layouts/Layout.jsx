@@ -14,9 +14,18 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/10 bg-[#111111] text-white">
-        <div className="mx-auto w-full max-w-7xl px-5 py-2 text-center text-xs font-semibold tracking-[0.12em] uppercase sm:px-8">
-          If you get more than 200 QTY then contact us get more discount
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/10 bg-[#ffffff] text-white">
+        <div className="mx-auto w-full max-w-7xl px-5 py-2 sm:px-8">
+          <div className="overflow-hidden whitespace-nowrap">
+            <div className="marquee-rtl motion-reduce:animate-none">
+              <span className="pr-10 text-xs font-semibold tracking-[0.12em] uppercase text-red-500">
+                * For quantities exceeding 200 units, please contact us for special pricing and additional discounts. .
+              </span>
+              <span className="pr-10 text-xs font-semibold tracking-[0.12em] uppercase text-red-500" aria-hidden="true">
+                * For quantities exceeding 200 units, please contact us for special pricing and additional discounts. .
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 

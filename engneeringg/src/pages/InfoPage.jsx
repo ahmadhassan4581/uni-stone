@@ -189,10 +189,6 @@ export default function InfoPage() {
         ) : slug === 'faqs' ? (
           <div className="mt-10 space-y-8 text-sm leading-7 text-obsidian/70">
             <div className="space-y-4">
-              <h2 className="font-display text-2xl tracking-[0.02em] text-obsidian">Frequently Asked Questions (FAQs)</h2>
-            </div>
-
-            <div className="space-y-4">
               <h3 className="font-display text-xl tracking-[0.02em] text-obsidian">General</h3>
               <p className="font-semibold text-obsidian">Who are Unistone Paving Limited?</p>
               <p>
