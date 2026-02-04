@@ -36,10 +36,6 @@
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/sale">
                 Sale
               </Link>
-
-              <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/privacy">
-                Privacy Policy
-              </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/consultation">
                 Consultation
               </Link>
@@ -53,6 +49,9 @@
             <nav className="mt-4 space-y-2 text-sm">
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/privacy">
                 Privacy Policy
+              </Link>
+               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/privacy">
+                Digital Brochure
               </Link>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/faqs">
                 FAQs
