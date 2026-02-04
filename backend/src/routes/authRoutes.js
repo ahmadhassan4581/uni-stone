@@ -12,6 +12,7 @@ const {
   updateAddresses,
   forgotPassword,
   resetPassword,
+  changePassword,
 } = require('../controllers/authController')
 const { protect } = require('../middleware/authMiddleware')
 
@@ -63,5 +64,19 @@ router.delete('/wishlist/:productId', protect, removeWishlistItem)
 
 router.get('/addresses', protect, getAddresses)
 router.put('/addresses', protect, updateAddresses)
+
+router.post(
+  '/change-password',
+  protect,
+  [
+    body('currentPassword').notEmpty().withMessage('Current password is required'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    body('confirmPassword').notEmpty().withMessage('Confirm password is required').custom((value, { req }) => {
+      if (value !== req.body.password) throw new Error('Passwords do not match')
+      return true
+    }),
+  ],
+  changePassword,
+)
 
 module.exports = router

@@ -211,6 +211,38 @@ async function forgotPassword(req, res, next) {
   }
 }
 
+async function changePassword(req, res, next) {
+  try {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      res.status(400)
+      return res.json({ errors: errors.array() })
+    }
+
+    const currentPassword = String(req.body?.currentPassword || '')
+    const password = String(req.body?.password || '')
+
+    const user = await User.findById(req.user?._id)
+    if (!user) {
+      res.status(401)
+      throw new Error('Not authorized')
+    }
+
+    const ok = await user.matchPassword(currentPassword)
+    if (!ok) {
+      res.status(400)
+      throw new Error('Current password is incorrect')
+    }
+
+    user.password = password
+    await user.save()
+
+    res.json({ ok: true })
+  } catch (err) {
+    next(err)
+  }
+}
+
 async function resetPassword(req, res, next) {
   try {
     const errors = validationResult(req)
@@ -255,4 +287,5 @@ module.exports = {
   updateAddresses,
   forgotPassword,
   resetPassword,
+  changePassword,
 }
