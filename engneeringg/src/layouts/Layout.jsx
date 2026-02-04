@@ -15,7 +15,7 @@ export default function Layout() {
       </main>
 
       <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/10 bg-[#ffffff] text-white">
-        <div className="mx-auto w-full max-w-7xl px-5 py-2 sm:px-8">
+        <div className="w-full  py-2 ">
           <div className="overflow-hidden whitespace-nowrap">
             <div className="marquee-rtl motion-reduce:animate-none">
               <span className="pr-10 text-xs font-semibold tracking-[0.12em] uppercase text-red-500">

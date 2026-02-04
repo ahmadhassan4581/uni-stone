@@ -50,9 +50,15 @@
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/privacy">
                 Privacy Policy
               </Link>
-               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/privacy">
+              <a
+                className="block text-obsidian/65 transition-colors hover:text-obsidian"
+                href="https://drive.google.com/file/d/YOUR_FILE_ID/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+              >
                 Digital Brochure
-              </Link>
+              </a>
               <Link className="block text-obsidian/65 transition-colors hover:text-obsidian" to="/info/faqs">
                 FAQs
               </Link>

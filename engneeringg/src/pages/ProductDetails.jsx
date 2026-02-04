@@ -199,6 +199,14 @@ export default function ProductDetails() {
                 <span className="font-medium text-gray-800">{hasStockValue ? stockValue : 'Available'}</span>
               </div>
             </div>
+
+            <p className="mt-2 text-xs text-gray-600">
+              *If you require more than the available stock, please contact us{' '}
+              <Link className="text-blue-600 hover:text-blue-700 hover:underline" to="/contact">
+                (contact)
+              </Link>{' '}
+              directly.
+            </p>
           </div>
 
           {/* RIGHT – CART BOX */}
@@ -234,14 +242,6 @@ export default function ProductDetails() {
               ) : null}
 
               {!inStock ? <p className="mt-3 text-xs text-red-600">Out of stock. Please contact us.</p> : null}
-
-              <p className="mt-3 text-xs text-gray-600">
-                *If you require more than the available stock, please contact us{' '}
-                <Link className="text-blue-600 hover:text-blue-700 hover:underline" to="/contact">
-                  (contact)
-                </Link>{' '}
-                directly.
-              </p>
 
               <button
                 type="button"

@@ -124,6 +124,7 @@ export default function Header() {
     () => [
       { to: '/', label: 'Home', tone: 'primary' },
       { to: '/products', label: 'All Products', tone: 'primary' },
+       { to: '/finish', label: 'Finish', tone: 'secondary' },
       { to: '/about', label: 'About', tone: 'secondary' },
       { to: '/info/delivery', label: 'Delivery', tone: 'secondary' },
       { to: '/info/faqs', label: 'FAQs', tone: 'secondary' },
@@ -396,7 +397,7 @@ export default function Header() {
                 >
                   <button
                     type="button"
-                    className="inline-flex items-center gap-2 rounded-md border border-black/10 bg-white px-4 py-2 text-[0.7rem] font-semibold tracking-[0.18em] text-obsidian transition-colors hover:bg-neutral-100"
+                    className="inline-flex items-center gap-2 px-4 py-2 text-[0.7rem] font-semibold tracking-[0.18em] text-obsidian transition-colors hover:bg-neutral-100"
                     aria-haspopup="menu"
                     aria-expanded={categoriesOpen}
                     onClick={() => setCategoriesOpen((v) => !v)}
