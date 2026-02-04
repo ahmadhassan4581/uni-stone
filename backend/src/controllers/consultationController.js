@@ -137,4 +137,42 @@ async function updateConsultation(req, res, next) {
   }
 }
 
-module.exports = { createConsultation, listConsultations, updateConsultation }
+async function sendConsultationEmailAdmin(req, res, next) {
+  try {
+    const doc = await Consultation.findById(req.params.id)
+    if (!doc) {
+      res.status(404)
+      throw new Error('Consultation not found')
+    }
+
+    const to = String(doc.customerEmail || '').trim()
+    if (!to) {
+      res.status(400)
+      throw new Error('Customer email is missing')
+    }
+
+    const subject = String(req.body?.subject || '').trim()
+    const message = String(req.body?.message || '').trim()
+    if (!subject || !message) {
+      res.status(400)
+      throw new Error('Subject and message are required')
+    }
+
+    const ok = await sendMailIfConfigured({
+      to,
+      subject,
+      text: message,
+    })
+
+    if (!ok) {
+      res.status(500)
+      throw new Error('Email service is not configured')
+    }
+
+    res.json({ ok: true })
+  } catch (err) {
+    next(err)
+  }
+}
+
+module.exports = { createConsultation, listConsultations, updateConsultation, sendConsultationEmailAdmin }

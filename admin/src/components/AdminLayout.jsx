@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import logo from '../assets/logo.png'
 
 function SideLink({ to, label }) {
   return (
@@ -47,10 +48,8 @@ export default function AdminLayout() {
       <div className="flex min-h-dvh">
         <aside className="w-72 border-r border-slate-200 bg-white/80 p-4 backdrop-blur">
           <div className="mb-6 flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-sm font-bold text-white">U</div>
-            <div>
-              <p className="text-base font-semibold leading-tight">Unistone</p>
-              <p className="text-xs text-slate-500">Admin Panel</p>
+            <div className="grid h-16 w-16 place-items-center overflow-hidden rounded-xl bg-white">
+              <img src={logo} alt="Unistone" className="h-full w-full object-contain" />
             </div>
           </div>
 

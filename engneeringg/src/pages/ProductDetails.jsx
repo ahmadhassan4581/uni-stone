@@ -185,37 +185,25 @@ export default function ProductDetails() {
               {numReviews} reviews
             </p>
 
-            <p className="flex items-center gap-2 text-sm">
-              {inStock ? (
-                <span className="text-green-600">✔</span>
-              ) : (
-                <XCircle className="h-4 w-4 text-red-600" />
-              )}
-              <span className="text-gray-600">Stock Status:</span>
-              <span className={inStock ? 'text-green-600' : 'text-red-600'}>{inStock ? 'In Stock' : 'Out of Stock'}</span>
-            </p>
-
-            <p className="text-sm text-gray-600">
-              <span className="font-medium text-gray-800">Stock:</span>{' '}
-              {hasStockValue ? stockValue : 'Available'}
-            </p>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+              <div className="inline-flex items-center gap-2">
+                {inStock ? <span className="text-green-600">✔</span> : <XCircle className="h-4 w-4 text-red-600" />}
+                <span className="text-gray-600">Stock Status:</span>
+                <span className={inStock ? 'text-green-600' : 'text-red-600'}>
+                  {inStock ? 'In Stock' : 'Out of Stock'}
+                </span>
+              </div>
+              <span className="text-gray-300">|</span>
+              <div className="inline-flex items-center gap-2">
+                <span className="text-gray-600">Stock:</span>
+                <span className="font-medium text-gray-800">{hasStockValue ? stockValue : 'Available'}</span>
+              </div>
+            </div>
           </div>
 
           {/* RIGHT – CART BOX */}
           <div className="lg:col-span-3">
             <div className="bg-gray-100 p-6">
-              <div className="mb-4 flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-800">Quantity</p>
-                <QuantityControl
-                  value={qty}
-                  onChange={(v) => setQty(Math.min(Math.max(1, Number(v) || 1), Math.max(1, maxAllowed)))}
-                  min={1}
-                  max={Math.max(1, maxAllowed)}
-                  tone="light"
-                  size="sm"
-                />
-              </div>
-
               <Button
                 variant="blue"
                 size="lg"
@@ -229,11 +217,31 @@ export default function ProductDetails() {
                 Add to Cart
               </Button>
 
+              <div className="mt-4 flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-800">Quantity</p>
+                <QuantityControl
+                  value={qty}
+                  onChange={(v) => setQty(Math.min(Math.max(1, Number(v) || 1), Math.max(1, maxAllowed)))}
+                  min={1}
+                  max={Math.max(1, maxAllowed)}
+                  tone="light"
+                  size="sm"
+                />
+              </div>
+
               {hasStockValue && stockValue > 20 ? (
                 <p className="mt-3 text-xs text-gray-600">For orders above 20 quantity, please contact us.</p>
               ) : null}
 
               {!inStock ? <p className="mt-3 text-xs text-red-600">Out of stock. Please contact us.</p> : null}
+
+              <p className="mt-3 text-xs text-gray-600">
+                *If you require more than the available stock, please contact us{' '}
+                <Link className="text-blue-600 hover:text-blue-700 hover:underline" to="/contact">
+                  (contact)
+                </Link>{' '}
+                directly.
+              </p>
 
               <button
                 type="button"
