@@ -12,6 +12,7 @@ import Button from './Button'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const [categoriesOpen, setCategoriesOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFeedback, setSearchFeedback] = useState({ type: '', message: '' })
   const { totalCount } = useCart()
@@ -388,6 +389,53 @@ export default function Header() {
           <div className="hidden border-t border-black/10 bg-neutral-100 md:block">
             <Container className="py-2">
               <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2" aria-label="Quick links">
+                <div
+                  className="relative"
+                  onMouseEnter={() => setCategoriesOpen(true)}
+                  onMouseLeave={() => setCategoriesOpen(false)}
+                >
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-2 rounded-md border border-black/10 bg-white px-4 py-2 text-[0.7rem] font-semibold tracking-[0.18em] text-obsidian transition-colors hover:bg-neutral-100"
+                    aria-haspopup="menu"
+                    aria-expanded={categoriesOpen}
+                    onClick={() => setCategoriesOpen((v) => !v)}
+                  >
+                    <Menu className="h-4 w-4" />
+                    <span>Browse Categories</span>
+                  </button>
+
+                  {categoriesOpen ? (
+                    <div
+                      role="menu"
+                      className="absolute left-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-md border border-black/10 bg-white shadow-lg"
+                    >
+                      <Link
+                        to="/products"
+                        role="menuitem"
+                        className="block px-4 py-2 text-xs font-semibold tracking-[0.16em] uppercase text-obsidian/80 transition-colors hover:bg-neutral-100 hover:text-obsidian"
+                        onClick={() => setCategoriesOpen(false)}
+                      >
+                        All Products
+                      </Link>
+                      <div className="h-px bg-black/10" />
+                      <div className="max-h-72 overflow-auto py-1">
+                        {categories.map((c) => (
+                          <Link
+                            key={c}
+                            to={`/products?category=${encodeURIComponent(c)}`}
+                            role="menuitem"
+                            className="block px-4 py-2 text-sm text-obsidian/80 transition-colors hover:bg-neutral-100 hover:text-obsidian"
+                            onClick={() => setCategoriesOpen(false)}
+                          >
+                            {c}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+
                 {quickLinks.map((l) => (
                   <Link
                     key={l.to}
