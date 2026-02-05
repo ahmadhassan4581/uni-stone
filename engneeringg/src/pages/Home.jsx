@@ -328,7 +328,7 @@ export default function Home() {
                        ultimate combination of unbeatable pricing and uncompromising quality. While we maintain a curated selection
                         of popular items in the UK for rapid delivery, our full potential is found in our comprehensive digital catalogue. If you can dream it, we can source it, bringing the vast mineral wealth of our Indian operations directly to the British market.
                   </p>
-                  <h4>Bespoke Craftsmanship & Specialist Solutions</h4>
+                  <h3 className="mt-5 font-display text-2xl leading-[1.05] tracking-[0.03em] text-obsidian sm:text-2xl">Bespoke Craftsmanship & Specialist Solutions</h3>
                   <p>
                    What truly sets us apart is our ability to move beyond "off-the-shelf" limitations. Because we control the production process from the mine upward, we offer full customization on every material we provide. We can precision-cut stone to your exact thickness and dimensions, creating bespoke Paving Slabs, Setts, Cobbles, Steps, Walling, and Edging. For luxury applications like pool side edging, we can shape stone with a sophisticated honed edge for a smooth, premium finish. We offer a diverse array of textures, including Natural Cleft, Shotblast, Flamed, Polished, and Tumbled/Antique surfaces.
                   </p>

@@ -11,9 +11,9 @@ export default function About() {
       <Container className="py-20 sm:py-24">
         <Reveal>
           <SectionHeading
-            eyebrow="About Us"
-            title="Natural Stone & Porcelain Specialists"
-            subtitle="Serving East Sussex and beyond from our Plumpton Green showroom."
+            eyebrow="Our Story"
+            title="From the Heart of India to the British Landscape"
+            subtitle="Two decades of natural stone expertise, now delivered direct to the UK."
             tone="light"
             className="[&_h2]:!text-[#111111] [&_p]:!text-[#111111]"
           />
@@ -30,11 +30,11 @@ export default function About() {
             <Reveal delay={120} className="md:col-span-7">
               <div className="space-y-6 text-sm leading-7 text-[#111111]">
                 <p>
-                  We are based in the beautiful scenic East Sussex countryside, just a 20-minute drive from Brighton. You are always welcome to visit and view our huge range of Natural Stone and Porcelain slabs and tiles. The extensive choice of materials we stock, combined with our unbeatable prices, truly sets us apart.
+                  At Unistone Paving, we believe that every great outdoor space begins with a story etched in stone. While we are a fresh face in the UK market, our journey actually began over two decades ago in the rugged, mineral-rich terrains of India.
                 </p>
 
                 <p>
-                  All of our products are displayed within our premises to give the best possible representation. We are also happy to escort customers to our nearby storage units, just a stone’s throw from the showroom, where you can view tiles and slabs directly from our latest batches.
+                  For twenty years, our family has lived and breathed natural stone, working directly at the source to master the art of quarrying and selection.
                 </p>
               </div>
             </Reveal>
@@ -44,15 +44,15 @@ export default function About() {
             <Reveal className="md:col-span-7">
               <div className="space-y-6 text-sm leading-7 text-[#111111]">
                 <p>
-                  Our premises in Plumpton Green is where it all began a few decades ago, and we are proud to continue operating in this beautiful and scenic part of the country.
+                  The spark to bring Unistone to the UK came during a family visit a few years ago. We fell in love with the classic British garden, a place of sanctuary and gathering, but we noticed a gap.
                 </p>
 
                 <p>
-                  Whilst we have grown significantly over the years and expanded across multiple units on the estate, we still follow the same principles that shaped us into the successful family business we are today.
+                  High-quality, ethically sourced Indian Sandstone was often hidden behind layers of middlemen, driving prices up and quality down. We realized that by bringing our decades of expertise and our direct mine-to-door connections to the UK, we could offer homeowners and landscapers something truly rare: premium quality without the premium markup.
                 </p>
 
                 <p>
-                  As a small business, we go the extra yard to stay ahead. We offer expert knowledge, professional advice, and customer service built on reputation. We know we cannot rest on our laurels, and we give everything to compete with the “big boys” — and that is exactly what we do.
+                  We operate differently because we know the stone better than anyone else. By importing directly from our partner mines in India, we cut out the overhead of traditional UK stockyards. This lean, efficient approach is exactly why we can offer a Price Guarantee: you are getting world-class materials straight from the source.
                 </p>
               </div>
             </Reveal>
@@ -70,11 +70,15 @@ export default function About() {
             <Reveal delay={120} className="md:col-span-7">
               <div className="space-y-6 text-sm leading-7 text-[#111111]">
                 <p>
-                  Our large display boards showcase materials across traditional and contemporary styles, all sizes, finishes, and formats, for both internal and external projects. If you can’t find what you’re looking for with us, we’d wager you won’t find it anywhere else.
+                  Even as a new name in the UK, we’ve hit the ground running, fueled by the reputation for excellence we’ve spent twenty years building abroad. We don’t just sell paving; we provide expert knowledge and professional advice rooted in two generations of industry experience.
                 </p>
 
                 <p>
-                  If you need help calculating quantities for tiling or paving, simply bring in your plans or send us your dimensions by phone or email. Measurements in metres or centimetres help speed things up, but we’re happy to assist regardless.
+                  Whether you are looking for the timeless charm of traditional riven sandstone or the sleek lines of a contemporary patio, our range covers every style and finish. Because we oversee the process from the moment the stone leaves the earth in India to the moment it reaches your project site, we ensure that every slab meets our rigorous standards for durability and aesthetics.
+                </p>
+
+                <p>
+                  If you’re planning a project and need help with quantities or dimensions, our team is ready to assist. Send over your plans in metres or centimetres, and we’ll help you calculate exactly what you need to transform your space.
                 </p>
               </div>
             </Reveal>
