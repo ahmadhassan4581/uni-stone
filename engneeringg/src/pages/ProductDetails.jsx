@@ -201,9 +201,9 @@ export default function ProductDetails() {
             </div>
 
             <p className="mt-2 text-xs text-gray-600">
-              *If you require more than the available stock, please contact us{' '}
+              *If you require more than the available stock, please {' '}
               <Link className="text-blue-600 hover:text-blue-700 hover:underline" to="/contact">
-                contact
+                Contact Us
               </Link>{' '}
               directly.
             </p>

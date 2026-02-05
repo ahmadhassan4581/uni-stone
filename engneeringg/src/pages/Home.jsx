@@ -317,49 +317,28 @@ export default function Home() {
               <div className="md:col-span-12">
           
                 <h2 className="mt-5 font-display text-3xl leading-[1.05] tracking-[0.03em] text-obsidian sm:text-4xl">
-                  Civil Engineering &amp; Construction
+                  What We Do :  Premium Paving, Tailored to You
                 </h2>
                 <div className="mt-6 space-y-5 text-sm leading-7 text-obsidian/70 sm:text-[0.95rem]">
                   <p>
-                    At Marblemosaics Ltd we are dedicated to sourcing and supplying only the finest quality garden paving slabs
-                    at the most affordable prices. With a wealth of knowledge and expertise spanning over two decades, we are
-                    the one of the UK’s leading specialist in high-quality patio &amp; garden tiles . Whether in natural stone or
-                    porcelains. Whether you're looking to transform your garden into a tranquil oasis with the help of Indian
-                    Sandstone, Porcelain, Granite, Limestone, or Slate Paving, we are confident that we have the perfect stone
-                    for you and your budget. By understanding the Natural Stone and Porcelain Paving market, we can guarantee
-                    you the best possible prices and customer service you’ll find online..
+                    At Unistone Paving, we bridge the gap between the world’s finest quarries and your doorstep. We
+                     specialize in an extensive range of high-performance materials, including Sandstone, Limestone, 
+                     Porcelain, Slate, and Granite. Whether you are a Landscape Architect seeking a specific aesthetic,
+                      a Developer managing a large-scale project, or a Homeowner crafting a private retreat, we provide the
+                       ultimate combination of unbeatable pricing and uncompromising quality. While we maintain a curated selection
+                        of popular items in the UK for rapid delivery, our full potential is found in our comprehensive digital catalogue. If you can dream it, we can source it, bringing the vast mineral wealth of our Indian operations directly to the British market.
+                  </p>
+                  <h4>Bespoke Craftsmanship & Specialist Solutions</h4>
+                  <p>
+                   What truly sets us apart is our ability to move beyond "off-the-shelf" limitations. Because we control the production process from the mine upward, we offer full customization on every material we provide. We can precision-cut stone to your exact thickness and dimensions, creating bespoke Paving Slabs, Setts, Cobbles, Steps, Walling, and Edging. For luxury applications like pool side edging, we can shape stone with a sophisticated honed edge for a smooth, premium finish. We offer a diverse array of textures, including Natural Cleft, Shotblast, Flamed, Polished, and Tumbled/Antique surfaces.
                   </p>
                   <p>
-                    At Marblemosaics Ltd , you can count on the expertise of our team to help you select the ideal patio paving
-                    slab for your garden project or mosaic tile for your bathroom or kitchen. With complimentary samples, you can
-                    view and appreciate the stone for yourself, giving you the confidence you need to make the purchase.
+                    Project Pricing: We are built to handle projects of all sizes. Big bulk orders are quoted separately, allowing us to provide significantly discounted rates for large-scale developments.
                   </p>
                   <p>
-                    Our customer service team boasts extensive experience and is ready to provide support throughout the process,
-                    from beginning to end. We have multiple communication options, such as Phone, Email, and off course in person
-                    at our Sussex showroom .
+                   For any inquiries or to request a bespoke quote, please send your requirements to inquiry@unistone.co.uk.
                   </p>
-                  <p>
-                    We are focused on providing you with a satisfying experience and delivering you the best value for your
-                    money. From ordering samples to pricing, delivery to product aftercare, we are dedicated to your
-                    satisfaction.
-                  </p>
-                  <p>
-                    All our products in the website are priced by square metre (m2) and are fully inclusive of VAT. We have
-                    achieved unbeatable prices by buying directly in bulk from unique sources, from Mines or Quarries from the
-                    four corners of the globe. Through the internet (no massive marketing budgets), coupled with our extremely low
-                    overheads, and the fact that we don't occupy expensive high street retail outlets (we have two warehouses and
-                    a yard), equates to us being able to offer all our customers astounding deals on stone &amp; mosaic tiles. Our
-                    current range includes Split Face Mosaics, Quartz Tiles, , Turkish Travertine, Limestone Tiles , Stone &amp; Marble
-                    Wash Basins &amp; Sinks Glass Mosaics, Pebble mosaic flooring. and many other exclusive tiles for Walls or Floors.
-                  </p>
-                  <p>
-                    Now stocking a huge range of Outdoor landscaping materials including a huge range of Porcelain and Stone
-                    Coping Stones and Steps with Bullnosed Edges, Slate Pavers , Granite Garden Patio Slabs, Sawn Smooth Paving ,
-                    Outdoor Porcelain Patio Tiles. Dijon &amp; Jerusalem Limestone Paving &amp; Driveway Cobbles. We have over 30,000 items
-                    in stock at unbeatable prices. Viewing is welcomed at our Plumpton Green Showroom in East Sussex a short drive
-                    from Surrey, Hampshire, London or Kent.
-                  </p>
+                  
                 </div>
               </div>
             </div>
