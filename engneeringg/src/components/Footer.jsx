@@ -17,8 +17,7 @@
               <span className="font-display text-2xl tracking-[0.14em] text-[rgba(199,159,80)]">Unistone Paving</span>
             </Link>
             <p className="mt-5 text-sm leading-7 text-obsidian/65">
-              Premium marble, granite, and natural stone solutions for residential and commercial projects. With years of industry
-              expertise, we help architects, builders, and homeowners make confident stone choices.
+              Premium natural stone paving solutions for residential and commercial projects. With years of industry expertise, we help architects, builders, and homeowners make confident stone choices.
             </p>
           </div>
 

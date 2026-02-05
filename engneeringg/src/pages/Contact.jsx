@@ -65,10 +65,7 @@ export default function Contact() {
           <p>
             Phone: {contactPhone} (8.30am – 4.30pm Monday to Friday) <span className="font-semibold">Closed</span> weekends & Bank Holidays.
           </p>
-          <p>
-            Our showroom & yard is open for viewings & collections Monday to Friday from 9:00 AM to 5:00 PM, but no collections after 5:00 PM please,
-            as we will be loading the trucks for the next day’s nationwide deliveries.
-          </p>
+         
           <p>
             Address: {addressText}
           </p>
