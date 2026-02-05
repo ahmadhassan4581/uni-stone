@@ -19,10 +19,10 @@ export default function Layout() {
           <div className="overflow-hidden whitespace-nowrap">
             <div className="marquee-rtl motion-reduce:animate-none">
               <span className="pr-10 text-xs font-semibold tracking-[0.12em] uppercase text-red-500">
-                * For quantities exceeding 200 units, please contact us for special pricing and additional discounts. .
+                * For quantities exceeding 160 units, please contact us for special pricing and additional discounts. .
               </span>
               <span className="pr-10 text-xs font-semibold tracking-[0.12em] uppercase text-red-500" aria-hidden="true">
-                * For quantities exceeding 200 units, please contact us for special pricing and additional discounts. .
+                * For quantities exceeding 160 units, please contact us for special pricing and additional discounts. .
               </span>
             </div>
           </div>
